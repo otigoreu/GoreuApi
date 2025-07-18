@@ -614,7 +614,7 @@ namespace Goreu.Persistence
                     if (adminUser2 is not null)
                     {
 
-                        await userManager.AddToRoleAsync(adminUser2, Constantes.RolCliente);
+                        await userManager.AddToRoleAsync(adminUser2, Constantes.RoleAdmin);
                         var usuarioUnidadOrganica3 = new UsuarioUnidadOrganica
                         {
 
