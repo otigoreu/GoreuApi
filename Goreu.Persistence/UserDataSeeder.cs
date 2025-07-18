@@ -214,11 +214,11 @@ namespace Goreu.Persistence
             };
             var persona3 = new Persona
             {
-                Nombres = "Piero",
+                Nombres = "Piero Paolo",
                 ApellidoPat = "Llenera",
                 ApellidoMat = "Lima",
                 FechaNac = new DateTime(1985, 02, 01),
-                Email = "edercinsoft@gmail.com",
+                Email = "pp.llerenalima@gmail.com",
                 IdTipoDoc = tipodoc1.Id,
                 NroDoc = "42928945",
 
@@ -522,7 +522,22 @@ namespace Goreu.Persistence
 
             #endregion
 
+            #region UsuarioAdmin2
+            //Admin user
+            var adminUser2 = new Usuario()
+            {
+                UserName = "42928945",
+                Email = "pp.llerenalima@gmail.com",
+                EmailConfirmed = true
+            };
 
+
+
+            #endregion
+
+
+
+            #region UsurioUno
             if (await userManager.FindByEmailAsync("edercin@gmail.com") is null)
             {
 
@@ -553,7 +568,9 @@ namespace Goreu.Persistence
                     }
                 }
             }
-            
+            #endregion
+
+            #region UsuarioDos
             if (await userManager.FindByEmailAsync("edercinsoft@gmail.com") is null)
             {     
                 customerUser.IdPersona = persona2.Id;
@@ -580,6 +597,38 @@ namespace Goreu.Persistence
                     }
                 }
             }
+            #endregion
+
+            #region UsuarioTres
+
+            if (await userManager.FindByEmailAsync("pp.llerenalima@gmail.com") is null)
+            {
+                adminUser2.IdPersona = persona3.Id;
+
+                var result = await userManager.CreateAsync(adminUser2, "Piero*2025");
+                if (result.Succeeded)
+                {
+                    // Obtenemos el registro del usuario
+                    adminUser2 = await userManager.FindByEmailAsync(adminUser2.Email);
+                    // Aqui agregamos el Rol de Administrador para el usuario Admin
+                    if (adminUser2 is not null)
+                    {
+
+                        await userManager.AddToRoleAsync(adminUser2, Constantes.RolCliente);
+                        var usuarioUnidadOrganica3 = new UsuarioUnidadOrganica
+                        {
+
+                            IdUsuario = adminUser2.Id,
+                            IdUnidadOrganica = unidadOrganica1.Id
+                        };
+                        context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica3);
+                        await context.SaveChangesAsync();
+
+                    }
+                }
+            }
+
+            #endregion
 
         }
 
