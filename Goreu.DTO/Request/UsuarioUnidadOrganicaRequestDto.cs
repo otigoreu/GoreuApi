@@ -9,6 +9,6 @@ namespace Goreu.Dto.Request
     public class UsuarioUnidadOrganicaRequestDto
     {
         public string IdUsuario { get; set; }
-        public int IdunidadOrganica { get; set; }
+        public int IdUnidadOrganica { get; set; }
     }
 }

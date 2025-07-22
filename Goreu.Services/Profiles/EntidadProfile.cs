@@ -10,7 +10,9 @@ namespace Goreu.Services.Profiles
     {
         public EntidadProfile()
         {
-            CreateMap<Entidad, EntidadResponseDto>().ForMember(dest => dest.CantidadAplicaciones, opt => opt.MapFrom(src => src.EntidadAplicaciones.Count));
+            CreateMap<Entidad, EntidadResponseDto>()
+                .ForMember(dest => dest.CantidadAplicaciones, opt => opt.MapFrom(src => src.EntidadAplicaciones.Count));
+
             CreateMap<EntidadRequestDto, Entidad>();
             CreateMap<EntidadInfo, EntidadResponseDto>();
         }

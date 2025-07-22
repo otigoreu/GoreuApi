@@ -12,15 +12,17 @@ namespace Goreu.Services.Profiles
         {
             CreateMap<UnidadOrganica, UnidadOrganicaResponseDto>()
             .ForMember(dest => dest.NombreEntidad,
-                       opt => opt.MapFrom(src => src.Entidad != null ? src.Entidad.Descripcion : string.Empty))
+                        opt => opt.MapFrom(src => src.Entidad != null ? src.Entidad.Descripcion : string.Empty))
             .ForMember(dest => dest.NombreDependencia,
-                       opt => opt.MapFrom(src => src.Dependencia != null ? src.Dependencia.Descripcion : ""))
+                        opt => opt.MapFrom(src => src.Dependencia != null ? src.Dependencia.Descripcion : ""))
             .ForMember(dest => dest.CantidadHijos,
-                       opt => opt.MapFrom(src => src.Hijos != null ? src.Hijos.Count : 0));
+                        opt => opt.MapFrom(src => src.Hijos != null ? src.Hijos.Count : 0))
+            .ForMember(dest => dest.CantidadUsuarios,
+                        opt => opt.MapFrom(src => src.UsuarioUnidadOrganicas.Count));
 
-            CreateMap<UnidadOrganicaRequestDto, UnidadOrganica>()
-                .ForMember(dest => dest.IdDependencia,
-                       opt => opt.MapFrom(src => src.IdUnidadOrganicaPadre));
+
+            CreateMap<UnidadOrganicaRequestDto, UnidadOrganica>();
+
             CreateMap<UnidadOrganicaInfo,UnidadOrganicaResponseDto>();
             CreateMap<UnidadOrganicaInfo, UnidadOrganicaResponseSingleDto>();
         }

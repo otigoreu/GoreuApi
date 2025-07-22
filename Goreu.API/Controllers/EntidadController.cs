@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Goreu.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/entidades")]
     [ApiController]
     public class EntidadController : ControllerBase
     {

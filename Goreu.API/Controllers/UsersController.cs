@@ -1,7 +1,4 @@
-﻿using Azure;
-using Goreu.Dto.Request;
-using Goreu.Services.Interface;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Goreu.Dto.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

@@ -4,7 +4,7 @@ using Goreu.DtoResponse;
 
 namespace Goreu.Services.Interface
 {
-    public  interface IUserService
+    public interface IUserService
     {
         Task<BaseResponseGeneric<RegisterResponseDto>> RegisterAsync(RegisterRequestDto request);
         Task<BaseResponseGeneric<LoginResponseDto>> LoginAsync(LoginRequestDto request);
@@ -21,5 +21,8 @@ namespace Goreu.Services.Interface
         Task<BaseResponse> GrantUserRoleByEmail(string email, string roleName);
         Task<BaseResponse> RevokeUserRoles(string userId);
         Task<BaseResponse> RevokeUserRole(string userId, string roleName);
+
+
+        Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string? descripcion, PaginationDto pagination);
     }
 }

@@ -34,5 +34,11 @@ namespace Goreu.Repositories.Implementation
 
             return response;
         }
+
+        public async Task<UsuarioUnidadOrganica> GetAsync(int idUnidadOrganica, string idUsuario)
+        {
+            return context.Set<UsuarioUnidadOrganica>()
+               .FirstOrDefault(z => z.IdUnidadOrganica == idUnidadOrganica && z.IdUsuario == idUsuario);
+        }
     }
 }

@@ -6,5 +6,7 @@
         public string Email { get; set; } = default!;
         public string UserName { get; set; } = default!;
         public List<string> Roles { get; set; } = default!;
+
+        public string descripcionPersona { get; set; }
     }
 }

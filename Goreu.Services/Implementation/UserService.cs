@@ -98,8 +98,8 @@ namespace Goreu.Services.Implementation
                     };
                     var usuariounidad = new UsuarioUnidadOrganicaRequestDto
                     {
-
-                        IdunidadOrganica = request.IdUnidadOrganica
+                        
+                        IdUnidadOrganica = request.IdUnidadOrganica
                     };
 
                     var resultado = await userManager.CreateAsync(user, request.ConfirmPassword);
@@ -732,7 +732,36 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
+        public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string descripcion, PaginationDto pagination)
+        {
+            var response = new BaseResponseGeneric<ICollection<UsuarioResponseDto>>();
+            try
+            {
+                //var data = await userRepository.GetAsync(
+                //    predicate: s => s.UserName.Contains(descripcion ?? string.Empty) || s.Persona.ApellidoPat + s.Persona.ApellidoMat + s.Persona.Nombres,
+                //    orderBy: x => x.UserName,
+                //    pagination);
 
+                var data = await userRepository.GetAsync(
+                    predicate: s =>
+                        s.UserName.Contains(descripcion ?? string.Empty) ||
+                        (s.Persona != null &&
+                         (s.Persona.ApellidoPat + " " + s.Persona.ApellidoMat + " " + s.Persona.Nombres).Contains(descripcion ?? string.Empty)),
+                    orderBy: x => x.UserName,
+                    pagination);
+
+
+
+                response.Data = mapper.Map<ICollection<UsuarioResponseDto>>(data);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al filtrar los usuarios por descripción.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
     }
 }
 

@@ -25,6 +25,7 @@ namespace Goreu.Repositories.Implementation
                 .Include(x => x.Entidad)
                 .Include(x => x.Dependencia)
                 .Include(x => x.Hijos)
+                .Include(z => z.UsuarioUnidadOrganicas.Where(ea => ea.Estado))
 
                 .Where(predicate)
                 .OrderBy(orderBy)

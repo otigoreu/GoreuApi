@@ -22,10 +22,9 @@ namespace Goreu.Repositories.Implementation
         public async Task<ICollection<Entidad>> GetAsync<TKey>(Expression<Func<Entidad, bool>> predicate, Expression<Func<Entidad, TKey>> orderBy, PaginationDto pagination)
         {
             var queryable = context.Set<Entidad>()
-
+                .Include(z => z.EntidadAplicaciones.Where(ea => ea.Estado))
                 .Where(predicate)
                 .OrderBy(orderBy)
-                .AsNoTracking()
                 .AsQueryable();
 
             await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
@@ -37,7 +36,7 @@ namespace Goreu.Repositories.Implementation
         public async Task <EntidadInfo> GetAsyncPerUser(string idUser)
         {
             var query = context.Set<EntidadInfo>().FromSqlRaw(
-                @"select e.Id, e.Descripcion,e.Ruc,e.Estado from Administrador.UnidadOrganica uo 
+                @"select distinct e.Id, e.Descripcion,e.Ruc,e.Estado from Administrador.UnidadOrganica uo 
                 join Administrador.UsuarioUnidadOrganica uuo on uuo.IdUnidadOrganica= uo.Id join Administrador.Entidad e on e.Id=uo.IdEntidad
                 join Administrador.Usuario u on u.Id=uuo.IdUsuario where u.Id={0}", idUser);
 

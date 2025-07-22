@@ -1,4 +1,5 @@
 ﻿using Goreu.Dto.Request;
+using Goreu.Entities;
 using Goreu.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -70,12 +71,27 @@ namespace Goreu.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("UnidadOrganica/Usuarios")]
-        public async Task<IActionResult> Get([FromQuery] int idUnidadOrganica, [FromQuery] PaginationDto pagination)
+        [HttpGet("unidadorganica/{idUnidadorganica}/usuarios")]
+        public async Task<IActionResult> GetUsuariosPaginadas(
+            [FromRoute] int idUnidadorganica,
+            [FromQuery] string? search,
+            [FromQuery] PaginationDto pagination)
         {
-            var result = await service.GetAsync(idUnidadOrganica, pagination);
+            var result = await service.GetUsuariosConEstadoPorUnidadorganicaAsync(idUnidadorganica, search ?? string.Empty, pagination);
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
+        }
+
+        [HttpGet("unidadorganica/{idUnidadorganica}/usuario/{idusuario}")]
+        public async Task<IActionResult> Get(
+            [FromRoute] int idUnidadorganica,
+            [FromRoute] string idusuario
+            )
+        {
+            var result = await service.GetAsync(idUnidadorganica, idusuario);
+
+            return Ok(result);
+            //return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
     }
 }
