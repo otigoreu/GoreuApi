@@ -732,6 +732,7 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
+<<<<<<< Updated upstream
         public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string descripcion, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<UsuarioResponseDto>>();
@@ -760,6 +761,24 @@ namespace Goreu.Services.Implementation
                 response.ErrorMessage = "Error al filtrar los usuarios por descripción.";
                 logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
+=======
+        public async Task<BaseResponseGeneric<ICollection<UsuarioInfo>>> GetAsyncAll(string? userName, PaginationDto pagination)
+        {
+            var response=new BaseResponseGeneric<ICollection<UsuarioInfo>>();
+
+            try
+            {
+                response.Data=await userRepository.GetAsyncAll(userName, pagination);
+                response.Success = true;
+
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrio un error al obetner los datos";
+                logger.LogError(ex,"{ErrorMessage} {Message}",response.ErrorMessage,ex.Message);
+            }
+
+>>>>>>> Stashed changes
             return response;
         }
     }

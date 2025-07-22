@@ -98,6 +98,12 @@ namespace Goreu.API.Controllers
             var response = await service.RevokeUserRole(userId, roleName);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        [HttpGet("userNames")]
+        public async Task<IActionResult> GetAll(string? userName, [FromQuery] PaginationDto pagination)
+        { 
+            var response =await service.GetAsyncAll(userName, pagination);
+            return response.Success ? Ok(response) :BadRequest(response);
+        }
 
     }
 }

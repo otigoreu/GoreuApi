@@ -36,7 +36,11 @@ namespace Goreu.Repositories.Implementation
         public async Task <EntidadInfo> GetAsyncPerUser(string idUser)
         {
             var query = context.Set<EntidadInfo>().FromSqlRaw(
+<<<<<<< Updated upstream
                 @"select distinct e.Id, e.Descripcion,e.Ruc,e.Estado from Administrador.UnidadOrganica uo 
+=======
+                @"select DISTINCT e.Id, e.Descripcion,e.Ruc,e.Estado from Administrador.UnidadOrganica uo 
+>>>>>>> Stashed changes
                 join Administrador.UsuarioUnidadOrganica uuo on uuo.IdUnidadOrganica= uo.Id join Administrador.Entidad e on e.Id=uo.IdEntidad
                 join Administrador.Usuario u on u.Id=uuo.IdUsuario where u.Id={0}", idUser);
 

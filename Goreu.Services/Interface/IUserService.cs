@@ -1,6 +1,7 @@
 ﻿using Goreu.Dto.Request;
 using Goreu.Dto.Response;
 using Goreu.DtoResponse;
+using Goreu.Entities.Info;
 
 namespace Goreu.Services.Interface
 {
@@ -22,7 +23,12 @@ namespace Goreu.Services.Interface
         Task<BaseResponse> RevokeUserRoles(string userId);
         Task<BaseResponse> RevokeUserRole(string userId, string roleName);
 
+<<<<<<< Updated upstream
 
         Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string? descripcion, PaginationDto pagination);
+=======
+        //--------------------------------------------------------------------------------------------
+        Task<BaseResponseGeneric<ICollection<UsuarioInfo>>> GetAsyncAll(string? userName, PaginationDto pagination);
+>>>>>>> Stashed changes
     }
 }
