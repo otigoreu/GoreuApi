@@ -54,7 +54,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowConfiguredOrigins", policyBuilder =>
     {
-        var allowedOrigins = builder.Configuration.GetSection("JWT:Audiences").Get<string[]>();
+        var allowedOrigins = builder.Configuration.GetSection("JWT:Audiences").Get<string[]>() ??
+                             throw new InvalidOperationException("JWT Audiences not configured.");
 
         if (allowedOrigins.Any())
         {
