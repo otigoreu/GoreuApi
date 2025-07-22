@@ -1,10 +1,7 @@
 ﻿using Goreu.Dto.Request;
 using Goreu.Entities;
-<<<<<<< Updated upstream
-using System.Linq.Expressions;
-=======
 using Goreu.Entities.Info;
->>>>>>> Stashed changes
+using System.Linq.Expressions;
 
 namespace Goreu.Repositories.Interface
 {
@@ -12,11 +9,8 @@ namespace Goreu.Repositories.Interface
     {
 
         Task<Usuario?> GetAsync(string id);
-<<<<<<< Updated upstream
-
-        Task<ICollection<Usuario>> GetAsync<TKey>(Expression<Func<Usuario, bool>> predicate, Expression<Func<Usuario, TKey>> orderBy, PaginationDto pagination);
-=======
         Task<ICollection<UsuarioInfo>> GetAsyncAll(string? nombres, PaginationDto pagination);
->>>>>>> Stashed changes
+        Task<ICollection<Usuario>> GetAsync<TKey>(Expression<Func<Usuario, bool>> predicate, Expression<Func<Usuario, TKey>> orderBy, PaginationDto pagination);
+
     }
 }

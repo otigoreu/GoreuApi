@@ -23,12 +23,9 @@ namespace Goreu.Services.Interface
         Task<BaseResponse> RevokeUserRoles(string userId);
         Task<BaseResponse> RevokeUserRole(string userId, string roleName);
 
-<<<<<<< Updated upstream
-
-        Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string? descripcion, PaginationDto pagination);
-=======
         //--------------------------------------------------------------------------------------------
         Task<BaseResponseGeneric<ICollection<UsuarioInfo>>> GetAsyncAll(string? userName, PaginationDto pagination);
->>>>>>> Stashed changes
+        Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string? descripcion, PaginationDto pagination);
+
     }
 }
