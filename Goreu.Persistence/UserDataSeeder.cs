@@ -289,7 +289,7 @@ namespace Goreu.Persistence
             };
             var menu3 = new Menu
             {
-                Descripcion = "Usurios",
+                Descripcion = "Usuarios",
                 Icono = "user-cog",
                 Ruta = "pages/user",
                 IdAplicacion = app1.Id,
@@ -326,13 +326,22 @@ namespace Goreu.Persistence
             var menu7 = new Menu
             {
                 Descripcion = "UnidadOrganica",
-                Icono = "building-factory-2",
+                Icono = "building-factory",
                 Ruta = "pages/unidadOrganica",
                 IdAplicacion = app1.Id,
                 MenuPadre = null,
 
             };
-            
+            var menu8 = new Menu
+            {
+                Descripcion = "Entidad",
+                Icono = "building-factory-2",
+                Ruta = "pages/entidad",
+                IdAplicacion = app1.Id,
+                MenuPadre = null,
+
+            };
+
 
             var men1 = await context.Set<Menu>().FirstOrDefaultAsync(x => x.Descripcion == menu1.Descripcion);
             var men2 = await context.Set<Menu>().FirstOrDefaultAsync(x => x.Descripcion == menu2.Descripcion);
@@ -341,8 +350,9 @@ namespace Goreu.Persistence
             var men5 = await context.Set<Menu>().FirstOrDefaultAsync(x => x.Descripcion == menu5.Descripcion);
             var men6 = await context.Set<Menu>().FirstOrDefaultAsync(x => x.Descripcion == menu6.Descripcion);
             var men7 = await context.Set<Menu>().FirstOrDefaultAsync(x => x.Descripcion == menu7.Descripcion);
+            var men8 = await context.Set<Menu>().FirstOrDefaultAsync(x => x.Descripcion == menu8.Descripcion);
 
-            if (men1 is null & men2 is null & men3 is null & men4 is null & men5 is null & men6 is null & men7 is null) {
+            if (men1 is null & men2 is null & men3 is null & men4 is null & men5 is null & men6 is null & men7 is null & men8 is null) {
 
                 context.Set<Menu>().Add(menu1);
                 context.Set<Menu>().Add(menu2);
@@ -351,6 +361,7 @@ namespace Goreu.Persistence
                 context.Set<Menu>().Add(menu5);
                 context.Set<Menu>().Add(menu6);
                 context.Set<Menu>().Add(menu7);
+                context.Set<Menu>().Add(menu8);
                 await context.SaveChangesAsync();
             }
 
@@ -411,7 +422,12 @@ namespace Goreu.Persistence
                 IdMenu = menu7.Id,
                 IdRol = role1.Id
             };
+            var menuRol9 = new MenuRol
+            {
 
+                IdMenu = menu8.Id,
+                IdRol = role1.Id
+            };
 
             var menro1 = await context.Set<MenuRol>().FirstOrDefaultAsync(x => x.Estado == menuRol1.Estado);
 
@@ -425,6 +441,8 @@ namespace Goreu.Persistence
                 context.Set<MenuRol>().Add(menuRol6);
                 context.Set<MenuRol>().Add(menuRol7);
                 context.Set<MenuRol>().Add(menuRol8);
+                context.Set<MenuRol>().Add(menuRol9);
+
                 await context.SaveChangesAsync();
             }
             #endregion
