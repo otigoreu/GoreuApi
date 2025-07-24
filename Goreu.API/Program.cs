@@ -160,10 +160,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowConfiguredOrigins");
-
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("AllowConfiguredOrigins");
 
 app.MapControllers();
 
