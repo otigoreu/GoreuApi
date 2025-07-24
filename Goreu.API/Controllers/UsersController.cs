@@ -1,9 +1,4 @@
-﻿using Goreu.Dto.Request;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-
-namespace Goreu.API.Controllers
+﻿namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/users")]

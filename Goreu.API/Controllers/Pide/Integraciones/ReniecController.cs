@@ -1,11 +1,4 @@
-﻿using Goreu.Dto.Request.Pide.Integraciones;
-using Goreu.Services.Interface.Pide;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Text;
-using System.Xml.Linq;
-
-namespace Goreu.API.Controllers.Pide.Integraciones
+﻿namespace Goreu.API.Controllers.Pide.Integraciones
 {
     [ApiController]
     [Route("api/reniec")]

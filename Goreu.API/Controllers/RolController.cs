@@ -1,11 +1,8 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Services.Interface;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Goreu.API.Controllers
+﻿namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/roles")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RolController : ControllerBase
     {
 

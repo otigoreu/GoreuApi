@@ -1,12 +1,8 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Entities;
-using Goreu.Services.Interface;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Goreu.API.Controllers
+﻿namespace Goreu.API.Controllers
 {
     [Route("api/usuarioUnidadOrganicas")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsuarioUnidadOrganicaController : ControllerBase
     {
         private readonly IUsuarioUnidadOrganicaService service;
