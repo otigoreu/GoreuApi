@@ -2,6 +2,7 @@
 {
     [ApiController]
     [Route("api/users")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsersController : ControllerBase
     {
         private readonly IUserService service;
@@ -18,8 +19,8 @@
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
-
         [HttpPost("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
         {
             var response = await service.LoginAsync(request);
@@ -27,6 +28,7 @@
         }
 
         [HttpPost("RequestTokenToResetPassword")]
+        [AllowAnonymous]
         public async Task<IActionResult> RequestTokenToResetPassword(ResetPasswordRequestDto request)
         {
             var response = await service.RequestTokenToResetPasswordAsync(request);
@@ -34,6 +36,7 @@
         }
 
         [HttpPost("ResetPassword")]
+        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] NewPasswordRequestDto request)
         {
             var response = await service.ResetPasswordAsync(request);
@@ -41,7 +44,6 @@
         }
 
         [HttpPost("ChangePassword")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> ChangePasswordUserName([FromBody] ChangePasswordRequestDto request)
         {
             //Obtener eil del token actual
@@ -51,6 +53,7 @@
         }
         //-------------------------------------------------------------------------------------------
         //trae los usuarios con ese rol
+        
         [HttpGet("GetUsersByRole")]
         public async Task<IActionResult> GetUsersByRole([FromQuery] string? role = "")
         {
@@ -76,29 +79,32 @@
         }
 
         [HttpPost("roles/grantByEmail/{email}")]
+        
         public async Task<IActionResult> GrantRolesByEmail(string email, string roleName)
         {
             var response = await service.GrantUserRoleByEmail(email, roleName);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        
         [HttpPost("roles/revoke/{userId}")]
         public async Task<IActionResult> RevokeRoles(string userId)
         {
             var response = await service.RevokeUserRoles(userId);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        
         [HttpPost("role/revoke/{userId}")]
         public async Task<IActionResult> RevokeRole(string userId, string roleName)
         {
             var response = await service.RevokeUserRole(userId, roleName);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        
         [HttpGet("userNames")]
         public async Task<IActionResult> GetAll(string? userName, [FromQuery] PaginationDto pagination)
         { 
             var response =await service.GetAsyncAll(userName, pagination);
             return response.Success ? Ok(response) :BadRequest(response);
         }
-
     }
 }
