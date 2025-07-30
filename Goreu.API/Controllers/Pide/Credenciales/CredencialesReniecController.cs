@@ -1,8 +1,4 @@
-﻿using Goreu.Dto.Request.Pide.Credenciales;
-using Goreu.Services.Interface.Pide;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Goreu.API.Controllers.Pide.Credenciales
+﻿namespace Goreu.API.Controllers.Pide.Credenciales
 {
     [ApiController]
     [Route("api/credencialesreniec")]

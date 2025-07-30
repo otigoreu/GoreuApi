@@ -19,7 +19,9 @@ namespace Goreu.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
             modelBuilder.Entity<AplicacionInfo>().HasNoKey();
             modelBuilder.Entity<UnidadOrganicaInfo>().HasNoKey();
             modelBuilder.Entity<EntidadInfo>().HasNoKey();

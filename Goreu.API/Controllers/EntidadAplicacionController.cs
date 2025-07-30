@@ -1,11 +1,8 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Services.Interface;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Goreu.API.Controllers
+﻿namespace Goreu.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class EntidadAplicacionController : ControllerBase
     {
         private readonly IEntidadAplicacionService service;

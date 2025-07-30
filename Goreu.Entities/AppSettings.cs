@@ -1,6 +1,4 @@
-﻿
-
-namespace Goreu.Entities
+﻿namespace Goreu.Entities
 {
     public class AppSettings
     {

@@ -9,6 +9,7 @@ namespace Goreu.Entities
         public bool Estado { get; set; } = true;
         public ICollection<MenuRol> MenuRoles { get; set; }
         public ICollection<EntidadAplicacionRol> EntidadAplicacioneRoles { get; set; }
+        //public ICollection<IdentityUserRole<string>> UsuarioRoles { get; set; }
 
     }
 }

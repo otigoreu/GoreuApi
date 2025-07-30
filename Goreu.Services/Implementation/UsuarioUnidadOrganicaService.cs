@@ -12,11 +12,13 @@ namespace Goreu.Services.Implementation
     {
         private readonly IUsuarioUnidadOrganicaRepository repository;
         private readonly IUserService serviceUsuario;
+        private readonly IUnidadOrganicaService serviceUnidadorganica;
 
-        public UsuarioUnidadOrganicaService(IUsuarioUnidadOrganicaRepository repository, IUserService serviceUsuario, ILogger<UsuarioUnidadOrganicaService> logger, IMapper mapper) : base(repository, logger, mapper)
+        public UsuarioUnidadOrganicaService(IUsuarioUnidadOrganicaRepository repository, IUserService serviceUsuario, IUnidadOrganicaService serviceUnidadorganica, ILogger<UsuarioUnidadOrganicaService> logger, IMapper mapper) : base(repository, logger, mapper)
         {
             this.repository = repository; // ✅ Asignación correcta
             this.serviceUsuario = serviceUsuario;
+            this.serviceUnidadorganica = serviceUnidadorganica;
         }
 
         public async Task<BaseResponseGeneric<ICollection<UsuarioUnidadOrganicaResponseDto>>> GetUsuariosConEstadoPorUnidadorganicaAsync(int idUnidadorganica, string descripcion, PaginationDto pagination)
@@ -25,8 +27,10 @@ namespace Goreu.Services.Implementation
 
             try
             {
+                var unidadorganica = await serviceUnidadorganica.GetAsync(idUnidadorganica);
+
                 // Paso 1: Obtener todas las usuarios
-                var todasLosUsuarios = await serviceUsuario.GetAsync(descripcion, pagination); // List<Aplicacion>
+                var todasLosUsuarios = await serviceUsuario.GetAsync(unidadorganica.Data.idEntidad, null, descripcion, pagination); // List<Aplicacion>
 
                 // Paso 2: Obtener las aplicaciones asociadas a la entidad
                 var usuariosUniadorganica = await repository.GetAsync(ea => ea.IdUnidadOrganica == idUnidadorganica);

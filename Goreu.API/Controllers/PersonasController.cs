@@ -1,14 +1,8 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Persistence;
-using Goreu.Services.Interface;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Goreu.API.Controllers
+﻿namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/personas")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PersonasController : ControllerBase
     {
         private readonly IPersonaService service;
@@ -19,21 +13,18 @@ namespace Goreu.API.Controllers
         }
 
         [HttpGet("nombre")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"PLANILLA,{Constantes.RoleAdmin}")]
         public async Task<IActionResult> Get(string? nombres, [FromQuery] PaginationDto pagination)
         {
             var response = await service.GetAsync(nombres, pagination);
             return response.Success ? Ok(response) : BadRequest(response);
         }
         [HttpGet("nombrefilter")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"PLANILLA,{Constantes.RoleAdmin}")]
         public async Task<IActionResult> Getfilter(string? nombres, [FromQuery] PaginationDto pagination)
         {
             var response = await service.GetAsyncfilter(nombres, pagination);
             return response.Success ? Ok(response) : BadRequest(response);
         }
         [HttpGet("email")]
-       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"PLANILLA,{Constantes.RoleAdmin}")]
         public async Task<IActionResult> Get(string? email)
         {
             var response = await service.GetAsyncBYEmail(email);
@@ -41,7 +32,6 @@ namespace Goreu.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"PLANILLA,{Constantes.RoleAdmin}")]
         public async Task<IActionResult> Get(int id)
         {
             var response = await service.GetAsync(id);
@@ -49,7 +39,6 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"PLANILLA,{Constantes.RoleAdmin}")]
         public async Task<IActionResult> Post(PersonaRequestDto personRequestDto)
         {
             var response = await service.AddAsync(personRequestDto);
@@ -57,7 +46,6 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPut("{id:int}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"PLANILLA,{Constantes.RoleAdmin}")]
         public async Task<IActionResult> Put(int id, PersonaRequestDto personRequestDto)
         {
             var response = await service.UpdateAsync(id, personRequestDto);
@@ -65,14 +53,12 @@ namespace Goreu.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
-       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"PLANILLA,{Constantes.RoleAdmin}")]
         public async Task<IActionResult> Delete(int id)
         {
             var response = await service.DeleteAsync(id);
             return response.Success ? Ok(response) : BadRequest(response);
         }
         [HttpDelete("finalized/{id:int}")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"PLANILLA,{Constantes.RoleAdmin}")]
         public async Task<IActionResult> PatchFinit(int id)
         {
             var response = await service.FinalizedAsync(id);
@@ -80,7 +66,6 @@ namespace Goreu.API.Controllers
         }
 
         [HttpGet("initialized/{id:int}")]
-       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = $"PLANILLA,{Constantes.RoleAdmin}")]
         public async Task<IActionResult> PatchInit(int id)
         {
 

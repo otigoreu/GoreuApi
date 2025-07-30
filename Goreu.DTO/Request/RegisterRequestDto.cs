@@ -15,10 +15,16 @@ namespace Goreu.Dto.Request
         [Required(ErrorMessage = "El email es obligatorio")]
         [EmailAddress]
         public string Email { get; set; } = default!;
+
         [Required]
         public int IdPersona { get; set; }
+        
         [Required]
         public int IdUnidadOrganica{ get; set; }
+
+        [Required]
+        public string Rol { get; set; }
+
         public string Password { get; set; } = default!;
 
         [Compare(nameof(Password), ErrorMessage = "Las contraseñas no coinciden")]

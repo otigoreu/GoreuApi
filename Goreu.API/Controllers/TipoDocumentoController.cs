@@ -1,12 +1,8 @@
-﻿using Azure;
-using Goreu.Dto.Request;
-using Goreu.Services.Interface;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Goreu.API.Controllers
+﻿namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/tipodocumentos")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TipoDocumentoController : ControllerBase
     {
         private readonly ITipoDocumentoService service;

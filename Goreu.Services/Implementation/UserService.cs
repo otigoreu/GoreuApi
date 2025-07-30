@@ -96,6 +96,7 @@ namespace Goreu.Services.Implementation
                         EmailConfirmed = true
 
                     };
+
                     var usuariounidad = new UsuarioUnidadOrganicaRequestDto
                     {
                         
@@ -110,15 +111,15 @@ namespace Goreu.Services.Implementation
 
                         if (user is not null)
                         {
-                            await userManager.AddToRoleAsync(user, Constantes.RolCliente);
                             usuariounidad.IdUsuario = user.Id;
-
 
                             ////relacion usuario unidad organica
                             await usuarioUnidadOrganicaRepository.AddAsync(mapper.Map<UsuarioUnidadOrganica>(usuariounidad));
 
-                            ////TODO: Enviar un email
+                            ////relacion usuario rol
+                            await userManager.AddToRoleAsync(user, request.Rol);
 
+                            ////TODO: Enviar un email
                             response.Success = true;
 
                             var tokenResponse = await ConstruirToken(user);//returning jwt
@@ -130,7 +131,6 @@ namespace Goreu.Services.Implementation
                                 Roles = tokenResponse.Roles
 
                             };
-
                         }
                     }
                     else
@@ -139,9 +139,7 @@ namespace Goreu.Services.Implementation
                         response.ErrorMessage = string.Join(" ", resultado.Errors.Select(x => x.Description).ToArray());
                         logger.LogWarning(response.ErrorMessage);
                     }
-
                 }
-
             }
             catch (Exception ex)
             {
@@ -154,8 +152,6 @@ namespace Goreu.Services.Implementation
         ////Login
         public async Task<BaseResponseGeneric<LoginResponseDto>> LoginAsync(LoginRequestDto request)
         {
-
-
             var response = new BaseResponseGeneric<LoginResponseDto>();
             try
             {
@@ -751,33 +747,103 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string? descripcion, PaginationDto pagination)
+        public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(int? idEntidad, string? rol, string? descripcion, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<UsuarioResponseDto>>();
+            ICollection<Usuario> usuarios;
+            ICollection<UsuarioResponseDto> usuariosDto;
+
             try
             {
-                //var data = await userRepository.GetAsync(
-                //    predicate: s => s.UserName.Contains(descripcion ?? string.Empty) || s.Persona.ApellidoPat + s.Persona.ApellidoMat + s.Persona.Nombres,
-                //    orderBy: x => x.UserName,
-                //    pagination);
+                if (idEntidad == 1)
+                    usuarios = await userRepository.GetAsync(
+                        predicate: s =>
+                        s.UserName.Contains(descripcion ?? string.Empty) || (s.Persona != null && (s.Persona.ApellidoPat + " " + s.Persona.ApellidoMat + " " + s.Persona.Nombres).Contains(descripcion ?? string.Empty)),
+                        orderBy: x => x.UserName,
+                        pagination);
 
-                var data = await userRepository.GetAsync(
-                    predicate: s =>
-                        s.UserName.Contains(descripcion ?? string.Empty) ||
-                        (s.Persona != null &&
-                         (s.Persona.ApellidoPat + " " + s.Persona.ApellidoMat + " " + s.Persona.Nombres).Contains(descripcion ?? string.Empty)),
-                    orderBy: x => x.UserName,
-                    pagination);
+                else
+                    usuarios = await userRepository.GetAsync(
+                        (int)idEntidad!,
+                        predicate: s =>
+                        s.UserName.Contains(descripcion ?? string.Empty) || (s.Persona != null && (s.Persona.ApellidoPat + " " + s.Persona.ApellidoMat + " " + s.Persona.Nombres).Contains(descripcion ?? string.Empty)),
+                        orderBy: x => x.UserName,
+                        pagination);
 
+                usuariosDto = mapper.Map<ICollection<UsuarioResponseDto>>(usuarios);
 
+                foreach (var (usuario, dto) in usuarios.Zip(usuariosDto, (usuario, dto) => (usuario, dto)))
+                {
+                    var roles = await userManager.GetRolesAsync(usuario);
+                    dto.Roles = roles.ToList();
+                    dto.CantidadRols = roles.Count;
+                }
 
-                response.Data = mapper.Map<ICollection<UsuarioResponseDto>>(data);
+                response.Data = usuariosDto;
                 response.Success = true;
             }
             catch (Exception ex)
             {
                 response.ErrorMessage = "Error al filtrar los usuarios por descripción.";
                 logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
+
+        //public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string? descripcion, PaginationDto pagination)
+        //{
+        //    var response = new BaseResponseGeneric<ICollection<UsuarioResponseDto>>();
+        //    try
+        //    {
+        //        var data = await userRepository.GetAsync(
+        //            predicate: s =>
+        //                s.UserName.Contains(descripcion ?? string.Empty) ||
+        //                (s.Persona != null &&
+        //                 (s.Persona.ApellidoPat + " " + s.Persona.ApellidoMat + " " + s.Persona.Nombres).Contains(descripcion ?? string.Empty)),
+        //            orderBy: x => x.UserName,
+        //            pagination);
+
+        //        response.Data = mapper.Map<ICollection<UsuarioResponseDto>>(data);
+        //        response.Success = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.ErrorMessage = "Error al filtrar los usuarios por descripción.";
+        //        logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+        //    }
+        //    return response;
+        //}
+
+
+        public async Task<BaseResponse> FinalizeAsync(string id)
+        {
+            var response = new BaseResponse();
+            try
+            {
+                await userRepository.FinalizeAsync(id);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al finalizar el usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
+        public async Task<BaseResponse> InitializeAsync(string id)
+        {
+            var response = new BaseResponse();
+            try
+            {
+                await userRepository.InitializeAsync(id);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al inicializar el usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
             }
             return response;
         }

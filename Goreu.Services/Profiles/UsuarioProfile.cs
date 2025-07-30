@@ -11,7 +11,9 @@ namespace Goreu.Services.Profiles
         {
             CreateMap<Usuario, UsuarioResponseDto>()
                 .ForMember(dest => dest.descripcionPersona,
-                    opt => opt.MapFrom(src => $"{src.Persona.ApellidoPat} {src.Persona.ApellidoMat}, {src.Persona.Nombres}"));
+                    opt => opt.MapFrom(src => $"{src.Persona.ApellidoPat} {src.Persona.ApellidoMat}, {src.Persona.Nombres}"))
+                .ForMember(dest => dest.CantidadUnidadorganicas,
+                        opt => opt.MapFrom(src => src.UsuarioUnidadOrganicas.Count));
         }
     }
 }

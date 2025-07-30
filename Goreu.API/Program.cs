@@ -8,6 +8,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnection"));
 });
 
+builder.Services.AddHttpContextAccessor();
+
 // 2. Configuración AppSettings
 builder.Services.Configure<AppSettings>(builder.Configuration);
 
@@ -32,7 +34,7 @@ builder.Services.AddAuthentication(options =>
     var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:JWTKey"] ??
         throw new InvalidOperationException("JWT key not configured"));
 
-    options.TokenValidationParameters = new TokenValidationParameters
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidIssuer = builder.Configuration["JWT:Issuer"],
@@ -49,28 +51,6 @@ builder.Services.AddAuthentication(options =>
 // 5. Autorización
 builder.Services.AddAuthorization();
 
-// 6. CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowConfiguredOrigins", policyBuilder =>
-    {
-        var allowedOrigins = builder.Configuration.GetSection("JWT:Audiences").Get<string[]>() ??
-                             throw new InvalidOperationException("JWT Audiences not configured.");
-
-        if (allowedOrigins.Any())
-        {
-            policyBuilder.WithOrigins(allowedOrigins)
-                         .AllowAnyMethod()
-                         .AllowAnyHeader()
-                         .AllowCredentials()
-                         .WithExposedHeaders("totalrecordsquantity");
-        }
-        else
-        {
-            throw new InvalidOperationException("No se configuraron orígenes válidos en JWT:Audiences.");
-        }
-    });
-});
 
 // 7. Repositorios (Acceso a Datos)
 builder.Services.AddTransient<IAplicacionRepository, AplicacionRepository>();
@@ -120,6 +100,29 @@ builder.Services.AddAutoMapper(config =>
 // 10. Semilla de Datos
 builder.Services.AddTransient<UserDataSeeder>();
 
+// 6. CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowConfiguredOrigins", policyBuilder =>
+    {
+        var allowedOrigins = builder.Configuration.GetSection("JWT:Audiences").Get<string[]>() ??
+                             throw new InvalidOperationException("JWT Audiences not configured.");
+
+        if (allowedOrigins.Any())
+        {
+            policyBuilder.WithOrigins(allowedOrigins)
+                         .AllowAnyMethod()
+                         .AllowAnyHeader()
+                         .AllowCredentials()
+                         .WithExposedHeaders("totalrecordsquantity");
+        }
+        else
+        {
+            throw new InvalidOperationException("No se configuraron orígenes válidos en JWT:Audiences.");
+        }
+    });
+});
+
 // 11. Controladores y HTTP Client
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
@@ -159,11 +162,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseRouting();
 
 app.UseCors("AllowConfiguredOrigins");
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

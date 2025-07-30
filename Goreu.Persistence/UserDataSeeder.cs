@@ -110,7 +110,6 @@ namespace Goreu.Persistence
 
             #endregion
 
-
             #region UnidadOrganica
             var unidadOrganica1 = new UnidadOrganica
             {
@@ -516,8 +515,6 @@ namespace Goreu.Persistence
 
             #endregion
 
-
-
             #region UsuarioAdmin
             //Admin user
             var adminUser = new Usuario()
@@ -550,12 +547,7 @@ namespace Goreu.Persistence
                 Email = "pp.llerenalima@gmail.com",
                 EmailConfirmed = true
             };
-
-
-
             #endregion
-
-
 
             #region UsurioUno
             if (await userManager.FindByEmailAsync("edercin@gmail.com") is null)

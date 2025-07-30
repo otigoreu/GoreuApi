@@ -1,12 +1,8 @@
-﻿using Goreu.Dto.Request;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-
-namespace Goreu.API.Controllers
+﻿namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/users")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsersController : ControllerBase
     {
         private readonly IUserService service;
@@ -23,8 +19,8 @@ namespace Goreu.API.Controllers
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
-
         [HttpPost("Login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
         {
             var response = await service.LoginAsync(request);
@@ -32,6 +28,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost("RequestTokenToResetPassword")]
+        [AllowAnonymous]
         public async Task<IActionResult> RequestTokenToResetPassword(ResetPasswordRequestDto request)
         {
             var response = await service.RequestTokenToResetPasswordAsync(request);
@@ -39,6 +36,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost("ResetPassword")]
+        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] NewPasswordRequestDto request)
         {
             var response = await service.ResetPasswordAsync(request);
@@ -46,7 +44,6 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost("ChangePassword")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> ChangePasswordUserName([FromBody] ChangePasswordRequestDto request)
         {
             //Obtener eil del token actual
@@ -56,6 +53,7 @@ namespace Goreu.API.Controllers
         }
         //-------------------------------------------------------------------------------------------
         //trae los usuarios con ese rol
+        
         [HttpGet("GetUsersByRole")]
         public async Task<IActionResult> GetUsersByRole([FromQuery] string? role = "")
         {
@@ -81,28 +79,56 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost("roles/grantByEmail/{email}")]
+        
         public async Task<IActionResult> GrantRolesByEmail(string email, string roleName)
         {
             var response = await service.GrantUserRoleByEmail(email, roleName);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        
         [HttpPost("roles/revoke/{userId}")]
         public async Task<IActionResult> RevokeRoles(string userId)
         {
             var response = await service.RevokeUserRoles(userId);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        
         [HttpPost("role/revoke/{userId}")]
         public async Task<IActionResult> RevokeRole(string userId, string roleName)
         {
             var response = await service.RevokeUserRole(userId, roleName);
             return response.Success ? Ok(response) : BadRequest(response);
         }
-        [HttpGet("userNames")]
-        public async Task<IActionResult> GetAll(string? userName, [FromQuery] PaginationDto pagination)
-        { 
-            var response =await service.GetAsyncAll(userName, pagination);
-            return response.Success ? Ok(response) :BadRequest(response);
+
+        [HttpGet("descripcion")]
+        [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
+        public async Task<IActionResult> Get([FromQuery] int? idEntidad, [FromQuery] string? rol, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
+        {
+            var response = await service.GetAsync(idEntidad, rol, search, pagination);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
+
+        [HttpPatch("{id}/finalize")]
+        public async Task<IActionResult> Finalize(string id)
+        {
+            var response = await service.FinalizeAsync(id);
+
+            if (!response.Success)
+                return NotFound(response); // o BadRequest según el motivo
+
+            return Ok(response);
+        }
+
+        [HttpPatch("{id}/initialize")]
+        public async Task<IActionResult> Initialize(string id)
+        {
+            var response = await service.InitializeAsync(id);
+
+            if (!response.Success)
+                return NotFound(response); // o BadRequest según el motivo
+
+            return Ok(response);
         }
 
     }
