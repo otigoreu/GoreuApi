@@ -68,6 +68,7 @@
         }
 
         [HttpGet("unidadorganica/{idUnidadorganica}/usuarios")]
+        [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
         public async Task<IActionResult> GetUsuariosPaginadas(
             [FromRoute] int idUnidadorganica,
             [FromQuery] string? search,

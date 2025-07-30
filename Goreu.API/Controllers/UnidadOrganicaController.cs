@@ -78,6 +78,7 @@
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
+
         [HttpGet("peruser")]
         public async Task<IActionResult> Get(string idUser)
         {

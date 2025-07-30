@@ -4,6 +4,7 @@ using Goreu.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Goreu.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250725202638_added_UsuarioRoles_field_USUARIO_ROL")]
+    partial class added_UsuarioRoles_field_USUARIO_ROL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -717,9 +720,19 @@ namespace Goreu.Persistence.Migrations
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("RolId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UsuarioId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("UserId", "RoleId");
 
+                    b.HasIndex("RolId");
+
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("UsuarioRol", "Administrador");
                 });
@@ -946,6 +959,10 @@ namespace Goreu.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
+                    b.HasOne("Goreu.Entities.Rol", null)
+                        .WithMany("UsuarioRoles")
+                        .HasForeignKey("RolId");
+
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
@@ -957,6 +974,10 @@ namespace Goreu.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Goreu.Entities.Usuario", null)
+                        .WithMany("UsuarioRoles")
+                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -1023,6 +1044,8 @@ namespace Goreu.Persistence.Migrations
                 {
                     b.Navigation("Historials");
 
+                    b.Navigation("UsuarioRoles");
+
                     b.Navigation("UsuarioUnidadOrganicas");
                 });
 
@@ -1031,6 +1054,8 @@ namespace Goreu.Persistence.Migrations
                     b.Navigation("EntidadAplicacioneRoles");
 
                     b.Navigation("MenuRoles");
+
+                    b.Navigation("UsuarioRoles");
                 });
 #pragma warning restore 612, 618
         }

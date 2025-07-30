@@ -99,12 +99,37 @@
             var response = await service.RevokeUserRole(userId, roleName);
             return response.Success ? Ok(response) : BadRequest(response);
         }
-        
-        [HttpGet("userNames")]
-        public async Task<IActionResult> GetAll(string? userName, [FromQuery] PaginationDto pagination)
-        { 
-            var response =await service.GetAsyncAll(userName, pagination);
-            return response.Success ? Ok(response) :BadRequest(response);
+
+        [HttpGet("descripcion")]
+        [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
+        public async Task<IActionResult> Get([FromQuery] int? idEntidad, [FromQuery] string? rol, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
+        {
+            var response = await service.GetAsync(idEntidad, rol, search, pagination);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
+
+
+        [HttpPatch("{id}/finalize")]
+        public async Task<IActionResult> Finalize(string id)
+        {
+            var response = await service.FinalizeAsync(id);
+
+            if (!response.Success)
+                return NotFound(response); // o BadRequest según el motivo
+
+            return Ok(response);
+        }
+
+        [HttpPatch("{id}/initialize")]
+        public async Task<IActionResult> Initialize(string id)
+        {
+            var response = await service.InitializeAsync(id);
+
+            if (!response.Success)
+                return NotFound(response); // o BadRequest según el motivo
+
+            return Ok(response);
+        }
+
     }
 }

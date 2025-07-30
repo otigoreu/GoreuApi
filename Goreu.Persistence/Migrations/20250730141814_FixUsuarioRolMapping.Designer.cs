@@ -4,6 +4,7 @@ using Goreu.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Goreu.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250730141814_FixUsuarioRolMapping")]
+    partial class FixUsuarioRolMapping
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -440,6 +443,36 @@ namespace Goreu.Persistence.Migrations
                     b.ToTable("CredencialReniec", "Administrador");
                 });
 
+            modelBuilder.Entity("Goreu.Entities.Rol", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
             modelBuilder.Entity("Goreu.Entities.TipoDocumento", b =>
                 {
                     b.Property<int>("Id")
@@ -572,6 +605,21 @@ namespace Goreu.Persistence.Migrations
                     b.ToTable("Usuario", "Administrador");
                 });
 
+            modelBuilder.Entity("Goreu.Entities.UsuarioRol", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UsuarioRol", "Administrador");
+                });
+
             modelBuilder.Entity("Goreu.Entities.UsuarioUnidadOrganica", b =>
                 {
                     b.Property<int>("Id")
@@ -605,36 +653,19 @@ namespace Goreu.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
-
                     b.Property<string>("Name")
-                        .HasMaxLength(256)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("varchar(max)");
 
                     b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(256)");
+                        .HasColumnType("varchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
                     b.ToTable("Rol", "Administrador");
-
-                    b.HasDiscriminator().HasValue("IdentityRole");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -709,21 +740,6 @@ namespace Goreu.Persistence.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UsuarioRol", "Administrador");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
@@ -741,16 +757,6 @@ namespace Goreu.Persistence.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Goreu.Entities.Rol", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
-
-                    b.Property<bool>("Estado")
-                        .HasColumnType("bit");
-
-                    b.HasDiscriminator().HasValue("Rol");
                 });
 
             modelBuilder.Entity("Goreu.Entities.EntidadAplicacion", b =>
@@ -898,6 +904,25 @@ namespace Goreu.Persistence.Migrations
                     b.Navigation("Persona");
                 });
 
+            modelBuilder.Entity("Goreu.Entities.UsuarioRol", b =>
+                {
+                    b.HasOne("Goreu.Entities.Rol", "Rol")
+                        .WithMany("UsuarioRols")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Goreu.Entities.Usuario", "Usuario")
+                        .WithMany("UsuarioRols")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rol");
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("Goreu.Entities.UsuarioUnidadOrganica", b =>
                 {
                     b.HasOne("Goreu.Entities.UnidadOrganica", "UnidadOrganica")
@@ -919,7 +944,7 @@ namespace Goreu.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Goreu.Entities.Rol", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -937,21 +962,6 @@ namespace Goreu.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Goreu.Entities.Usuario", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Goreu.Entities.Usuario", null)
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -1007,6 +1017,15 @@ namespace Goreu.Persistence.Migrations
                     b.Navigation("Usuarios");
                 });
 
+            modelBuilder.Entity("Goreu.Entities.Rol", b =>
+                {
+                    b.Navigation("EntidadAplicacioneRoles");
+
+                    b.Navigation("MenuRoles");
+
+                    b.Navigation("UsuarioRols");
+                });
+
             modelBuilder.Entity("Goreu.Entities.TipoDocumento", b =>
                 {
                     b.Navigation("Personas");
@@ -1023,14 +1042,9 @@ namespace Goreu.Persistence.Migrations
                 {
                     b.Navigation("Historials");
 
+                    b.Navigation("UsuarioRols");
+
                     b.Navigation("UsuarioUnidadOrganicas");
-                });
-
-            modelBuilder.Entity("Goreu.Entities.Rol", b =>
-                {
-                    b.Navigation("EntidadAplicacioneRoles");
-
-                    b.Navigation("MenuRoles");
                 });
 #pragma warning restore 612, 618
         }

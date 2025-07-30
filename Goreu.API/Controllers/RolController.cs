@@ -14,6 +14,7 @@
         }
 
         [HttpGet]
+        [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
         public async Task<IActionResult> Get()
         {
             var response = await service.GetAsync();
