@@ -18,24 +18,37 @@ namespace Goreu.Services.Implementation
             this.repository = repository; // ✅ Asignación correcta
         }
 
-        public async Task<BaseResponseGeneric<ICollection<EntidadResponseDto>>> GetAsync(string descripcion, PaginationDto pagination)
+        public async Task<BaseResponseGeneric<ICollection<EntidadResponseDto>>> GetAsync(int idEntidad, string descripcion, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<EntidadResponseDto>>();
             try
             {
-                var data = await repository.GetAsync(
-                    predicate: s => s.Descripcion.Contains(descripcion ?? string.Empty),
-                    orderBy: x => x.Descripcion,
-                    pagination);
+                ICollection<Entidad> data;
+
+                if (idEntidad == 1)
+                {
+                    data = await repository.GetAsync(
+                        predicate: s => s.Descripcion.Contains(descripcion ?? string.Empty),
+                        orderBy: x => x.Descripcion,
+                        pagination);
+                }
+                else
+                {
+                    data = await repository.GetAsync(
+                        predicate: s => s.Id == idEntidad && s.Descripcion.Contains(descripcion ?? string.Empty),
+                        orderBy: x => x.Descripcion,
+                        pagination);
+                }
 
                 response.Data = mapper.Map<ICollection<EntidadResponseDto>>(data);
                 response.Success = true;
             }
             catch (Exception ex)
             {
-                response.ErrorMessage = "Error al filtrar las unidades organicas por descripción.";
+                response.ErrorMessage = "Error al filtrar las unidades orgánicas por descripción.";
                 logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
+
             return response;
         }
 
