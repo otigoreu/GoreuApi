@@ -2,7 +2,7 @@
 {
     [Route("api/entidades")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class EntidadController : ControllerBase
     {
         private readonly IEntidadService service;

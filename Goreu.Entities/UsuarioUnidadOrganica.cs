@@ -12,5 +12,6 @@ namespace Goreu.Entities
         public int IdUnidadOrganica { get; set; }
         public Usuario Usuario { get; set; }
         public UnidadOrganica UnidadOrganica { get; set; }
+
     }
 }

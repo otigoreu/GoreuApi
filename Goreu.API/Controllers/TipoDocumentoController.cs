@@ -2,7 +2,7 @@
 {
     [ApiController]
     [Route("api/tipodocumentos")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TipoDocumentoController : ControllerBase
     {
         private readonly ITipoDocumentoService service;

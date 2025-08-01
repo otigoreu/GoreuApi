@@ -2,7 +2,7 @@
 {
     [ApiController]
     [Route("api/roles")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RolController : ControllerBase
     {
 

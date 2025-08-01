@@ -12,6 +12,6 @@ namespace Goreu.Entities
         public Entidad Entidad { get; set; }
         public int IdAplicacion { get; set; }
         public Aplicacion Aplicacion { get; set; }
-        public ICollection<EntidadAplicacionRol> EntidadAplicacioneRoles { get; set; }
+        public ICollection<Rol> Roles { get; set; } = default!;
     }
 }

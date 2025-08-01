@@ -41,11 +41,10 @@ namespace Goreu.Repositories.Implementation
         {
             
             var query = context.Set<AplicacionInfo>().FromSqlRaw(
-                @"select a.Id, a.Descripcion, a.Estado from Administrador.Usuario u 
-                join Administrador.UsuarioRol ur on u.Id=ur.UserId 
-                join Administrador.Rol r on r.Id=ur.RoleId join Administrador.EntidadAplicacionRol ear on ear.IdRol=r.Id
-                join Administrador.EntidadAplicacion ea on ea.id=ear.idEntidadAplicacion join Administrador.Aplicacion a on a.Id=ea.IdAplicacion 
-                where u.Id={0}",idUser);
+                @"select distinct  a.Id, a.Descripcion, a.Estado from Administrador.Usuario u 
+                join Administrador.UsuarioRol ur on u.Id=ur.UserId join Administrador.Rol r on r.Id=ur.RoleId
+                join Administrador.EntidadAplicacion ea on r.IdEntidadAplicacion=ea.Id join Administrador.Aplicacion a on a.Id=ea.IdAplicacion 
+                where u.Id={0}", idUser);
 
             return await query.ToListAsync();
         }

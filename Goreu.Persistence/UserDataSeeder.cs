@@ -31,32 +31,42 @@ namespace Goreu.Persistence
 
             var entidad1 = new Entidad
             {
+                Descripcion = "Sistema",
+                Ruc = "10101010101"
+            };
+
+            var entidad2 = new Entidad
+            {
                 Descripcion="Goreu",
                 Ruc="12345678901"
             };
 
 
             var enti1= await context.Set<Entidad>().FirstOrDefaultAsync(x => x.Descripcion== entidad1.Descripcion);
-            
-            if (enti1 is null )
+            var enti2 = await context.Set<Entidad>().FirstOrDefaultAsync(x => x.Descripcion == entidad2.Descripcion);
+
+            if (enti1 is null & enti2 is null)
             {
 
 
                 context.Set<Entidad>().Add(entidad1);
- 
+                context.Set<Entidad>().Add(entidad2);
+
                 await context.SaveChangesAsync();
             }
             #endregion
 
 
             #region Aplicacion
+            var app0 = new Aplicacion
+            {
+                Descripcion = "SISTEMA"
+            };
 
             var app1 = new Aplicacion
             {
                 Descripcion = "TRAMITE"
             };
-
-
 
             var app2 = new Aplicacion
             {
@@ -67,13 +77,14 @@ namespace Goreu.Persistence
             {
                 Descripcion = "SISMORE"
             };
+            var api0 = await context.Set<Aplicacion>().FirstOrDefaultAsync(x => x.Descripcion == app0.Descripcion);
             var api1 = await context.Set<Aplicacion>().FirstOrDefaultAsync(x => x.Descripcion == app1.Descripcion);
             var api2 = await context.Set<Aplicacion>().FirstOrDefaultAsync(x => x.Descripcion == app2.Descripcion);
             var api3 = await context.Set<Aplicacion>().FirstOrDefaultAsync(x => x.Descripcion == app3.Descripcion);
 
-            if (api1 is null & api2 is null & api3 is null)
+            if (api0 is null & api1 is null & api2 is null & api3 is null)
             {
-
+                context.Set<Aplicacion>().Add(app0);
                 context.Set<Aplicacion>().Add(app1);
                 context.Set<Aplicacion>().Add(app2);
                 context.Set<Aplicacion>().Add(app3);
@@ -114,7 +125,7 @@ namespace Goreu.Persistence
             var unidadOrganica1 = new UnidadOrganica
             {
                 Descripcion = "OTI",
-                IdEntidad = entidad1.Id,
+                IdEntidad = entidad2.Id,
                 Dependencia = null
 
 
@@ -124,7 +135,7 @@ namespace Goreu.Persistence
             var unidadOrganica2 = new UnidadOrganica
             {
                 Descripcion = "Tesoreria",
-                IdEntidad = entidad1.Id,
+                IdEntidad = entidad2.Id,
                 Dependencia = null
 
 
@@ -152,22 +163,29 @@ namespace Goreu.Persistence
             var entidadApp1 = new EntidadAplicacion
             {
 
-                IdEntidad = entidad1.Id,
-                IdAplicacion = app1.Id
+                IdEntidad = entidad1.Id,//Sistema
+                IdAplicacion = app0.Id//Sistema
 
             };
             var entidadApp2 = new EntidadAplicacion
             {
 
-                IdEntidad = entidad1.Id,
-                IdAplicacion = app2.Id
+                IdEntidad = entidad2.Id,//Goreu
+                IdAplicacion = app1.Id//Tramite
 
             };
             var entidadApp3 = new EntidadAplicacion
             {
 
-                IdEntidad = entidad1.Id,
-                IdAplicacion = app3.Id
+                IdEntidad = entidad2.Id,//Goreu
+                IdAplicacion = app2.Id//Planilla
+
+            };
+            var entidadApp4 = new EntidadAplicacion
+            {
+
+                IdEntidad = entidad2.Id,//Goreu
+                IdAplicacion = app3.Id//sismore
 
             };
             var entiApi1 = await context.Set<EntidadAplicacion>().FirstOrDefaultAsync(x => x.Estado == entidadApp1.Estado);
@@ -177,6 +195,7 @@ namespace Goreu.Persistence
                 context.Set<EntidadAplicacion>().Add(entidadApp1);
                 context.Set<EntidadAplicacion>().Add(entidadApp2);
                 context.Set<EntidadAplicacion>().Add(entidadApp3);
+                context.Set<EntidadAplicacion>().Add(entidadApp4);
 
                 await context.SaveChangesAsync();
             }
@@ -242,25 +261,47 @@ namespace Goreu.Persistence
 
             #region Roles
             //Creating roles
+
             var role1 = new Rol
             {
-                Name = Constantes.RoleAdmin,
-                NormalizedName = Constantes.RoleAdmin
+                Name = Constantes.RolSuperAdmin,
+                NormalizedName = Constantes.RolSuperAdmin,
+                IdEntidadAplicacion=entidadApp1.Id
             };
+            
             var role2 = new Rol
             {
-                Name = Constantes.RolCliente,
-                NormalizedName = Constantes.RolCliente
+                Name = Constantes.RoleAdminGoreuTramite,
+                NormalizedName = Constantes.RoleAdminGoreuTramite,
+                IdEntidadAplicacion = entidadApp2.Id
             };
-            var rol1 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name== role1.Name);
+            
+            var role3 = new Rol
+            {
+                Name = Constantes.RolAdminGoreuPlanilla,
+                NormalizedName = Constantes.RolAdminGoreuPlanilla,
+                IdEntidadAplicacion = entidadApp3.Id
+            };
+            
+            var role4 = new Rol
+            {
+                Name = Constantes.RolUsuarioGoreuTramite,
+                NormalizedName = Constantes.RolUsuarioGoreuTramite,
+                IdEntidadAplicacion = entidadApp3.Id
+            };
+
+            var rol1 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role1.Name);
             var rol2 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role2.Name);
+            var rol3 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role3.Name);
+            var rol4 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role4.Name);
 
-
-            if (rol1 is null & rol2 is null)
+            if (rol1 is null & rol2 is null & rol3 is null & rol4 is null)
             {
 
                 context.Set<Rol>().Add(role1);
                 context.Set<Rol>().Add(role2);
+                context.Set<Rol>().Add(role3);
+                context.Set<Rol>().Add(role4);
                 await context.SaveChangesAsync();
             }
             #endregion
@@ -272,7 +313,7 @@ namespace Goreu.Persistence
                 Descripcion = "Persona",
                 Icono = "users",
                 Ruta = "pages/persona",
-                IdAplicacion = app1.Id,
+                IdAplicacion = app0.Id,
                 MenuPadre = null,
 
             };
@@ -282,7 +323,7 @@ namespace Goreu.Persistence
                 Descripcion = "Rol",
                 Icono = "user-exclamation",
                 Ruta = "pages/rol",
-                IdAplicacion = app1.Id,
+                IdAplicacion = app0.Id,
                 MenuPadre = null,
 
             };
@@ -291,7 +332,7 @@ namespace Goreu.Persistence
                 Descripcion = "Usurios",
                 Icono = "user-cog",
                 Ruta = "pages/user",
-                IdAplicacion = app1.Id,
+                IdAplicacion = app0.Id,
                 MenuPadre = null,
 
             };
@@ -300,7 +341,7 @@ namespace Goreu.Persistence
                 Descripcion = "TipoDocumento",
                 Icono = "file-barcode",
                 Ruta = "pages/tipo-documento",
-                IdAplicacion = app1.Id,
+                IdAplicacion = app0.Id,
                 MenuPadre = null,
 
             };
@@ -309,7 +350,7 @@ namespace Goreu.Persistence
                 Descripcion = "Menu",
                 Icono = "menu-deep",
                 Ruta = "pages/menu",
-                IdAplicacion = app1.Id,
+                IdAplicacion = app0.Id,
                 MenuPadre = null,
 
             };
@@ -318,7 +359,7 @@ namespace Goreu.Persistence
                 Descripcion = "Aplicacion",
                 Icono = "brand-google-play",
                 Ruta = "pages/aplicacion",
-                IdAplicacion = app1.Id,
+                IdAplicacion = app0.Id,
                 MenuPadre = null,
 
             };
@@ -327,7 +368,7 @@ namespace Goreu.Persistence
                 Descripcion = "UnidadOrganica",
                 Icono = "building-factory-2",
                 Ruta = "pages/unidadOrganica",
-                IdAplicacion = app1.Id,
+                IdAplicacion = app0.Id,
                 MenuPadre = null,
 
             };
@@ -401,16 +442,27 @@ namespace Goreu.Persistence
             var menuRol7 = new MenuRol
             {
 
-                IdMenu = menu2.Id,
-                IdRol = role2.Id
+                IdMenu = menu7.Id,
+                IdRol = role1.Id
             };
             var menuRol8 = new MenuRol
             {
 
-                IdMenu = menu7.Id,
-                IdRol = role1.Id
+                IdMenu = menu1.Id,
+                IdRol = role2.Id
             };
+            var menuRol9 = new MenuRol
+            {
 
+                IdMenu = menu2.Id,
+                IdRol = role2.Id
+            };
+            var menuRol10 = new MenuRol
+            {
+
+                IdMenu = menu3.Id,
+                IdRol = role2.Id
+            };
 
             var menro1 = await context.Set<MenuRol>().FirstOrDefaultAsync(x => x.Estado == menuRol1.Estado);
 
@@ -424,70 +476,12 @@ namespace Goreu.Persistence
                 context.Set<MenuRol>().Add(menuRol6);
                 context.Set<MenuRol>().Add(menuRol7);
                 context.Set<MenuRol>().Add(menuRol8);
+                context.Set<MenuRol>().Add(menuRol9); 
+                context.Set<MenuRol>().Add(menuRol10);
                 await context.SaveChangesAsync();
             }
             #endregion
 
-            #region EntidadAplicacionRol
-
-            var entidadappRol1 = new EntidadAplicacionRol
-            {
-
-                IdEntidadAplicacion = entidadApp1.Id,
-                IdRol = role1.Id
-
-            };
-            var entidadappRol2 = new EntidadAplicacionRol
-            {
-
-                IdEntidadAplicacion = entidadApp2.Id,
-                IdRol = role1.Id
-
-            };
-            var entidadappRol3 = new EntidadAplicacionRol
-            {
-
-                IdEntidadAplicacion = entidadApp3.Id,
-                IdRol = role1.Id
-
-            };
-
-            var entidadappRol4 = new EntidadAplicacionRol
-            {
-
-                IdEntidadAplicacion = entidadApp1.Id,
-                IdRol = role2.Id
-
-            };
-            var entidadappRol5 = new EntidadAplicacionRol
-            {
-
-                IdEntidadAplicacion = entidadApp2.Id,
-                IdRol = role2.Id
-
-            };
-            //var entidadappRol6 = new EntidadAplicacionRol
-            //{
-
-            //    IdEntidadAplicacion = entidadApp3.Id,
-            //    IdRol = role2.Id
-
-            //};
-
-            var entiaprol = await context.Set<EntidadAplicacionRol>().FirstOrDefaultAsync(x => x.Estado == entidadappRol1.Estado);
-
-            if (entiaprol is null)
-            {
-                context.Set<EntidadAplicacionRol>().Add(entidadappRol1);
-                context.Set<EntidadAplicacionRol>().Add(entidadappRol2);
-                context.Set<EntidadAplicacionRol>().Add(entidadappRol3);
-                context.Set<EntidadAplicacionRol>().Add(entidadappRol4);
-                context.Set<EntidadAplicacionRol>().Add(entidadappRol5);
-
-                await context.SaveChangesAsync();
-            }
-
-            #endregion
 
             #region reniec
 
@@ -566,7 +560,11 @@ namespace Goreu.Persistence
                     if (adminUser is not null)
                     {
 
-                        await userManager.AddToRoleAsync(adminUser, Constantes.RoleAdmin);
+                        await userManager.AddToRoleAsync(adminUser, role1.Name);
+                        await userManager.AddToRoleAsync(adminUser, role2.Name);
+                        await userManager.AddToRoleAsync(adminUser, role3.Name);
+                        await userManager.AddToRoleAsync(adminUser, role4.Name);
+
 
                         var usuarioUnidadOrganica1 = new UsuarioUnidadOrganica
                         {
@@ -596,7 +594,7 @@ namespace Goreu.Persistence
                     if (customerUser is not null)
                     {
 
-                        await userManager.AddToRoleAsync(customerUser, Constantes.RolCliente);
+                        await userManager.AddToRoleAsync(customerUser, Constantes.RolUsuarioGoreuTramite);
                         var usuarioUnidadOrganica2 = new UsuarioUnidadOrganica
                         {
 
@@ -626,7 +624,7 @@ namespace Goreu.Persistence
                     if (adminUser2 is not null)
                     {
 
-                        await userManager.AddToRoleAsync(adminUser2, Constantes.RoleAdmin);
+                        await userManager.AddToRoleAsync(adminUser2, role3.Name);
                         var usuarioUnidadOrganica3 = new UsuarioUnidadOrganica
                         {
 

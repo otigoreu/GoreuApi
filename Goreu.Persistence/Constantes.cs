@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Goreu.Persistence
+﻿namespace Goreu.Persistence
 {
     public class Constantes
     {
-        public const string RoleAdmin = "Administrador";
-        public const string RolCliente = "Cliente";
+        public const string RolSuperAdmin = "SuperAdministrador";
+        public const string RoleAdminGoreuTramite = "AdministradorGoreu";
+        public const string RolUsuarioGoreuTramite = "UsuarioGoreu";
+        public const string RolAdminGoreuPlanilla = "RolAdminGoreuPlanilla";
     }
 }
