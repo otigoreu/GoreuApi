@@ -255,6 +255,7 @@ namespace Goreu.Services.Implementation
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
                 ExpirationDate = expiracion,
+                IdUsuario = user.Id,
                 Roles = roles.ToList(),
                 Entidad=entidadDto,
                 Persona = personaDto,
