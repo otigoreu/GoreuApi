@@ -110,5 +110,28 @@ namespace Goreu.Repositories.Implementation
             await context.SaveChangesAsync();
         }
 
+        public async Task ActivateSuperUser(string id)
+        {
+            var item = await context.Set<Usuario>()
+                .FirstOrDefaultAsync(x => x.Id == id); // sin AsNoTracking
+
+            if (item is null)
+                throw new InvalidOperationException($"No se encontró el registro con id {id}");
+
+            item.EsSuperUser = true;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeactivateSuperUser(string id)
+        {
+            var item = await context.Set<Usuario>()
+                .FirstOrDefaultAsync(x => x.Id == id); // sin AsNoTracking
+
+            if (item is null)
+                throw new InvalidOperationException($"No se encontró el registro con id {id}");
+
+            item.EsSuperUser = false;
+            await context.SaveChangesAsync();
+        }
     }
 }

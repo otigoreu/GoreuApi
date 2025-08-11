@@ -318,6 +318,7 @@ namespace Goreu.Persistence.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IdPersona = table.Column<int>(type: "int", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false),
+                    EsSuperUser = table.Column<bool>(type: "bit", unicode: false, nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),

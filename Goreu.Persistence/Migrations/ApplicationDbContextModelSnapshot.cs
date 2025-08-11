@@ -490,6 +490,10 @@ namespace Goreu.Persistence.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("EsSuperUser")
+                        .IsUnicode(false)
+                        .HasColumnType("bit");
+
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 

@@ -479,6 +479,8 @@ namespace Goreu.Services.Implementation
                         Id = user.Id,
                         UserName = user.UserName,
                         Email = user.Email ?? string.Empty,
+                        EsSuperUser=user.EsSuperUser,
+                        Estado=user.Estado,
                         Roles = roles.ToList()
                     });
                 }
@@ -510,19 +512,21 @@ namespace Goreu.Services.Implementation
             var response = new BaseResponseGeneric<UsuarioResponseDto>();
             try
             {
-                var person = await userManager.Users.Where(x => x.Email == email).FirstOrDefaultAsync();
-                if (person is not null)
+                var user = await userManager.Users.Where(x => x.Email == email).FirstOrDefaultAsync();
+                if (user is not null)
                 {
-                    var roles = await userManager.GetRolesAsync(person);
-                    var personDto = new UsuarioResponseDto
+                    var roles = await userManager.GetRolesAsync(user);
+                    var userDto = new UsuarioResponseDto
                     {
-                        Id = person.Id,
-                        Email = person.Email ?? string.Empty,
-                        UserName = person.UserName,
+                        Id = user.Id,
+                        Email = user.Email ?? string.Empty,
+                        UserName = user.UserName,
+                        EsSuperUser = user.EsSuperUser,
+                        Estado = user.Estado,
                         Roles = roles.ToList()
                     };
                     response.Success = true;
-                    response.Data = personDto;
+                    response.Data = userDto;
 
                 }
                 else
@@ -843,6 +847,38 @@ namespace Goreu.Services.Implementation
             catch (Exception ex)
             {
                 response.ErrorMessage = "Error al inicializar el usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
+        public async Task<BaseResponse> ActivateSuperUser(string id)
+        {
+            var response = new BaseResponse();
+            try
+            {
+                await userRepository.ActivateSuperUser(id);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al activar Super Usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
+        public async Task<BaseResponse> DeactivateSuperUser(string id)
+        {
+            var response = new BaseResponse();
+            try
+            {
+                await userRepository.DeactivateSuperUser(id);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al desactiva Super Usuario.";
                 logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
             }
             return response;

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Goreu.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250731200627_initial")]
+    [Migration("20250807203802_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -491,6 +491,10 @@ namespace Goreu.Persistence.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("EsSuperUser")
+                        .IsUnicode(false)
                         .HasColumnType("bit");
 
                     b.Property<bool>("Estado")

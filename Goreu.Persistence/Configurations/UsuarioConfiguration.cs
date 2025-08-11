@@ -11,6 +11,7 @@ namespace Goreu.Persistence.Configurations
             builder.ToTable(nameof(Usuario), "Administrador");
             builder.Property(x => x.UserName).IsUnicode(false);
             builder.Property(x => x.Email).IsUnicode(false);
+            builder.Property(x=>x.EsSuperUser).IsUnicode(false);
 
             builder.HasOne(ua => ua.Persona)
                    .WithMany(u => u.Usuarios)

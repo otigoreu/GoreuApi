@@ -7,6 +7,7 @@ namespace Goreu.Entities
         public int IdPersona { get; set; }
         public bool Estado { get; set; } = true;
         public Persona Persona {get; set;}
+        public bool EsSuperUser { get; set; } = false;
         public ICollection<UsuarioUnidadOrganica> UsuarioUnidadOrganicas { get; set; }
         //public ICollection<UsuarioRol> UsuarioRols { get; set; }
         public ICollection<Historial> Historials { get; set; } = new List<Historial>();
