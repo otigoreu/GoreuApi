@@ -1,4 +1,6 @@
-﻿namespace Goreu.API.Controllers
+﻿using System.Runtime.ConstrainedExecution;
+
+namespace Goreu.API.Controllers
 {
     [Route("api/entidades")]
     [ApiController]
@@ -67,13 +69,18 @@
             return Ok(response);
         }
 
-        [HttpGet("descripcion")]
-        public async Task<IActionResult> Get([FromQuery] int idEntidad, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
+        [HttpGet]
+        public async Task<IActionResult> Get(
+            [FromQuery] string userId,
+            [FromQuery] string? search,
+            [FromQuery] PaginationDto? pagination = null)
         {
-            var result = await service.GetAsync(idEntidad, search ?? string.Empty, pagination);
+            var result = await service.GetAsync(userId, search ?? string.Empty, pagination);
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
+
+
         [HttpGet("peruser")]
         public async Task<IActionResult> Get(string idUser)
         {

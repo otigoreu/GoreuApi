@@ -19,7 +19,7 @@ namespace Goreu.Repositories.Implementation
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ICollection<Entidad>> GetAsync<TKey>(Expression<Func<Entidad, bool>> predicate, Expression<Func<Entidad, TKey>> orderBy, PaginationDto pagination)
+        public async Task<ICollection<Entidad>> GetAsync<TKey>(Expression<Func<Entidad, bool>> predicate, Expression<Func<Entidad, TKey>> orderBy, PaginationDto? pagination = null)
         {
             var queryable = context.Set<Entidad>()
                 .Include(z => z.EntidadAplicaciones.Where(ea => ea.Estado))
@@ -27,9 +27,13 @@ namespace Goreu.Repositories.Implementation
                 .OrderBy(orderBy)
                 .AsQueryable();
 
-            await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
-            var response = await queryable.Paginate(pagination).ToListAsync();
+            if (pagination is not null)
+            {
+                await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
+                queryable = queryable.Paginate(pagination);
+            }
 
+            var response = await queryable.ToListAsync();
             return response;
         }
 

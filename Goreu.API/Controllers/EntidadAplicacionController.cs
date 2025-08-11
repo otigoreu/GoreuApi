@@ -1,4 +1,6 @@
-﻿namespace Goreu.API.Controllers
+﻿using System.Runtime.ConstrainedExecution;
+
+namespace Goreu.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -55,7 +57,6 @@
             return Ok(response);
         }
 
-
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -65,6 +66,15 @@
                 return NotFound(response); // Usar NotFound mejora semánticamente el mensaje
 
             return Ok(response);
+        }
+
+        [HttpGet("entidades/{idEntidad}/aplicaciones/activos")]
+        public async Task<IActionResult> GetAplicaciones(
+            [FromRoute] int idEntidad)
+        {
+            var result = await service.GetAplicacionesAsync(idEntidad);
+
+            return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
 
         [HttpGet("entidad/{idEntidad}/aplicaciones")]

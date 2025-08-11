@@ -89,6 +89,35 @@ namespace Goreu.Services.Implementation
             }
             return response;
         }
+
+        public async Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetUnidadOrganicasAsync(string userId)
+        {
+            var response = new BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>();
+
+            try
+            {
+                var unidadesOrganicas = await repository.GetAsync(
+                    predicate: z => z.IdUsuario == userId && z.Usuario.Estado,
+                    orderBy: z => z.UnidadOrganica.Descripcion,
+                    pagination: null // no paginar aquí
+                );
+
+                // Solo mapear la parte de UnidadOrganica
+                var data = unidadesOrganicas
+                    .Select(u => u.UnidadOrganica)
+                    .ToList();
+
+                response.Data = mapper.Map<ICollection<UnidadOrganicaResponseDto>>(data);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al listar las unidades orgánicas habilitadas para el usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
     }
 
 }

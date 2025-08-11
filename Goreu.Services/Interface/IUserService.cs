@@ -17,6 +17,7 @@ namespace Goreu.Services.Interface
         //--------------------------------------------------------------------------------------------
         Task<BaseResponseGeneric<List<UsuarioResponseDto>>> GetUsersByRole(string? role);
         Task<BaseResponseGeneric<UsuarioResponseDto>> GetUserByEmail(string email);
+        Task<BaseResponseGeneric<UsuarioResponseDto>> GetUserByIdAsync(string userId);
         //--------------------------------------------------------------------------------------------
         Task<BaseResponse> GrantUserRole(string userId, string roleName);
         Task<BaseResponse> GrantUserRoleByEmail(string email, string roleName);

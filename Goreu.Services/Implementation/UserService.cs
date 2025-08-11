@@ -546,6 +546,36 @@ namespace Goreu.Services.Implementation
 
             return response;
         }
+
+        public async Task<BaseResponseGeneric<UsuarioResponseDto>> GetUserByIdAsync(string userId)
+        {
+            var response = new BaseResponseGeneric<UsuarioResponseDto>();
+
+            try
+            {
+                var user = await userManager.Users
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+
+                if (user is not null)
+                {
+                    response.Success = true;
+                    response.Data = mapper.Map<UsuarioResponseDto>(user);
+                }
+                else
+                {
+                    response.ErrorMessage = "Ningún usuario encontrado.";
+                    logger.LogWarning(response.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrió un error";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
+
         ////---------------------------------------------------------------------------------------------
         ////---------------------------------------------------------------------------------------------
         ////Asignar Role por IdUsuario

@@ -7,7 +7,7 @@ namespace Goreu.Repositories.Interface
 {
     public interface IEntidadRepository : IRepositoryBase<Entidad>
     {
-        Task<ICollection<Entidad>> GetAsync<TKey>(Expression<Func<Entidad, bool>> predicate, Expression<Func<Entidad, TKey>> orderBy, PaginationDto pagination);
+        Task<ICollection<Entidad>> GetAsync<TKey>(Expression<Func<Entidad, bool>> predicate, Expression<Func<Entidad, TKey>> orderBy, PaginationDto? pagination = null);
 
         Task <EntidadInfo> GetAsyncPerUser(string iUser);
     }

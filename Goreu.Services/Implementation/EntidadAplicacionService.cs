@@ -5,6 +5,8 @@ using Goreu.Entities;
 using Goreu.Repositories.Interface;
 using Goreu.Services.Interface;
 using Microsoft.Extensions.Logging;
+using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Goreu.Services.Implementation
 {
@@ -12,11 +14,36 @@ namespace Goreu.Services.Implementation
     {
         private readonly IEntidadAplicacionRepository repository;
         private readonly IAplicacionService serviceAplicacion;
+        private readonly IEntidadService serviceEntidad;
 
         public EntidadAplicacionService(IEntidadAplicacionRepository repository, IAplicacionService serviceAplicacion, ILogger<EntidadAplicacionService> logger, IMapper mapper) : base(repository, logger, mapper)
         {
             this.repository = repository; // ✅ Asignación correcta
             this.serviceAplicacion = serviceAplicacion;
+        }
+
+        public async Task<BaseResponseGeneric<ICollection<AplicacionResponseDto>>> GetAplicacionesAsync(int idEntidad)
+        {
+            var response = new BaseResponseGeneric<ICollection<AplicacionResponseDto>>();
+
+            try
+            {
+                // Paso 1: Obtener todas las aplicaciones
+                var data = await repository.GetAplicacionesAsync(
+                    predicate: z => z.IdEntidad == idEntidad && z.Aplicacion.Estado,
+                    orderBy: z => z.Aplicacion.Descripcion,
+                    null);
+                
+                response.Data = mapper.Map<ICollection<AplicacionResponseDto>>(data); 
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al listar las aplicaciones para la entidad.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
         }
 
         public async Task<BaseResponseGeneric<ICollection<EntidadAplicacionResponseDto>>> GetAplicacionesConEstadoPorEntidadAsync(int idEntidad, string descripcion, PaginationDto pagination)

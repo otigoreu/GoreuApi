@@ -18,22 +18,47 @@ namespace Goreu.Repositories.Implementation
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ICollection<UsuarioUnidadOrganica>> GetAsync<TKey>(Expression<Func<UsuarioUnidadOrganica, bool>> predicate, Expression<Func<UsuarioUnidadOrganica, TKey>> orderBy, PaginationDto pagination)
+        //public async Task<ICollection<UsuarioUnidadOrganica>> GetAsync<TKey>(Expression<Func<UsuarioUnidadOrganica, bool>> predicate, Expression<Func<UsuarioUnidadOrganica, TKey>> orderBy, PaginationDto pagination)
+        //{
+        //    var queryable = context.Set<UsuarioUnidadOrganica>()
+        //        .Include(x => x.Usuario)
+        //        .Include(x => x.UnidadOrganica)
+
+        //        .Where(predicate)
+        //        .OrderBy(orderBy)
+        //        .AsNoTracking()
+        //        .AsQueryable();
+
+        //    await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
+        //    var response = await queryable.Paginate(pagination).ToListAsync();
+
+        //    return response;
+        //}
+
+        public async Task<ICollection<UsuarioUnidadOrganica>> GetAsync<TKey>(
+            Expression<Func<UsuarioUnidadOrganica, bool>> predicate,
+            Expression<Func<UsuarioUnidadOrganica, TKey>> orderBy,
+            PaginationDto? pagination = null)
         {
             var queryable = context.Set<UsuarioUnidadOrganica>()
                 .Include(x => x.Usuario)
                 .Include(x => x.UnidadOrganica)
-
                 .Where(predicate)
                 .OrderBy(orderBy)
                 .AsNoTracking()
                 .AsQueryable();
 
-            await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
-            var response = await queryable.Paginate(pagination).ToListAsync();
+            // Si hay paginación, insertar cabecera y aplicar paginación
+            if (pagination is not null)
+            {
+                await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
+                queryable = queryable.Paginate(pagination);
+            }
 
+            var response = await queryable.ToListAsync();
             return response;
         }
+
 
         public async Task<UsuarioUnidadOrganica> GetAsync(int idUnidadOrganica, string idUsuario)
         {
