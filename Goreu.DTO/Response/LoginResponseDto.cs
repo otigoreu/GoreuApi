@@ -4,6 +4,7 @@
     {
         public string Token { get; set; } = default!;
         public DateTime ExpirationDate { get; set; }
+        public String IdUsuario { get; set; }
         public List<string> Roles { get; set; } = default!;
 
         public EntidadResponseDto Entidad { get; set; } 
