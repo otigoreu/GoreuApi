@@ -124,8 +124,8 @@ namespace Goreu.Persistence
             #region UnidadOrganica
             var unidadOrganica1 = new UnidadOrganica
             {
-                Descripcion = "OTI",
-                IdEntidad = entidad2.Id,
+                Descripcion = "SISTEMA",
+                IdEntidad = entidad1.Id,
                 Dependencia = null
 
 
@@ -134,7 +134,7 @@ namespace Goreu.Persistence
 
             var unidadOrganica2 = new UnidadOrganica
             {
-                Descripcion = "Tesoreria",
+                Descripcion = "OTI",
                 IdEntidad = entidad2.Id,
                 Dependencia = null
 
@@ -264,44 +264,39 @@ namespace Goreu.Persistence
 
             var role1 = new Rol
             {
-                Name = Constantes.RolSuperAdmin,
-                NormalizedName = Constantes.RolSuperAdmin,
-                IdEntidadAplicacion=entidadApp1.Id
+                Name = Constantes.RolAdminSistema,
+                NormalizedName = Constantes.RolAdminSistema,
+                IdEntidadAplicacion =entidadApp1.Id
             };
             
             var role2 = new Rol
             {
-                Name = Constantes.RoleAdminGoreuTramite,
-                NormalizedName = Constantes.RoleAdminGoreuTramite,
+                Name = Constantes.RoleAdminEntidad,
+                NormalizedName = Constantes.RoleAdminEntidad,
                 IdEntidadAplicacion = entidadApp2.Id
             };
             
             var role3 = new Rol
             {
-                Name = Constantes.RolAdminGoreuPlanilla,
-                NormalizedName = Constantes.RolAdminGoreuPlanilla,
-                IdEntidadAplicacion = entidadApp3.Id
+                Name = Constantes.RolAdminAplicacion,
+                NormalizedName = Constantes.RolAdminAplicacion,
+                IdEntidadAplicacion = entidadApp2.Id
             };
             
-            var role4 = new Rol
-            {
-                Name = Constantes.RolUsuarioGoreuTramite,
-                NormalizedName = Constantes.RolUsuarioGoreuTramite,
-                IdEntidadAplicacion = entidadApp3.Id
-            };
+           
 
             var rol1 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role1.Name);
             var rol2 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role2.Name);
             var rol3 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role3.Name);
-            var rol4 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role4.Name);
+            
 
-            if (rol1 is null & rol2 is null & rol3 is null & rol4 is null)
+            if (rol1 is null & rol2 is null & rol3 is null )
             {
 
                 context.Set<Rol>().Add(role1);
                 context.Set<Rol>().Add(role2);
                 context.Set<Rol>().Add(role3);
-                context.Set<Rol>().Add(role4);
+                
                 await context.SaveChangesAsync();
             }
             #endregion
@@ -372,7 +367,72 @@ namespace Goreu.Persistence
                 MenuPadre = null,
 
             };
-            
+            var menu8 = new Menu
+            {
+                Descripcion = "Entidad",
+                Icono = "building-factory",
+                Ruta = "pages/entidad",
+                IdAplicacion = app0.Id,
+                MenuPadre = null,
+
+            };
+            var menu9 = new Menu
+            {
+                Descripcion = "Persona",
+                Icono = "users",
+                Ruta = "pages/persona",
+                IdAplicacion = app1.Id,
+                MenuPadre = null,
+
+            };
+            var menu10 = new Menu
+            {
+
+                Descripcion = "Rol",
+                Icono = "user-exclamation",
+                Ruta = "pages/rol",
+                IdAplicacion = app1.Id,
+                MenuPadre = null,
+
+            };
+            var menu11 = new Menu
+            {
+                Descripcion = "Usurios",
+                Icono = "user-cog",
+                Ruta = "pages/user",
+                IdAplicacion = app1.Id,
+                MenuPadre = null,
+
+            };
+            var menu12 = new Menu
+            {
+                Descripcion = "Menu",
+                Icono = "menu-deep",
+                Ruta = "pages/menu",
+                IdAplicacion = app1.Id,
+                MenuPadre = null,
+
+            };
+            var menu13 = new Menu
+            {
+                Descripcion = "Aplicacion",
+                Icono = "brand-google-play",
+                Ruta = "pages/aplicacion",
+                IdAplicacion = app1.Id,
+                MenuPadre = null,
+
+            };
+            var menu14 = new Menu
+            {
+                Descripcion = "UnidadOrganica",
+                Icono = "building-factory-2",
+                Ruta = "pages/unidadOrganica",
+                IdAplicacion = app1.Id,
+                MenuPadre = null,
+
+            };
+          
+
 
             var men1 = await context.Set<Menu>().FirstOrDefaultAsync(x => x.Descripcion == menu1.Descripcion);
             var men2 = await context.Set<Menu>().FirstOrDefaultAsync(x => x.Descripcion == menu2.Descripcion);
@@ -391,6 +451,13 @@ namespace Goreu.Persistence
                 context.Set<Menu>().Add(menu5);
                 context.Set<Menu>().Add(menu6);
                 context.Set<Menu>().Add(menu7);
+                context.Set<Menu>().Add(menu8);
+                context.Set<Menu>().Add(menu9);
+                context.Set<Menu>().Add(menu10);
+                context.Set<Menu>().Add(menu11);
+                context.Set<Menu>().Add(menu12);
+                context.Set<Menu>().Add(menu13);
+                context.Set<Menu>().Add(menu14);
                 await context.SaveChangesAsync();
             }
 
@@ -448,21 +515,60 @@ namespace Goreu.Persistence
             var menuRol8 = new MenuRol
             {
 
-                IdMenu = menu1.Id,
-                IdRol = role2.Id
+                IdMenu = menu8.Id,
+                IdRol = role1.Id
             };
+            //menu rol AdminEntidad
             var menuRol9 = new MenuRol
             {
 
-                IdMenu = menu2.Id,
+                IdMenu = menu10.Id,
                 IdRol = role2.Id
             };
             var menuRol10 = new MenuRol
             {
 
-                IdMenu = menu3.Id,
+                IdMenu = menu11.Id,
                 IdRol = role2.Id
             };
+            var menuRol11= new MenuRol
+            {
+
+                IdMenu = menu12.Id,
+                IdRol = role2.Id
+            };
+            var menuRol12 = new MenuRol
+            {
+
+                IdMenu = menu13.Id,
+                IdRol = role2.Id
+            };
+            var menuRol13 = new MenuRol
+            {
+
+                IdMenu = menu14.Id,
+                IdRol = role2.Id
+            };
+            //menu rol AdminAplicacion
+            var menuRol14 = new MenuRol
+            {
+
+                IdMenu = menu10.Id,
+                IdRol = role3.Id
+            };
+            var menuRol15 = new MenuRol
+            {
+
+                IdMenu = menu11.Id,
+                IdRol = role3.Id
+            };
+            var menuRol16 = new MenuRol
+            {
+
+                IdMenu = menu12.Id,
+                IdRol = role3.Id
+            };
+            
 
             var menro1 = await context.Set<MenuRol>().FirstOrDefaultAsync(x => x.Estado == menuRol1.Estado);
 
@@ -478,6 +584,12 @@ namespace Goreu.Persistence
                 context.Set<MenuRol>().Add(menuRol8);
                 context.Set<MenuRol>().Add(menuRol9); 
                 context.Set<MenuRol>().Add(menuRol10);
+                context.Set<MenuRol>().Add(menuRol11);
+                context.Set<MenuRol>().Add(menuRol12);
+                context.Set<MenuRol>().Add(menuRol13);
+                context.Set<MenuRol>().Add(menuRol14);
+                context.Set<MenuRol>().Add(menuRol15);
+                context.Set<MenuRol>().Add(menuRol16);
                 await context.SaveChangesAsync();
             }
             #endregion
@@ -509,9 +621,9 @@ namespace Goreu.Persistence
 
             #endregion
 
-            #region UsuarioAdmin
+            #region UsuarioAdminSistema
             //Admin user
-            var adminUser = new Usuario()
+            var adminSistema = new Usuario()
             {
                 UserName = "43056714",
                 Email = "edercin@gmail.com",
@@ -522,9 +634,9 @@ namespace Goreu.Persistence
 
             #endregion
 
-            #region UsuarioCustomer
+            #region UsuarioAdminEntidad
             //Customer user
-            var customerUser = new Usuario()
+            var adminEntidad = new Usuario()
             {
                 UserName = "46519259",
                 Email = "edercinsoft@gmail.com",
@@ -533,9 +645,9 @@ namespace Goreu.Persistence
 
             #endregion
 
-            #region UsuarioAdmin2
+            #region UsuarioAdminAplicacion
             //Admin user
-            var adminUser2 = new Usuario()
+            var adminAplicacion = new Usuario()
             {
                 UserName = "42928945",
                 Email = "pp.llerenalima@gmail.com",
@@ -548,28 +660,25 @@ namespace Goreu.Persistence
             {
 
 
-                adminUser.IdPersona = persona1.Id;
+                adminSistema.IdPersona = persona1.Id;
 
-                var result = await userManager.CreateAsync(adminUser, "Edeher*2024");
+                var result = await userManager.CreateAsync(adminSistema, "Edeher*2024");
                 if (result.Succeeded)
                 {
                     // Obtenemos el registro del usuario
-                    adminUser = await userManager.FindByEmailAsync(adminUser.Email);
+                    adminSistema = await userManager.FindByEmailAsync(adminSistema.Email);
                     // Aqui agregamos el Rol de Administrador para el usuario Admin
 
-                    if (adminUser is not null)
+                    if (adminSistema is not null)
                     {
 
-                        await userManager.AddToRoleAsync(adminUser, role1.Name);
-                        await userManager.AddToRoleAsync(adminUser, role2.Name);
-                        await userManager.AddToRoleAsync(adminUser, role3.Name);
-                        await userManager.AddToRoleAsync(adminUser, role4.Name);
+                        await userManager.AddToRoleAsync(adminSistema, role1.Name);
 
 
                         var usuarioUnidadOrganica1 = new UsuarioUnidadOrganica
                         {
 
-                            IdUsuario = adminUser.Id,
+                            IdUsuario = adminSistema.Id,
                             IdUnidadOrganica = unidadOrganica1.Id
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica1 );
@@ -583,23 +692,23 @@ namespace Goreu.Persistence
             #region UsuarioDos
             if (await userManager.FindByEmailAsync("edercinsoft@gmail.com") is null)
             {     
-                customerUser.IdPersona = persona2.Id;
+                adminEntidad.IdPersona = persona2.Id;
 
-                var result = await userManager.CreateAsync(customerUser, "Edeher*2025");
+                var result = await userManager.CreateAsync(adminEntidad, "Edeher*2025");
                 if (result.Succeeded)
                 {
                     // Obtenemos el registro del usuario
-                    customerUser = await userManager.FindByEmailAsync(customerUser.Email);
+                    adminEntidad = await userManager.FindByEmailAsync(adminEntidad.Email);
                     // Aqui agregamos el Rol de Administrador para el usuario Admin
-                    if (customerUser is not null)
+                    if (adminEntidad is not null)
                     {
 
-                        await userManager.AddToRoleAsync(customerUser, Constantes.RolUsuarioGoreuTramite);
+                        await userManager.AddToRoleAsync(adminEntidad, role2.Name);
                         var usuarioUnidadOrganica2 = new UsuarioUnidadOrganica
                         {
 
-                            IdUsuario = customerUser.Id,
-                            IdUnidadOrganica = unidadOrganica1.Id
+                            IdUsuario = adminEntidad.Id,
+                            IdUnidadOrganica = unidadOrganica2.Id
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica2);
                         await context.SaveChangesAsync();
@@ -613,23 +722,23 @@ namespace Goreu.Persistence
 
             if (await userManager.FindByEmailAsync("pp.llerenalima@gmail.com") is null)
             {
-                adminUser2.IdPersona = persona3.Id;
+                adminAplicacion.IdPersona = persona3.Id;
 
-                var result = await userManager.CreateAsync(adminUser2, "Piero*2025");
+                var result = await userManager.CreateAsync(adminAplicacion, "Piero*2025");
                 if (result.Succeeded)
                 {
                     // Obtenemos el registro del usuario
-                    adminUser2 = await userManager.FindByEmailAsync(adminUser2.Email);
+                    adminAplicacion = await userManager.FindByEmailAsync(adminAplicacion.Email);
                     // Aqui agregamos el Rol de Administrador para el usuario Admin
-                    if (adminUser2 is not null)
+                    if (adminAplicacion is not null)
                     {
 
-                        await userManager.AddToRoleAsync(adminUser2, role3.Name);
+                        await userManager.AddToRoleAsync(adminAplicacion, role3.Name);
                         var usuarioUnidadOrganica3 = new UsuarioUnidadOrganica
                         {
 
-                            IdUsuario = adminUser2.Id,
-                            IdUnidadOrganica = unidadOrganica1.Id
+                            IdUsuario = adminAplicacion.Id,
+                            IdUnidadOrganica = unidadOrganica2.Id
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica3);
                         await context.SaveChangesAsync();
