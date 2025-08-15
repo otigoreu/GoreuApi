@@ -131,27 +131,7 @@
             return Ok(response);
         }
 
-        [HttpPatch("{id}/activarsuperuser")]
-        public async Task<IActionResult> ActivateSuperUser(string id)
-        {
-            var response = await service.ActivateSuperUser(id);
-
-            if (!response.Success)
-                return NotFound(response); // o BadRequest según el motivo
-
-            return Ok(response);
-        }
-
-        [HttpPatch("{id}/desactivarsuperuser")]
-        public async Task<IActionResult> DeactivateSuperUser(string id)
-        {
-            var response = await service.DeactivateSuperUser(id);
-
-            if (!response.Success)
-                return NotFound(response); // o BadRequest según el motivo
-
-            return Ok(response);
-        }
+        
 
     }
 }

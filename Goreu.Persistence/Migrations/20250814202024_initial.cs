@@ -124,6 +124,21 @@ namespace Goreu.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TipoRol",
+                schema: "Administrador",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TipoRol", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UnidadOrganicaInfo",
                 columns: table => new
                 {
@@ -266,6 +281,7 @@ namespace Goreu.Persistence.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: true),
+                    IdTipoRol = table.Column<int>(type: "int", nullable: true),
                     IdEntidadAplicacion = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
@@ -279,6 +295,13 @@ namespace Goreu.Persistence.Migrations
                         column: x => x.IdEntidadAplicacion,
                         principalSchema: "Administrador",
                         principalTable: "EntidadAplicacion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Rol_TipoRol_IdTipoRol",
+                        column: x => x.IdTipoRol,
+                        principalSchema: "Administrador",
+                        principalTable: "TipoRol",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -318,7 +341,6 @@ namespace Goreu.Persistence.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IdPersona = table.Column<int>(type: "int", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false),
-                    EsSuperUser = table.Column<bool>(type: "bit", unicode: false, nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
@@ -637,6 +659,12 @@ namespace Goreu.Persistence.Migrations
                 column: "IdEntidadAplicacion");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Rol_IdTipoRol",
+                schema: "Administrador",
+                table: "Rol",
+                column: "IdTipoRol");
+
+            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 schema: "Administrador",
                 table: "Rol",
@@ -764,6 +792,10 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "EntidadAplicacion",
+                schema: "Administrador");
+
+            migrationBuilder.DropTable(
+                name: "TipoRol",
                 schema: "Administrador");
 
             migrationBuilder.DropTable(

@@ -30,10 +30,7 @@ namespace Goreu.Services.Interface
 
         Task<BaseResponse> FinalizeAsync(string id);
         Task<BaseResponse> InitializeAsync(string id);
-        //--------------------------------------------------------------------------------------------
-
-        Task<BaseResponse> ActivateSuperUser(string id);
-        Task<BaseResponse> DeactivateSuperUser(string id);
+       
 
     }
 }

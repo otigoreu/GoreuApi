@@ -480,7 +480,6 @@ namespace Goreu.Services.Implementation
                         Id = user.Id,
                         UserName = user.UserName,
                         Email = user.Email ?? string.Empty,
-                        EsSuperUser=user.EsSuperUser,
                         Estado=user.Estado,
                         Roles = roles.ToList()
                     });
@@ -522,7 +521,6 @@ namespace Goreu.Services.Implementation
                         Id = user.Id,
                         Email = user.Email ?? string.Empty,
                         UserName = user.UserName,
-                        EsSuperUser = user.EsSuperUser,
                         Estado = user.Estado,
                         Roles = roles.ToList()
                     };
@@ -883,37 +881,7 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
-        public async Task<BaseResponse> ActivateSuperUser(string id)
-        {
-            var response = new BaseResponse();
-            try
-            {
-                await userRepository.ActivateSuperUser(id);
-                response.Success = true;
-            }
-            catch (Exception ex)
-            {
-                response.ErrorMessage = "Error al activar Super Usuario.";
-                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
-            }
-            return response;
-        }
-
-        public async Task<BaseResponse> DeactivateSuperUser(string id)
-        {
-            var response = new BaseResponse();
-            try
-            {
-                await userRepository.DeactivateSuperUser(id);
-                response.Success = true;
-            }
-            catch (Exception ex)
-            {
-                response.ErrorMessage = "Error al desactiva Super Usuario.";
-                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
-            }
-            return response;
-        }
+       
     }
 }
 

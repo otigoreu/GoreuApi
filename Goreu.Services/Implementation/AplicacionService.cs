@@ -14,7 +14,7 @@ namespace Goreu.Services.Implementation
 
         public AplicacionService(IAplicacionRepository repository, ILogger<AplicacionService> logger, IMapper mapper) : base(repository, logger, mapper)
         {
-            this.repository = repository; // ✅ Asignación correcta
+           this.repository=repository;
         }
 
         public async Task<BaseResponseGeneric<ICollection<AplicacionResponseDto>>> GetAsync(string descripcion, PaginationDto pagination)

@@ -65,6 +65,7 @@ builder.Services.AddTransient<IUsuarioUnidadOrganicaRepository, UsuarioUnidadOrg
 builder.Services.AddTransient<ITipoDocumentoRepository, TipoDocumentoRepository>();
 builder.Services.AddTransient<ICredencialReniecRepository, CredencialReniecRepository>();
 builder.Services.AddTransient<IHistorialRepository, HistorialRepository>();
+builder.Services.AddTransient<ITipoRolRepository, TipoRolRepository>();
 
 // 8. Servicios (Lógica de Negocio)
 builder.Services.AddTransient<IAplicacionService, AplicacionService>();
@@ -80,6 +81,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ITipoDocumentoService, TipoDocumentoService>();
 builder.Services.AddTransient<ICredencialReniecService, CredencialReniecService>();
 builder.Services.AddTransient<IHistorialService, HistorialService>();
+builder.Services.AddTransient<ITipoRolService,TipoRolService>();
 
 // 9. AutoMapper
 builder.Services.AddAutoMapper(config =>
@@ -95,6 +97,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<UsuarioUnidadOrganicaProfile>();
     config.AddProfile<TipoDocumentoProfile>();
     config.AddProfile<CredencialReniecProfile>();
+    config.AddProfile<TipoRolProfile>();
 });
 
 // 10. Semilla de Datos

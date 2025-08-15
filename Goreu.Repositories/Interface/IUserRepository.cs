@@ -15,7 +15,6 @@ namespace Goreu.Repositories.Interface
 
         Task FinalizeAsync(string id);
         Task InitializeAsync(string id);
-        Task ActivateSuperUser(string id);
-        Task DeactivateSuperUser(string id);
+       
     }
 }

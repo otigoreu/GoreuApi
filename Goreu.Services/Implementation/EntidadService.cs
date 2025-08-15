@@ -41,12 +41,7 @@ namespace Goreu.Services.Implementation
 
                 Expression<Func<Entidad, bool>> predicate;
 
-                if (user.Data.EsSuperUser)
-                {
-                    predicate = s => s.Descripcion.Contains(descripcion);
-                }
-                else
-                {
+              
                     var unidadesOrganicasUsuario = await user_uoService.GetUnidadOrganicasAsync(userId);
 
                     if (unidadesOrganicasUsuario?.Data == null || !unidadesOrganicasUsuario.Data.Any())
@@ -58,7 +53,7 @@ namespace Goreu.Services.Implementation
                     var primeraUnidadOrganica = unidadesOrganicasUsuario.Data.First();
                     predicate = s => s.Id == primeraUnidadOrganica.idEntidad &&
                                      s.Descripcion.Contains(descripcion);
-                }
+                
 
                 data = await repository.GetAsync(
                     predicate: predicate,
