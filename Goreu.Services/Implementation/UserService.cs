@@ -35,6 +35,7 @@ namespace Goreu.Services.Implementation
         private readonly IEmailService emailService;
         private readonly ApplicationDbContext context;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IRolRepository rolRepository;
         private readonly IUserRepository userRepository;
         private readonly IAplicacionRepository aplicacionRepository;
         private readonly IUsuarioUnidadOrganicaRepository usuarioUnidadOrganicaRepository;
@@ -48,6 +49,7 @@ namespace Goreu.Services.Implementation
             IMapper mapper,
             ApplicationDbContext context,
             RoleManager<IdentityRole> roleManager,
+            IRolRepository rolRepository,
             IPersonaRepository personaRepository,
             IEntidadRepository entidadRepository,
             IUnidadOrganicaRepository unidadOrganicaRepository,
@@ -69,6 +71,7 @@ namespace Goreu.Services.Implementation
             this.emailService = emailService;
             this.context = context;
             this.roleManager = roleManager;
+            this.rolRepository = rolRepository;
             this.userRepository = userRepository;
             this.aplicacionRepository = aplicacionRepository;
             this.usuarioUnidadOrganicaRepository = usuarioUnidadOrganicaRepository;
@@ -233,6 +236,13 @@ namespace Goreu.Services.Implementation
             aplicacionesDto = mapper.Map<List<AplicacionResponseDto>>(dataApp);
 
 
+            ////Roles
+            var dataroles=await rolRepository.GetAsyncPerUser(user.Id);
+            var rolesResponseDto= new List<RolResponseSingleDto>();
+
+            rolesResponseDto = mapper.Map<List<RolResponseSingleDto>>(dataroles);
+
+
             ////Agregar múltiples audiencias como claims dinámicamente
             var audiences = options.Value.Jwt.Audiences;
             foreach (var audience in audiences)
@@ -256,7 +266,7 @@ namespace Goreu.Services.Implementation
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
                 ExpirationDate = expiracion,
                 IdUsuario = user.Id,
-                Roles = roles.ToList(),
+                Roles = rolesResponseDto,
                 Entidad=entidadDto,
                 Persona = personaDto,
                 UnidadOrganicas= unidadOrganicaDto,

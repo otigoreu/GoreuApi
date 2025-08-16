@@ -16,6 +16,7 @@ namespace Goreu.Services.Interface
         Task<BaseResponse> UpdateAsync(string id, RolRequestDto request);
         Task<BaseResponseGeneric<ICollection<RolResponseDto>>> GetAsync();
         Task<BaseResponseGeneric<RolResponseDto>> GetAsync(string id);
+        Task<BaseResponseGeneric<ICollection<RolResponseSingleDto>>> GetAsyncPerUser(string idUser);
         Task<BaseResponse> FinalizedAsync(string id);
         Task<BaseResponse> InitializedAsync(string id);
     }

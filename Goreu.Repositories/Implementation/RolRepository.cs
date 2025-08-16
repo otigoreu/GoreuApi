@@ -1,4 +1,6 @@
-﻿using Goreu.Entities;
+﻿using Goreu.Dto.Response;
+using Goreu.Entities;
+using Goreu.Entities.Info;
 using Goreu.Persistence;
 using Goreu.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
@@ -69,6 +71,17 @@ namespace Goreu.Repositories.Implementation
                 await context.SaveChangesAsync();
 
             }
+        }
+
+        public async Task<ICollection<RolInfo>> GetAsyncPerUser(string idUser)
+        {
+            var query = context.Set<RolInfo>().FromSqlRaw(
+                @"select r.Id, r.Name from Administrador.Rol r 
+                join Administrador.UsuarioRol ur on r.Id=ur.RoleId 
+                join Administrador.Usuario u on u.Id=ur.UserId where u.Id={0}", idUser);
+
+            return await query.ToListAsync();
+               
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Goreu.Dto.Request;
+using Goreu.Dto.Response;
 using Goreu.DtoResponse;
 using Goreu.Entities;
+using Goreu.Entities.Info;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,7 @@ namespace Goreu.Services.Profiles
         {
             CreateMap<RolRequestDto, Rol>();
             CreateMap<Rol, RolResponseDto>();
+            CreateMap<RolInfo,RolResponseSingleDto>();
 
         }
     }

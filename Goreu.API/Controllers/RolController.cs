@@ -61,5 +61,13 @@
             var response = await service.InitializedAsync(id);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
+        [HttpGet("peruser")]
+        public async Task<IActionResult> GetPerUser(string idUser)
+        {
+            var result = await service.GetAsyncPerUser(idUser);
+
+            return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
+        }
     }
 }

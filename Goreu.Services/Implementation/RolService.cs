@@ -134,6 +134,25 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
+        public async Task<BaseResponseGeneric<ICollection<RolResponseSingleDto>>> GetAsyncPerUser(string idUser)
+        {
+            var response = new BaseResponseGeneric<ICollection<RolResponseSingleDto>>();
+            try
+            {
+               var data=await repository.GetAsyncPerUser(idUser);
+                response.Data = mapper.Map<ICollection<RolResponseSingleDto>>(data);
+                response.Success = true;
+
+            }
+            catch (Exception ex)
+            {
+
+                response.ErrorMessage = "Ocurrio un error al obtener los datos";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
         public async Task<BaseResponse> InitializedAsync(string id)
         {
             var response = new BaseResponse();

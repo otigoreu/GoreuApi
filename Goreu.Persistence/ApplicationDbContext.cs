@@ -26,6 +26,8 @@ namespace Goreu.Persistence
             modelBuilder.Entity<UnidadOrganicaInfo>().HasNoKey();
             modelBuilder.Entity<EntidadInfo>().HasNoKey();
             modelBuilder.Entity<MenuInfoRol>().HasNoKey();
+            modelBuilder.Entity<RolInfo>();
+            
 
             modelBuilder.Entity<IdentityUserRole<string>>(x => x.ToTable("UsuarioRol", "Administrador"));
         }
