@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Goreu.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250814202024_initial")]
+    [Migration("20250819161309_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -231,6 +231,24 @@ namespace Goreu.Persistence.Migrations
                     b.ToTable("MenuInfoRol");
                 });
 
+            modelBuilder.Entity("Goreu.Entities.Info.RolInfo", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nivel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RolInfo");
+                });
+
             modelBuilder.Entity("Goreu.Entities.Info.UnidadOrganicaInfo", b =>
                 {
                     b.Property<string>("Descripcion")
@@ -440,27 +458,6 @@ namespace Goreu.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TipoDocumento", "Administrador");
-                });
-
-            modelBuilder.Entity("Goreu.Entities.TipoRol", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("Estado")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TipoRol", "Administrador");
                 });
 
             modelBuilder.Entity("Goreu.Entities.UnidadOrganica", b =>
@@ -750,12 +747,11 @@ namespace Goreu.Persistence.Migrations
                     b.Property<int>("IdEntidadAplicacion")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdTipoRol")
-                        .HasColumnType("int");
+                    b.Property<string>("Nivel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1)");
 
                     b.HasIndex("IdEntidadAplicacion");
-
-                    b.HasIndex("IdTipoRol");
 
                     b.HasDiscriminator().HasValue("Rol");
                 });
@@ -964,15 +960,7 @@ namespace Goreu.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Goreu.Entities.TipoRol", "TipoRol")
-                        .WithMany()
-                        .HasForeignKey("IdTipoRol")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("EntidadAplicacion");
-
-                    b.Navigation("TipoRol");
                 });
 
             modelBuilder.Entity("Goreu.Entities.Aplicacion", b =>

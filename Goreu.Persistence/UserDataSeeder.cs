@@ -259,34 +259,6 @@ namespace Goreu.Persistence
 
             #endregion
 
-            #region TipoRol
-            var tipoRol1 = new TipoRol {
-                Descripcion = "Sistema",
-
-            };
-            var tipoRol2 = new TipoRol
-            {
-                Descripcion = "Entidad",
-            };
-            var tipoRol3 = new TipoRol
-            {
-                Descripcion = "Aplicacion",
-            };
-
-            var tiporole1 = await context.Set<TipoRol>().FirstOrDefaultAsync(x => x.Descripcion == tipoRol1.Descripcion);
-            var tiporole2 = await context.Set<TipoRol>().FirstOrDefaultAsync(x => x.Descripcion == tipoRol2.Descripcion);
-            var tiporole3 = await context.Set<TipoRol>().FirstOrDefaultAsync(x => x.Descripcion == tipoRol3.Descripcion);
-
-            if (tiporole1 is null & tiporole2 is null & tiporole3 is null) { 
-
-                context.Set<TipoRol>().Add(tipoRol1);
-                context.Set<TipoRol>().Add(tipoRol2);
-                context.Set<TipoRol>().Add(tipoRol3);
-                await context.SaveChangesAsync();
-            }
-
-
-            #endregion
 
             #region Roles
             //Creating roles
@@ -295,7 +267,7 @@ namespace Goreu.Persistence
             {
                 Name = Constantes.RolAdminSistema,
                 NormalizedName = Constantes.RolAdminSistema,
-                IdTipoRol=tipoRol1.Id,
+                Nivel='1',
                 IdEntidadAplicacion =entidadApp1.Id
             };
             
@@ -303,7 +275,7 @@ namespace Goreu.Persistence
             {
                 Name = Constantes.RoleAdminEntidad,
                 NormalizedName = Constantes.RoleAdminEntidad,
-                IdTipoRol = tipoRol2.Id,
+                Nivel='2',
                 IdEntidadAplicacion = entidadApp2.Id
             };
             
@@ -311,7 +283,7 @@ namespace Goreu.Persistence
             {
                 Name = Constantes.RolAdminAplicacion,
                 NormalizedName = Constantes.RolAdminAplicacion,
-                IdTipoRol = tipoRol3.Id,
+                Nivel = '3',
                 IdEntidadAplicacion = entidadApp2.Id
             };
             

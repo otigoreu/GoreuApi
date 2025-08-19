@@ -7,11 +7,8 @@ namespace Goreu.Entities
     public class Rol : IdentityRole
     {
         public bool Estado { get; set; } = true;
-
-        public int IdTipoRol { get; set; }
-
-        [ForeignKey("IdTipoRol")]
-        public TipoRol TipoRol { get; set; }
+        
+        public char Nivel { get; set; } = default!;
         public int IdEntidadAplicacion {get;set;}
 
         [ForeignKey("IdEntidadAplicacion")]
