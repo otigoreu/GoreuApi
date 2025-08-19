@@ -141,6 +141,39 @@ namespace Goreu.Persistence
 
             };
 
+            var unidadOrganica3 = new UnidadOrganica
+            {
+                Descripcion = "Contabilidad",
+                IdEntidad = entidad2.Id,
+                Dependencia = null
+
+
+            };
+            var unidadOrganica4= new UnidadOrganica
+            {
+                Descripcion = "Tesoreria",
+                IdEntidad = entidad2.Id,
+                Dependencia = null
+
+
+            };
+            var unidadOrganica5 = new UnidadOrganica
+            {
+                Descripcion = "Logistica",
+                IdEntidad = entidad2.Id,
+                Dependencia = null
+
+
+            };
+            var unidadOrganica6= new UnidadOrganica
+            {
+                Descripcion = "RRHH",
+                IdEntidad = entidad2.Id,
+                Dependencia = null
+
+
+            };
+
             var uniOr1 = await context.Set<UnidadOrganica>().FirstOrDefaultAsync(x => x.Descripcion == unidadOrganica1.Descripcion);
             var uniOr2 = await context.Set<UnidadOrganica>().FirstOrDefaultAsync(x => x.Descripcion == unidadOrganica2.Descripcion);
             if (uniOr1 is null & uniOr2 is null)
@@ -148,8 +181,12 @@ namespace Goreu.Persistence
 
 
                 context.Set<UnidadOrganica>().Add(unidadOrganica1);
-
                 context.Set<UnidadOrganica>().Add(unidadOrganica2);
+                context.Set<UnidadOrganica>().Add(unidadOrganica3);
+                context.Set<UnidadOrganica>().Add(unidadOrganica4);
+                context.Set<UnidadOrganica>().Add(unidadOrganica5);
+                context.Set<UnidadOrganica>().Add(unidadOrganica6);
+
                 await context.SaveChangesAsync();
             }
 
@@ -242,11 +279,24 @@ namespace Goreu.Persistence
 
             };
 
+            var persona4 = new Persona
+            {
+                Nombres = "Tony",
+                ApellidoPat = "Stark",
+                ApellidoMat = "Taricuarima",
+                FechaNac = new DateTime(1985, 02, 01),
+                Email = "viernes@gmail.com",
+                IdTipoDoc = tipodoc1.Id,
+                NroDoc = "11223344",
+
+            };
+
 
             var per1 = await context.Set<Persona>().FirstOrDefaultAsync(x => x.NroDoc == persona1.NroDoc);
             var per2 = await context.Set<Persona>().FirstOrDefaultAsync(x => x.NroDoc == persona2.NroDoc);
             var per3 = await context.Set<Persona>().FirstOrDefaultAsync(x => x.NroDoc == persona3.NroDoc);
-            if (per1 is null & per2 is null& per3 is null)
+            var per4 = await context.Set<Persona>().FirstOrDefaultAsync(x => x.NroDoc == persona4.NroDoc);
+            if (per1 is null & per2 is null& per3 is null & per4 is null)
             {
 
 
@@ -254,6 +304,7 @@ namespace Goreu.Persistence
                 context.Set<Persona>().Add(persona1);
                 context.Set<Persona>().Add(persona2);
                 context.Set<Persona>().Add(persona3);
+                context.Set<Persona>().Add(persona4);
                 await context.SaveChangesAsync();
             }
 
@@ -286,21 +337,31 @@ namespace Goreu.Persistence
                 Nivel = '3',
                 IdEntidadAplicacion = entidadApp2.Id
             };
-            
-           
+            var role4 = new Rol
+            {
+                Name = "AdminAplicacionPlanilla",
+                NormalizedName = "AdminAplicacionPlanilla",
+                Nivel = '3',
+                IdEntidadAplicacion = entidadApp3.Id
+            };
+
+
+
 
             var rol1 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role1.Name);
             var rol2 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role2.Name);
             var rol3 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role3.Name);
-            
+            var rol4 = await context.Set<Rol>().FirstOrDefaultAsync(x => x.Name == role4.Name);
 
-            if (rol1 is null & rol2 is null & rol3 is null )
+
+            if (rol1 is null & rol2 is null & rol3 is null & rol4 is null)
             {
 
                 context.Set<Rol>().Add(role1);
                 context.Set<Rol>().Add(role2);
                 context.Set<Rol>().Add(role3);
-                
+                context.Set<Rol>().Add(role4);
+
                 await context.SaveChangesAsync();
             }
             #endregion
@@ -435,7 +496,16 @@ namespace Goreu.Persistence
                 MenuPadre = null,
 
             };
-          
+            var menu15 = new Menu
+            {
+                Descripcion = "Usurios",
+                Icono = "user-cog",
+                Ruta = "pages/user",
+                IdAplicacion = app2.Id,
+                MenuPadre = null,
+
+            };
+
 
 
             var men1 = await context.Set<Menu>().FirstOrDefaultAsync(x => x.Descripcion == menu1.Descripcion);
@@ -462,6 +532,7 @@ namespace Goreu.Persistence
                 context.Set<Menu>().Add(menu12);
                 context.Set<Menu>().Add(menu13);
                 context.Set<Menu>().Add(menu14);
+                context.Set<Menu>().Add(menu15);
                 await context.SaveChangesAsync();
             }
 
@@ -572,7 +643,13 @@ namespace Goreu.Persistence
                 IdMenu = menu12.Id,
                 IdRol = role3.Id
             };
-            
+            var menuRol17 = new MenuRol
+            {
+
+                IdMenu = menu15.Id,
+                IdRol = role4.Id
+            };
+
 
             var menro1 = await context.Set<MenuRol>().FirstOrDefaultAsync(x => x.Estado == menuRol1.Estado);
 
@@ -594,6 +671,7 @@ namespace Goreu.Persistence
                 context.Set<MenuRol>().Add(menuRol14);
                 context.Set<MenuRol>().Add(menuRol15);
                 context.Set<MenuRol>().Add(menuRol16);
+                context.Set<MenuRol>().Add(menuRol17);
                 await context.SaveChangesAsync();
             }
             #endregion
@@ -655,6 +733,16 @@ namespace Goreu.Persistence
             {
                 UserName = "42928945",
                 Email = "pp.llerenalima@gmail.com",
+                EmailConfirmed = true
+            };
+            #endregion
+
+            #region UsuarioAdminAplicacion2
+            //Admin user
+            var adminAplicacionPlanilla = new Usuario()
+            {
+                UserName = "11223344",
+                Email = "viernes@gmail.com",
                 EmailConfirmed = true
             };
             #endregion
@@ -743,6 +831,36 @@ namespace Goreu.Persistence
 
                             IdUsuario = adminAplicacion.Id,
                             IdUnidadOrganica = unidadOrganica2.Id
+                        };
+                        context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica3);
+                        await context.SaveChangesAsync();
+
+                    }
+                }
+            }
+
+            #endregion
+            #region UsuarioCuatro
+
+            if (await userManager.FindByEmailAsync("viernes@gmail.com") is null)
+            {
+                adminAplicacionPlanilla.IdPersona = persona4.Id;
+
+                var result = await userManager.CreateAsync(adminAplicacionPlanilla, "Piero*2025");
+                if (result.Succeeded)
+                {
+                    // Obtenemos el registro del usuario
+                    adminAplicacionPlanilla = await userManager.FindByEmailAsync(adminAplicacionPlanilla.Email);
+                    // Aqui agregamos el Rol de Administrador para el usuario Admin
+                    if (adminAplicacionPlanilla is not null)
+                    {
+
+                        await userManager.AddToRoleAsync(adminAplicacionPlanilla, role4.Name);
+                        var usuarioUnidadOrganica3 = new UsuarioUnidadOrganica
+                        {
+
+                            IdUsuario = adminAplicacionPlanilla.Id,
+                            IdUnidadOrganica = unidadOrganica6.Id
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica3);
                         await context.SaveChangesAsync();

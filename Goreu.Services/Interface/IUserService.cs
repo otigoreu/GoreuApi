@@ -7,7 +7,8 @@ namespace Goreu.Services.Interface
 {
     public interface IUserService
     {
-        Task<BaseResponseGeneric<RegisterResponseDto>> RegisterAsync(RegisterRequestDto request);
+        //Task<BaseResponseGeneric<RegisterResponseDto>> RegisterAsync(RegisterRequestDto request);
+        Task<BaseResponseGeneric<string>> RegisterAsync(RegisterRequestDto request);
         Task<BaseResponseGeneric<LoginResponseDto>> LoginAsync(LoginRequestDto request);
         //-----------------------------------------------------------------------------------------
         Task<BaseResponse> RequestTokenToResetPasswordAsync(ResetPasswordRequestDto request);

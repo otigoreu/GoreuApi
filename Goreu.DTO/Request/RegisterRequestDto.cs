@@ -23,7 +23,7 @@ namespace Goreu.Dto.Request
         public int IdUnidadOrganica{ get; set; }
 
         [Required]
-        public string Rol { get; set; }
+        public string idRol { get; set; }
 
         public string Password { get; set; } = default!;
 

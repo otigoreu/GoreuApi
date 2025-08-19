@@ -79,9 +79,9 @@ namespace Goreu.Services.Implementation
         }
         ////---------------------------------------------------------------------------------------------
         ////Registar Usuario
-        public async Task<BaseResponseGeneric<RegisterResponseDto>> RegisterAsync(RegisterRequestDto request)
+        public async Task<BaseResponseGeneric<string>> RegisterAsync(RegisterRequestDto request)
         {
-            var response = new BaseResponseGeneric<RegisterResponseDto>();
+            var response = new BaseResponseGeneric<string>();
             try
             {
                 var resultadoPersona = await personaRepository.GetAsync(request.IdPersona);
@@ -120,20 +120,23 @@ namespace Goreu.Services.Implementation
                             await usuarioUnidadOrganicaRepository.AddAsync(mapper.Map<UsuarioUnidadOrganica>(usuariounidad));
 
                             ////relacion usuario rol
-                            await userManager.AddToRoleAsync(user, request.Rol);
+                            var rolData = await rolRepository.GetAsync(request.idRol);
 
+                            await userManager.AddToRoleAsync(user, rolData.Name);
+
+                            response.Data = user.Id ;
                             ////TODO: Enviar un email
                             response.Success = true;
 
-                            var tokenResponse = await ConstruirToken(user);//returning jwt
-                            response.Data = new RegisterResponseDto
-                            {
-                                UserId = user.Id,
-                                Token = tokenResponse.Token,
-                                ExpirationDate = tokenResponse.ExpirationDate,
-                                Roles = tokenResponse.Roles
+                            //var tokenResponse = await ConstruirToken(user);//returning jwt
+                            //response.Data = new RegisterResponseDto
+                            //{
+                            //    UserId = user.Id,
+                            //    Token = tokenResponse.Token,
+                            //    ExpirationDate = tokenResponse.ExpirationDate,
+                            //    Roles = tokenResponse.Roles
 
-                            };
+                            //};
                         }
                     }
                     else
