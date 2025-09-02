@@ -1,14 +1,4 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities;
-using Goreu.Entities.Info;
-using Goreu.Persistence;
-using Goreu.Repositories.Interface;
-using Goreu.Repositories.Utils;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq.Expressions;
+﻿using System.Runtime.CompilerServices;
 
 namespace Goreu.Repositories.Implementation
 {
@@ -41,7 +31,7 @@ namespace Goreu.Repositories.Implementation
                      Id = x.Id,
                      UserName = x.UserName,
                      Email = x.Email,
-                     idPersona = x.Persona.Id,
+                     IdPersona = x.Persona.Id,
                      Nombres = x.Persona.Nombres,
                      ApellidoPat = x.Persona.ApellidoPat,
                      ApellidoMat = x.Persona.ApellidoMat
@@ -69,21 +59,86 @@ namespace Goreu.Repositories.Implementation
             return await queryable.Paginate(pagination).ToListAsync();
         }
 
-        public async Task<ICollection<Usuario>> GetAsync<TKey>(int idEntidad, Expression<Func<Usuario, bool>> predicate, Expression<Func<Usuario, TKey>> orderBy, PaginationDto pagination)
+        public async Task<ICollection<UsuarioInfo>> GetByRolAsync(int idAplicacion, string search, PaginationDto pagination)
         {
-            var queryable = context.Set<UsuarioUnidadOrganica>()
-                .Include(z => z.Usuario.Persona)
-                .Include(z => z.Usuario.UsuarioUnidadOrganicas.Where(ea => ea.Estado))
+            search = string.IsNullOrWhiteSpace(search) ? "" : search;
 
-                .Where(z => z.UnidadOrganica.IdEntidad == idEntidad)
-                .Select(z => z.Usuario) // Aquí ya no necesitas más Include
-                .Where(predicate)
-                .OrderBy(orderBy)
-                .AsNoTracking();
+            var sql = GetUsuarioInfoQuery("WHERE e.idAplicacion = {1}");
+
+            return await ExecuteUsuarioInfoQueryAsync(
+                FormattableStringFactory.Create(sql, search, idAplicacion), pagination);
+        }
+
+
+        public async Task<ICollection<UsuarioInfo>> GetByEntidadAsync(int idEntidad, string search, PaginationDto pagination)
+        {
+            search = string.IsNullOrWhiteSpace(search) ? "" : search;
+
+            var sql = GetUsuarioInfoQuery("WHERE e.idEntidad = {1}");
+
+            return await ExecuteUsuarioInfoQueryAsync(
+                FormattableStringFactory.Create(sql, search, idEntidad), pagination);
+        }
+
+        public async Task<ICollection<UsuarioInfo>> GetAllAsync(string search, PaginationDto pagination)
+        {
+            search = string.IsNullOrWhiteSpace(search) ? "" : search;
+
+            var sql = GetUsuarioInfoQuery();
+
+            return await ExecuteUsuarioInfoQueryAsync(
+                FormattableStringFactory.Create(sql, search), pagination);
+        }
+
+        private async Task<ICollection<UsuarioInfo>> ExecuteUsuarioInfoQueryAsync(
+            FormattableString sql, PaginationDto pagination)
+        {
+            var queryable = context.UsuariosInfo.FromSqlInterpolated(sql);
+
+            // acá ordenas con LINQ
+            // ✅ Usa OrderBy encadenado en vez de new { ... }
+            queryable = queryable
+                .OrderBy(u => u.ApellidoPat)
+                .ThenBy(u => u.ApellidoMat)
+                .ThenBy(u => u.Nombres);
 
             await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
 
             return await queryable.Paginate(pagination).ToListAsync();
+        }
+
+        private string GetUsuarioInfoQuery(string extraWhere = "")
+        {
+            return $@"
+                SELECT	
+                    b.Id,
+                    b.IdPersona,
+                    b.Email,
+                    b.UserName,
+                    c.Nombres,
+                    c.ApellidoPat,
+                    c.ApellidoMat,
+                    f.Descripcion AS Entidad_Descripcion,
+                    g.Descripcion AS Aplicacion_Descripcion,
+                    COUNT(h.IdUnidadOrganica) AS CantidadUnidadOrganica
+                FROM [Administrador].[UsuarioRol] a
+                INNER JOIN [Administrador].[Usuario] b ON a.UserId = b.Id
+                INNER JOIN [Administrador].[Persona] c ON b.IdPersona = c.Id
+                    AND (
+                        c.Nombres LIKE '%' + {{0}} + '%' 
+                        OR c.ApellidoPat LIKE '%' + {{0}} + '%' 
+                        OR c.ApellidoMat LIKE '%' + {{0}} + '%'
+                    )
+                INNER JOIN [Administrador].[Rol] d ON a.RoleId = d.Id
+                INNER JOIN [Administrador].[EntidadAplicacion] e ON d.IdEntidadAplicacion = e.Id
+                INNER JOIN [Administrador].[Entidad] f ON e.IdEntidad = f.Id
+                INNER JOIN [Administrador].[Aplicacion] g ON e.IdAplicacion = g.Id
+                LEFT JOIN [Administrador].[UsuarioUnidadOrganica] h ON a.UserId = h.IdUsuario
+                {extraWhere}
+                GROUP BY 
+                    b.Id, b.IdPersona, b.Email, b.UserName, 
+                    c.Nombres, c.ApellidoPat, c.ApellidoMat, 
+                    f.Descripcion, g.Descripcion";
         }
 
         public async Task FinalizeAsync(string id)
@@ -109,7 +164,5 @@ namespace Goreu.Repositories.Implementation
             item.Estado = true;
             await context.SaveChangesAsync();
         }
-
-        
     }
 }

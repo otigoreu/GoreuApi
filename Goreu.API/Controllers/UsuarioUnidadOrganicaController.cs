@@ -56,6 +56,16 @@
         }
 
 
+        /// <summary>
+        /// Obtiene la información de una Unidad Orgánica de Usuario específica por su identificador único.
+        /// </summary>
+        /// <param name="id">Identificador único de la Unidad Orgánica de Usuario.</param>
+        /// <returns>
+        /// Retorna un objeto con el resultado de la operación:
+        /// - <c>200 OK</c> con los datos de la Unidad Orgánica de Usuario si se encuentra el registro.
+        /// - <c>404 Not Found</c> si no existe una Unidad Orgánica de Usuario con el <paramref name="id"/> especificado.
+        /// - <c>500 Internal Server Error</c> si ocurre un error inesperado durante el procesamiento.
+        /// </returns>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -67,6 +77,7 @@
             return Ok(response);
         }
 
+
         [HttpGet("unidadorganica/{idUnidadorganica}/usuarios")]
         [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
         public async Task<IActionResult> GetUsuariosPaginadas(
@@ -75,6 +86,30 @@
             [FromQuery] PaginationDto pagination)
         {
             var result = await service.GetUsuariosConEstadoPorUnidadorganicaAsync(idUnidadorganica, search ?? string.Empty, pagination);
+
+            return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
+        }
+
+        /// <summary>
+        /// Devuelve una lista paginada de Unidades Orgánicas asociadas a un usuario.
+        /// </summary>
+        /// <param name="idEntidad">Identificador de la entidad a la que pertenece el usuario.</param>
+        /// <param name="search">Texto opcional para filtrar por nombre o descripción de la Unidad Orgánica.</param>
+        /// <param name="pagination">Parámetros de paginación (número de página y tamaño de página).</param>
+        /// <param name="userId">Identificador único del usuario.</param>
+        /// <returns>
+        /// Retorna un objeto con el resultado de la operación:
+        /// - <c>200 OK</c> con la lista de Unidades Orgánicas asociadas si la operación es exitosa.
+        /// - <c>500 Internal Server Error</c> si ocurre un error durante el procesamiento.
+        /// </returns>
+        [HttpGet("usuario/{userId}/unidadorganicas")]
+        public async Task<IActionResult> GetUnidadOrganicasPaginadas(
+            [FromQuery] int idEntidad,
+            [FromQuery] string? search,
+            [FromQuery] PaginationDto pagination,
+            [FromRoute] string userId)
+        {
+            var result = await service.GetUnidadOrganicasConEstado_ByUsuarioAsync(idEntidad, search ?? string.Empty, pagination, userId);
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
@@ -90,5 +125,7 @@
             return Ok(result);
             //return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
+
+        
     }
 }

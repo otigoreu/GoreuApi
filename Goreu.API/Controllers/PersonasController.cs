@@ -12,18 +12,16 @@
             this.service = service;
         }
 
-        [HttpGet("nombre")]
-        public async Task<IActionResult> Get(string? nombres, [FromQuery] PaginationDto pagination)
+        [HttpGet]
+        public async Task<IActionResult> Get(
+            [FromQuery] string? search,
+            [FromQuery] PaginationDto? pagination = null)
         {
-            var response = await service.GetAsync(nombres, pagination);
-            return response.Success ? Ok(response) : BadRequest(response);
+            var result = await service.GetAsync(search, pagination);
+
+            return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
-        [HttpGet("nombrefilter")]
-        public async Task<IActionResult> Getfilter(string? nombres, [FromQuery] PaginationDto pagination)
-        {
-            var response = await service.GetAsyncfilter(nombres, pagination);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+
         [HttpGet("email")]
         public async Task<IActionResult> Get(string? email)
         {
@@ -58,6 +56,7 @@
             var response = await service.DeleteAsync(id);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        
         [HttpDelete("finalized/{id:int}")]
         public async Task<IActionResult> PatchFinit(int id)
         {

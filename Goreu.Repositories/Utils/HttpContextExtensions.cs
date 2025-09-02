@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Goreu.Repositories.Utils
+﻿namespace Goreu.Repositories.Utils
 {
     public static class HttpContextExtensions
     {
@@ -15,8 +7,21 @@ namespace Goreu.Repositories.Utils
             if (httpContext is null)
                 throw new ArgumentNullException(nameof(httpContext));
 
-            double totalRecords = await queryable.CountAsync();
-            httpContext.Response.Headers.Add("TotalRecordsQuantity", totalRecords.ToString());
+            int totalRecords = await queryable.CountAsync();
+            httpContext.Response.Headers["totalrecordsquantity"] = totalRecords.ToString();
+
+            //httpContext.Response.Headers.Add("totalrecordsquantity", totalRecords.ToString());
         }
+
+        //public async static Task InsertarPaginacionHeader<T>(this HttpContext httpContext, IQueryable<T> queryable)
+        //{
+        //    if (httpContext is null)
+        //        throw new ArgumentNullException(nameof(httpContext));
+
+        //    int totalRecords = await queryable.CountAsync();
+
+        //    // Usa una convención estándar en APIs REST
+        //    httpContext.Response.Headers["X-Total-Count"] = totalRecords.ToString();
+        //}
     }
 }

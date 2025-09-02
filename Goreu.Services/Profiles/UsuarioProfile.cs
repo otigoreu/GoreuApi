@@ -1,19 +1,18 @@
-﻿using AutoMapper;
-using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities;
-
-namespace Goreu.Services.Profiles
+﻿namespace Goreu.Services.Profiles
 {
     public class UsuarioProfile : Profile
     {
         public UsuarioProfile()
         {
             CreateMap<Usuario, UsuarioResponseDto>()
-                .ForMember(dest => dest.descripcionPersona,
+                .ForMember(dest => dest.DescripcionPersona,
                     opt => opt.MapFrom(src => $"{src.Persona.ApellidoPat} {src.Persona.ApellidoMat}, {src.Persona.Nombres}"))
-                .ForMember(dest => dest.CantidadUnidadorganicas,
+                .ForMember(dest => dest.CantidadUnidadOrganica,
                         opt => opt.MapFrom(src => src.UsuarioUnidadOrganicas.Count));
+
+            CreateMap<UsuarioInfo, UsuarioResponseDto>()
+                .ForMember(dest => dest.DescripcionPersona,
+                    opt => opt.MapFrom(src => $"{src.ApellidoPat} {src.ApellidoMat}, {src.Nombres}"));
         }
     }
 }

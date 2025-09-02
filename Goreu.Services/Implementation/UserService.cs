@@ -1,23 +1,5 @@
-﻿using AutoMapper;
-using Azure;
-using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.DtoResponse;
-using Goreu.Entities;
-using Goreu.Entities.Info;
-using Goreu.Persistence;
-using Goreu.Repositories.Interface;
-using Goreu.Services.Interface;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security;
-using System.Security.Claims;
-using System.Text;
+﻿using Goreu.Repositories.Implementation;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Goreu.Services.Implementation
 {
@@ -39,6 +21,8 @@ namespace Goreu.Services.Implementation
         private readonly IUserRepository userRepository;
         private readonly IAplicacionRepository aplicacionRepository;
         private readonly IUsuarioUnidadOrganicaRepository usuarioUnidadOrganicaRepository;
+        private readonly IEntidadAplicacionRepository entidadAplicacionRepository;
+
 
         public UserService(
             UserManager<Usuario> userManager,
@@ -56,7 +40,8 @@ namespace Goreu.Services.Implementation
             IUserRepository userRepository,
             IEmailService emailService,
             IAplicacionRepository aplicacionRepository,
-            IUsuarioUnidadOrganicaRepository usuarioUnidadOrganicaRepository
+            IUsuarioUnidadOrganicaRepository usuarioUnidadOrganicaRepository,
+            IEntidadAplicacionRepository entidadAplicacionRepository
             )
         {
             this.userManager = userManager;
@@ -75,7 +60,7 @@ namespace Goreu.Services.Implementation
             this.userRepository = userRepository;
             this.aplicacionRepository = aplicacionRepository;
             this.usuarioUnidadOrganicaRepository = usuarioUnidadOrganicaRepository;
-            this.usuarioUnidadOrganicaRepository = usuarioUnidadOrganicaRepository;
+            this.entidadAplicacionRepository = entidadAplicacionRepository;
         }
         ////---------------------------------------------------------------------------------------------
         ////Registar Usuario
@@ -493,8 +478,7 @@ namespace Goreu.Services.Implementation
                         Id = user.Id,
                         UserName = user.UserName,
                         Email = user.Email ?? string.Empty,
-                        Estado=user.Estado,
-                        Roles = roles.ToList()
+                        Estado=user.Estado
                     });
                 }
                 if (resultado.Count > 0)
@@ -534,8 +518,7 @@ namespace Goreu.Services.Implementation
                         Id = user.Id,
                         Email = user.Email ?? string.Empty,
                         UserName = user.UserName,
-                        Estado = user.Estado,
-                        Roles = roles.ToList()
+                        Estado = user.Estado
                     };
                     response.Success = true;
                     response.Data = userDto;
@@ -793,73 +776,44 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(int? idEntidad, string? rol, string? descripcion, PaginationDto pagination)
+        public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(
+    string? rolId, string search, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<UsuarioResponseDto>>();
-            ICollection<Usuario> usuarios;
-            ICollection<UsuarioResponseDto> usuariosDto;
 
             try
             {
-                if (idEntidad == 1)
-                    usuarios = await userRepository.GetAsync(
-                        predicate: s =>
-                        s.UserName.Contains(descripcion ?? string.Empty) || (s.Persona != null && (s.Persona.ApellidoPat + " " + s.Persona.ApellidoMat + " " + s.Persona.Nombres).Contains(descripcion ?? string.Empty)),
-                        orderBy: x => x.UserName,
-                        pagination);
+                search = string.IsNullOrWhiteSpace(search) ? "" : search;
 
-                else
-                    usuarios = await userRepository.GetAsync(
-                        (int)idEntidad!,
-                        predicate: s =>
-                        s.UserName.Contains(descripcion ?? string.Empty) || (s.Persona != null && (s.Persona.ApellidoPat + " " + s.Persona.ApellidoMat + " " + s.Persona.Nombres).Contains(descripcion ?? string.Empty)),
-                        orderBy: x => x.UserName,
-                        pagination);
+                var rol = await rolRepository.GetAsync(rolId);
 
-                usuariosDto = mapper.Map<ICollection<UsuarioResponseDto>>(usuarios);
-
-                foreach (var (usuario, dto) in usuarios.Zip(usuariosDto, (usuario, dto) => (usuario, dto)))
+                EntidadAplicacion? entidadAplicacion = null;
+                if (rol.Nivel is '2' or '3') // Solo cuando hace falta
                 {
-                    var roles = await userManager.GetRolesAsync(usuario);
-                    dto.Roles = roles.ToList();
-                    dto.CantidadRols = roles.Count;
+                    entidadAplicacion = await entidadAplicacionRepository.GetAsync(rol.IdEntidadAplicacion);
                 }
 
-                response.Data = usuariosDto;
+                ICollection<UsuarioInfo> data = rol.Nivel switch
+                {
+                    '3' => await userRepository.GetByRolAsync(entidadAplicacion!.IdAplicacion, search, pagination),
+                    '2' => await userRepository.GetByEntidadAsync(entidadAplicacion!.IdEntidad, search, pagination),
+                    '1' => await userRepository.GetAllAsync(search, pagination),
+                    _ => new List<UsuarioInfo>()
+                };
+
+                response.Data = mapper.Map<ICollection<UsuarioResponseDto>>(data);
                 response.Success = true;
             }
             catch (Exception ex)
             {
-                response.ErrorMessage = "Error al filtrar los usuarios por descripción.";
-                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+                response.ErrorMessage = "Error al obtener usuarios.";
+                logger.LogError(ex,
+                    "{ErrorMessage}. Parámetros -> rolId: {RolId}, search: {Search}",
+                    response.ErrorMessage, rolId, search);
             }
 
             return response;
         }
-
-        //public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string? descripcion, PaginationDto pagination)
-        //{
-        //    var response = new BaseResponseGeneric<ICollection<UsuarioResponseDto>>();
-        //    try
-        //    {
-        //        var data = await userRepository.GetAsync(
-        //            predicate: s =>
-        //                s.UserName.Contains(descripcion ?? string.Empty) ||
-        //                (s.Persona != null &&
-        //                 (s.Persona.ApellidoPat + " " + s.Persona.ApellidoMat + " " + s.Persona.Nombres).Contains(descripcion ?? string.Empty)),
-        //            orderBy: x => x.UserName,
-        //            pagination);
-
-        //        response.Data = mapper.Map<ICollection<UsuarioResponseDto>>(data);
-        //        response.Success = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.ErrorMessage = "Error al filtrar los usuarios por descripción.";
-        //        logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
-        //    }
-        //    return response;
-        //}
 
 
         public async Task<BaseResponse> FinalizeAsync(string id)

@@ -9,6 +9,7 @@ namespace Goreu.Persistence
 {
     public class ApplicationDbContext : IdentityDbContext<Usuario>
     {
+        public DbSet<UsuarioInfo> UsuariosInfo { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -27,7 +28,13 @@ namespace Goreu.Persistence
             modelBuilder.Entity<EntidadInfo>().HasNoKey();
             modelBuilder.Entity<MenuInfoRol>().HasNoKey();
             modelBuilder.Entity<RolInfo>();
-            
+
+            // UsuarioInfo no tiene clave (Keyless)
+            modelBuilder.Entity<UsuarioInfo>()
+                .HasNoKey()
+                .ToView("UsuarioInfoView"); // nombre ficticio
+            // Esto lo marca como "query type" sin clave primaria
+
 
             modelBuilder.Entity<IdentityUserRole<string>>(x => x.ToTable("UsuarioRol", "Administrador"));
         }

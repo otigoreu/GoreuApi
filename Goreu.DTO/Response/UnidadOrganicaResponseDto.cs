@@ -16,7 +16,6 @@ namespace Goreu.Dto.Response
         public bool Estado { get; set; }
         public int CantidadUsuarios { get; set; }
 
-
         public int idEntidad { get; set; }
         public int? idDependencia { get; set; }
     }

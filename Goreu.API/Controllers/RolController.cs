@@ -5,7 +5,6 @@
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RolController : ControllerBase
     {
-
         private readonly IRolService service;
 
         public RolController(IRolService service)
@@ -14,12 +13,12 @@
         }
 
         [HttpGet]
-        [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
         public async Task<IActionResult> Get()
         {
             var response = await service.GetAsync();
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
         [HttpGet("id")]
         public async Task<IActionResult> Get(string id)
         {
@@ -47,6 +46,7 @@
             var response = await service.DeleteAsync(id);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
         [HttpDelete("finalized")]
         public async Task<IActionResult> PatchFinit(string id)
         {
@@ -54,6 +54,7 @@
             var response = await service.FinalizedAsync(id);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
         [HttpGet("initialized")]
         public async Task<IActionResult> PatchInit(string id)
         {
@@ -68,6 +69,18 @@
             var result = await service.GetAsyncPerUser(idUser);
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
+        }
+
+        [HttpGet("entidad/{idEntidad}/Aplicacion/{idAplicacion}")]
+        public async Task<IActionResult> Get(
+            [FromRoute] int idEntidad,
+            [FromRoute] int idAplicacion,
+            [FromQuery] string? search,
+            [FromQuery] PaginationDto? pagination
+            )
+        {
+            var response = await service.GetAsync(idEntidad, idAplicacion, search, pagination);
+            return response.Success ? Ok(response) : BadRequest(response);
         }
     }
 }

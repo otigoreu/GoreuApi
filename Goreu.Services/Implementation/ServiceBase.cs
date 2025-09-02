@@ -1,16 +1,4 @@
-﻿using AutoMapper;
-using Goreu.Dto.Response;
-using Goreu.Entities;
-using Goreu.Repositories.Interface;
-using Goreu.Services.Interface;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Goreu.Services.Implementation
+﻿namespace Goreu.Services.Implementation
 {
     public class ServiceBase<TEntity, TRequest, TResponse> : IServiceBase<TRequest, TResponse> where TEntity : EntityBase
     {

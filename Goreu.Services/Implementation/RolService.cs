@@ -39,6 +39,7 @@ namespace Goreu.Services.Implementation
             this.context = context;
             this.repository = repository;
         }
+
         //FUNCIONA
         public async Task<BaseResponseGeneric<string>> AddSync(RolRequestDto request)
         {
@@ -191,6 +192,26 @@ namespace Goreu.Services.Implementation
                 response.ErrorMessage = "";
                 logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
+            return response;
+        }
+
+        public async Task<BaseResponseGeneric<ICollection<RolPaginationResponseDto>>> GetAsync(int idEntidad, int idAplicacion, string? search, PaginationDto? pagination)
+        {
+            var response = new BaseResponseGeneric<ICollection<RolPaginationResponseDto>>();
+
+            try
+            {
+                var data = await repository.GetAsync(idEntidad, idAplicacion, search, pagination);
+
+                response.Data = mapper.Map<ICollection<RolPaginationResponseDto>>(data);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al listar los roles para la entidad y aplicacion.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
             return response;
         }
     }

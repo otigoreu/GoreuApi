@@ -1,12 +1,4 @@
-﻿using AutoMapper;
-using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities;
-using Goreu.Repositories.Interface;
-using Goreu.Services.Interface;
-using Microsoft.Extensions.Logging;
-
-namespace Goreu.Services.Implementation
+﻿namespace Goreu.Services.Implementation
 {
     public class AplicacionService : ServiceBase<Aplicacion, AplicacionRequestDto, AplicacionResponseDto>, IAplicacionService
     {

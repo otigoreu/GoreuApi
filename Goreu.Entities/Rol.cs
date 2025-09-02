@@ -1,8 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Goreu.Entities
+﻿namespace Goreu.Entities
 {
     public class Rol : IdentityRole
     {
@@ -14,7 +10,5 @@ namespace Goreu.Entities
         [ForeignKey("IdEntidadAplicacion")]
         public EntidadAplicacion EntidadAplicacion { get; set; }
         public ICollection<MenuRol> MenuRoles { get; set; }
-        
-
     }
 }

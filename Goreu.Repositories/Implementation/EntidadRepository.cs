@@ -1,14 +1,4 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Entities;
-using Goreu.Entities.Info;
-using Goreu.Persistence;
-using Goreu.Repositories.Interface;
-using Goreu.Repositories.Utils;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-
-namespace Goreu.Repositories.Implementation
+﻿namespace Goreu.Repositories.Implementation
 {
     public class EntidadRepository : RepositoryBase<Entidad>, IEntidadRepository
     {

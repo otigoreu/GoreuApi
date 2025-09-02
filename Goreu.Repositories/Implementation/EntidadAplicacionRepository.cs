@@ -1,13 +1,4 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Entities;
-using Goreu.Persistence;
-using Goreu.Repositories.Interface;
-using Goreu.Repositories.Utils;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-
-namespace Goreu.Repositories.Implementation
+﻿namespace Goreu.Repositories.Implementation
 {
     public class EntidadAplicacionRepository : RepositoryBase<EntidadAplicacion>, IEntidadAplicacionRepository
     {
@@ -42,7 +33,7 @@ namespace Goreu.Repositories.Implementation
         public async Task<ICollection<EntidadAplicacion>> GetAsync<TKey>(Expression<Func<EntidadAplicacion, bool>> predicate, Expression<Func<EntidadAplicacion, TKey>> orderBy, PaginationDto pagination)
         {
             var queryable = context.Set<EntidadAplicacion>()
-
+                
                 .Where(predicate)
                 .OrderBy(orderBy)
                 .AsNoTracking()

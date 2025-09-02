@@ -100,14 +100,13 @@
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
-        [HttpGet("descripcion")]
+        [HttpGet]
         [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
-        public async Task<IActionResult> Get([FromQuery] int? idEntidad, [FromQuery] string? rol, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
+        public async Task<IActionResult> Get([FromQuery] string? rolId, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
         {
-            var response = await service.GetAsync(idEntidad, rol, search, pagination);
+            var response = await service.GetAsync(rolId, search, pagination);
             return response.Success ? Ok(response) : BadRequest(response);
         }
-
 
         [HttpPatch("{id}/finalize")]
         public async Task<IActionResult> Finalize(string id)
@@ -130,8 +129,5 @@
 
             return Ok(response);
         }
-
-        
-
     }
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace Goreu.Entities
+﻿namespace Goreu.Entities
 {
     public class Usuario : IdentityUser
     {

@@ -22,54 +22,48 @@ namespace Goreu.Repositories.Implementation
         {
             this.httpContext = httpContext;
         }
-        public async Task<ICollection<PersonaInfo>> GetAsync(string? nombres, PaginationDto pagination)
+
+
+        public async Task<ICollection<Persona>> GetAsync(string? search, PaginationDto? pagination)
         {
-            //eager loading optimizado
             var queryable = context.Set<Persona>()
-                .Where(x => x.Nombres.Contains(nombres ?? string.Empty))
-                .AsNoTracking()
-                .Select(x => new PersonaInfo
-                {
-                    Id = x.Id,
-                    nombres = x.Nombres,
-                    apellidoPat = x.ApellidoPat,
-                    apellidoMat = x.ApellidoMat,
-                    fechaNac = x.FechaNac,
-                    email = x.Email,
-                    idTipoDoc = x.IdTipoDoc,
-                    nroDoc = x.NroDoc,
-                    estado = x.Estado
+                .AsNoTracking();
 
-                }).AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                queryable = queryable.Where(x =>
+                    x.Nombres.Contains(search) ||
+                    x.ApellidoPat.Contains(search) ||
+                    x.ApellidoMat.Contains(search));
+            }
 
-            await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
-            return await queryable.OrderBy(x => x.Id).Paginate(pagination).ToListAsync();
+            if (pagination is not null)
+            {
+                await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
+                queryable = queryable.Paginate(pagination);
+            }
 
+            return await queryable.ToListAsync();
         }
-        public async Task<ICollection<PersonaInfo>> GetAsyncfilter(string? nombres, PaginationDto pagination)
-        {
-            //eager loading optimizado
-            var queryable = context.Set<Persona>()
-                .Where(x => x.Nombres.Contains(nombres ?? string.Empty))
-                .IgnoreQueryFilters()
-                .AsNoTracking()
-                .Select(x => new PersonaInfo
-                {
-                    Id = x.Id,
-                    nombres = x.Nombres,
-                    apellidoPat = x.ApellidoPat,
-                    apellidoMat = x.ApellidoMat,
-                    fechaNac = x.FechaNac,
-                    email = x.Email,
-                    idTipoDoc = x.IdTipoDoc,
-                    nroDoc = x.NroDoc,
-                    estado = x.Estado
 
-                }).AsQueryable();
+        //public async Task<ICollection<Persona>> GetAsync(string? search, PaginationDto? pagination)
+        //{
+        //    //eager loading optimizado
+        //    var queryable = context.Set<Persona>()
+        //        .Where(x => $"{x.Nombres} {x.ApellidoPat} {x.ApellidoMat}".Contains(search ?? string.Empty))
+        //        .AsNoTracking()
+        //        .AsQueryable();
 
-            await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
-            return await queryable.OrderBy(x => x.Id).Paginate(pagination).ToListAsync();
-        }
+        //    if (pagination is not null)
+        //    {
+        //        await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
+        //        queryable = queryable.Paginate(pagination);
+        //    }
+
+        //    var response = await queryable.ToListAsync();
+        //    return response;
+        //}
+        
         public async Task<ICollection<PersonaInfo>> GetAsyncEmail(string? email, PaginationDto pagination)
         {
             //eager loading optimizado
@@ -94,6 +88,7 @@ namespace Goreu.Repositories.Implementation
             return await queryable.OrderBy(x => x.Id).Paginate(pagination).ToListAsync();
 
         }
+        
         public async Task FinalizedAsync(int id)
         {
             var person = await GetAsync(id);

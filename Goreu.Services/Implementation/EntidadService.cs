@@ -14,17 +14,22 @@ namespace Goreu.Services.Implementation
     {
         private readonly IEntidadRepository repository;
         private readonly IUserService userService;
+        private readonly IRolService rolService;
+        private readonly IEntidadAplicacionService entidadaplicacionService;
+
         private readonly IUsuarioUnidadOrganicaService user_uoService;
 
 
-        public EntidadService(IEntidadRepository repository, IUserService userService, IUsuarioUnidadOrganicaService user_uoService, ILogger<EntidadService> logger, IMapper mapper) : base(repository, logger, mapper)
+        public EntidadService(IEntidadRepository repository, IUserService userService, IRolService rolService, IEntidadAplicacionService entidadaplicacionService, IUsuarioUnidadOrganicaService user_uoService, ILogger<EntidadService> logger, IMapper mapper) : base(repository, logger, mapper)
         {
             this.repository = repository; // ✅ Asignación correcta
             this.userService = userService;
+            this.rolService = rolService;
+            this.entidadaplicacionService = entidadaplicacionService;
             this.user_uoService = user_uoService;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<EntidadResponseDto>>> GetAsync(string userId, string? descripcion, PaginationDto? pagination)
+        public async Task<BaseResponseGeneric<ICollection<EntidadResponseDto>>> GetAsync(string userId, string rolId, string? descripcion, PaginationDto? pagination)
         {
             var response = new BaseResponseGeneric<ICollection<EntidadResponseDto>>();
             try
@@ -39,21 +44,25 @@ namespace Goreu.Services.Implementation
                     return response;
                 }
 
+                var rol = await rolService.GetAsync(rolId);
+                if (rol?.Data == null)
+                {
+                    response.ErrorMessage = "Rol no encontrado.";
+                    return response;
+                }
+
                 Expression<Func<Entidad, bool>> predicate;
+                if (rol.Data.Nivel == '1')
+                {  // -->> Sistema
+                    predicate = s => s.Descripcion.Contains(descripcion);
+                }
+                else              
+                {
+                    var entidadaplicacion = await entidadaplicacionService.GetAsync(rol.Data.idEntidadAplicacion);
 
-              
-                    var unidadesOrganicasUsuario = await user_uoService.GetUnidadOrganicasAsync(userId);
-
-                    if (unidadesOrganicasUsuario?.Data == null || !unidadesOrganicasUsuario.Data.Any())
-                    {
-                        response.ErrorMessage = "El usuario no tiene unidades orgánicas asignadas.";
-                        return response;
-                    }
-
-                    var primeraUnidadOrganica = unidadesOrganicasUsuario.Data.First();
-                    predicate = s => s.Id == primeraUnidadOrganica.idEntidad &&
-                                     s.Descripcion.Contains(descripcion);
-                
+                    predicate = s => s.Id == entidadaplicacion.Data.IdEntidad &&
+                                 s.Descripcion.Contains(descripcion);
+                }
 
                 data = await repository.GetAsync(
                     predicate: predicate,

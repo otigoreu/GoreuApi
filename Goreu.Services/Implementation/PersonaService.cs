@@ -1,18 +1,4 @@
-﻿using AutoMapper;
-using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities;
-using Goreu.Entities.Info;
-using Goreu.Repositories.Interface;
-using Goreu.Services.Interface;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Goreu.Services.Implementation
+﻿namespace Goreu.Services.Implementation
 {
     public class PersonaService : IPersonaService
     {
@@ -26,13 +12,15 @@ namespace Goreu.Services.Implementation
             this.logger = logger;
             this.mapper = mapper;
         }
-        public async Task<BaseResponseGeneric<ICollection<PersonaInfo>>> GetAsync(string? nombres, PaginationDto pagination)
+
+        public async Task<BaseResponseGeneric<ICollection<PersonaResponseDto>>> GetAsync(string? search, PaginationDto? pagination)
         {
-            var response = new BaseResponseGeneric<ICollection<PersonaInfo>>();
+            var response = new BaseResponseGeneric<ICollection<PersonaResponseDto>>();
             try
             {
+                var data = await repository.GetAsync(search, pagination);
 
-                response.Data = await repository.GetAsync(nombres, pagination);
+                response.Data = mapper.Map<ICollection<PersonaResponseDto>>(data);
                 response.Success = true;
             }
             catch (Exception ex)
@@ -42,22 +30,7 @@ namespace Goreu.Services.Implementation
             }
             return response;
         }
-        public async Task<BaseResponseGeneric<ICollection<PersonaInfo>>> GetAsyncfilter(string? nombres, PaginationDto pagination)
-        {
-            var response = new BaseResponseGeneric<ICollection<PersonaInfo>>();
-            try
-            {
 
-                response.Data = await repository.GetAsyncfilter(nombres, pagination);
-                response.Success = true;
-            }
-            catch (Exception ex)
-            {
-                response.ErrorMessage = "Ocurrio un error al obtener los datos";
-                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
-            }
-            return response;
-        }
         public async Task<BaseResponseGeneric<PersonaResponseDto>> GetAsync(int id)
         {
             var response = new BaseResponseGeneric<PersonaResponseDto>();
@@ -75,6 +48,7 @@ namespace Goreu.Services.Implementation
             }
             return response;
         }
+
         public async Task<BaseResponseGeneric<int>> AddAsync(PersonaRequestDto request)
         {
             var response = new BaseResponseGeneric<int>();
@@ -90,6 +64,7 @@ namespace Goreu.Services.Implementation
             }
             return response;
         }
+
         public async Task<BaseResponse> UpdateAsync(int id, PersonaRequestDto request)
         {
             var response = new BaseResponse();

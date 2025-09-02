@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Goreu.DtoResponse
+﻿namespace Goreu.DtoResponse
 {
     public class RolResponseDto
     {
@@ -12,5 +6,8 @@ namespace Goreu.DtoResponse
         public string Name { get; set; } = default!;
         public string NormalizedName { get; set; } = default!;
         public bool Estado { get; set; } = default!;
+
+        public char Nivel { get; set; }
+        public int idEntidadAplicacion { get; set; }
     }
 }

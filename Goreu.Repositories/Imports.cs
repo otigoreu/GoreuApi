@@ -1,0 +1,9 @@
+﻿global using Goreu.Dto.Request;
+global using Goreu.Entities;
+global using Goreu.Entities.Info;
+global using Goreu.Persistence;
+global using Goreu.Repositories.Interface;
+global using Goreu.Repositories.Utils;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.EntityFrameworkCore;
+global using System.Linq.Expressions;

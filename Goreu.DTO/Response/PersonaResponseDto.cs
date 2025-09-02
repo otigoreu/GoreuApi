@@ -16,5 +16,6 @@ namespace Goreu.Dto.Response
         public string Email { get; set; } = default!;
         public int IdTipoDoc { get; set; }
         public string NroDoc { get; set; } = default!;
+        public string NombreCompleto { get; set; } = default!;
     }
 }

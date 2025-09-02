@@ -1,6 +1,4 @@
-﻿using System.Runtime.ConstrainedExecution;
-
-namespace Goreu.API.Controllers
+﻿namespace Goreu.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

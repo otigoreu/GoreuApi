@@ -1,4 +1,5 @@
 ﻿using Goreu.Dto.Response;
+using Goreu.DtoResponse;
 using Goreu.Entities;
 using Goreu.Entities.Info;
 using Goreu.Persistence;
@@ -24,7 +25,6 @@ namespace Goreu.Repositories.Implementation
         {
             return await context.Set<Rol>().FindAsync(id);
         }
-
 
         public async Task<string> AddAsync(Rol rol)
         {
@@ -83,5 +83,38 @@ namespace Goreu.Repositories.Implementation
             return await query.ToListAsync();
                
         }
+
+        public async Task<ICollection<Rol>> GetAsync(
+            int idEntidad,
+            int idAplicacion,
+            string? search,
+            PaginationDto? pagination)
+        {
+            var queryable = context.Set<Rol>()
+                .Include(z => z.EntidadAplicacion.Entidad)
+                .Include(z => z.EntidadAplicacion.Aplicacion)
+                .Where(z => z.EntidadAplicacion.IdEntidad == idEntidad
+                         && z.EntidadAplicacion.IdAplicacion == idAplicacion)
+                .AsNoTracking();
+
+            // Filtro de búsqueda
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                queryable = queryable.Where(z => z.Name.Contains(search));
+            }
+
+            // Ordenar
+            queryable = queryable.OrderBy(z => z.Name);
+
+            // Paginación
+            if (pagination is not null)
+            {
+                await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
+                queryable = queryable.Paginate(pagination);
+            }
+
+            return await queryable.ToListAsync();
+        }
+
     }
 }

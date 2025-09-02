@@ -1,10 +1,4 @@
-﻿using Goreu.Entities;
-using Goreu.Repositories.Interface;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-
-
-namespace Goreu.Repositories.Implementation
+﻿namespace Goreu.Repositories.Implementation
 {
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : EntityBase
     {
@@ -31,7 +25,7 @@ namespace Goreu.Repositories.Implementation
             return await context.Set<TEntity>().Where(predicate).AsNoTracking().ToListAsync();
         }
 
-        public async Task<ICollection<TEntity>> GetAsync<Tkey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, Tkey>> orderBy)
+        public virtual async Task<ICollection<TEntity>> GetAsync<Tkey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, Tkey>> orderBy)
         {
             return await context.Set<TEntity>().Where(predicate).OrderBy(orderBy).AsNoTracking().ToListAsync();
         }

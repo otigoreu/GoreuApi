@@ -21,6 +21,10 @@ namespace Goreu.Services.Profiles
             CreateMap<Rol, RolResponseDto>();
             CreateMap<RolInfo,RolResponseSingleDto>();
 
+            CreateMap<Rol, RolPaginationResponseDto>()
+                .ForMember(dest => dest.descripcionEntidad, opt => opt.MapFrom(src => src.EntidadAplicacion.Entidad.Descripcion))
+                .ForMember(dest => dest.descripcionAplicacion, opt => opt.MapFrom(src => src.EntidadAplicacion.Aplicacion.Descripcion))
+                .ForMember(dest => dest.descripcion, opt => opt.MapFrom(src => src.Name));
         }
     }
 }

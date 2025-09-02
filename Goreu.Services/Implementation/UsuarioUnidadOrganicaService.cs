@@ -1,10 +1,4 @@
-﻿using AutoMapper;
-using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities;
-using Goreu.Repositories.Interface;
-using Goreu.Services.Interface;
-using Microsoft.Extensions.Logging;
+﻿using Goreu.Entities;
 
 namespace Goreu.Services.Implementation
 {
@@ -13,12 +7,14 @@ namespace Goreu.Services.Implementation
         private readonly IUsuarioUnidadOrganicaRepository repository;
         private readonly IUserService serviceUsuario;
         private readonly IUnidadOrganicaService serviceUnidadorganica;
+        private readonly IRolRepository rolRepository;
 
-        public UsuarioUnidadOrganicaService(IUsuarioUnidadOrganicaRepository repository, IUserService serviceUsuario, IUnidadOrganicaService serviceUnidadorganica, ILogger<UsuarioUnidadOrganicaService> logger, IMapper mapper) : base(repository, logger, mapper)
+        public UsuarioUnidadOrganicaService(IUsuarioUnidadOrganicaRepository repository, IUserService serviceUsuario, IUnidadOrganicaService serviceUnidadorganica, IRolRepository rolRepository, ILogger<UsuarioUnidadOrganicaService> logger, IMapper mapper) : base(repository, logger, mapper)
         {
             this.repository = repository; // ✅ Asignación correcta
             this.serviceUsuario = serviceUsuario;
             this.serviceUnidadorganica = serviceUnidadorganica;
+            this.rolRepository = rolRepository;
         }
 
         public async Task<BaseResponseGeneric<ICollection<UsuarioUnidadOrganicaResponseDto>>> GetUsuariosConEstadoPorUnidadorganicaAsync(int idUnidadorganica, string descripcion, PaginationDto pagination)
@@ -27,10 +23,8 @@ namespace Goreu.Services.Implementation
 
             try
             {
-                var unidadorganica = await serviceUnidadorganica.GetAsync(idUnidadorganica);
-
                 // Paso 1: Obtener todas las usuarios
-                var todasLosUsuarios = await serviceUsuario.GetAsync(unidadorganica.Data.idEntidad, null, descripcion, pagination); // List<Aplicacion>
+                var todasLosUsuarios = await serviceUsuario.GetAsync("definir", descripcion, pagination);
 
                 // Paso 2: Obtener las aplicaciones asociadas a la entidad
                 var usuariosUniadorganica = await repository.GetAsync(ea => ea.IdUnidadOrganica == idUnidadorganica);
@@ -48,7 +42,7 @@ namespace Goreu.Services.Implementation
                             IdUnidadOrganica = asociada?.IdUnidadOrganica ?? 0, // Si no está asociada, IdEntidad = 0
                             IdUsuario = app.Id,
                             Numdoc = app.UserName,
-                            DescripcionPersona = app.descripcionPersona,
+                            DescripcionPersona = app.DescripcionPersona,
                             Estado = asociada?.Estado ?? false // Si no está asociada, se asume Estado = false
                         };
                     })
@@ -56,6 +50,30 @@ namespace Goreu.Services.Implementation
                     .ToList();
 
                 response.Data = resultado;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al listar los usuarios habilitadas para la unidad organica.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
+
+        public async Task<BaseResponseGeneric<ICollection<UsuarioUnidadOrganica_UnidadOrganicaResponseDto>>> GetUnidadOrganicasConEstado_ByUsuarioAsync(int idEntidad, string search, PaginationDto pagination, string userId)
+        {
+            var response = new BaseResponseGeneric<ICollection<UsuarioUnidadOrganica_UnidadOrganicaResponseDto>>();
+
+            try
+            {
+                // Paso 2: Obtener las unidadesorganicas asociadas a al usuario
+                var data = await repository.GetAsync(
+                    predicate: z => z.UnidadOrganica.IdEntidad == idEntidad && z.IdUsuario == userId,
+                    orderBy: z => z.UnidadOrganica.Descripcion,
+                    pagination);
+
+                response.Data = mapper.Map<ICollection<UsuarioUnidadOrganica_UnidadOrganicaResponseDto>>(data);
                 response.Success = true;
             }
             catch (Exception ex)

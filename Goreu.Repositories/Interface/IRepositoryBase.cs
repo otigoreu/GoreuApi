@@ -1,7 +1,4 @@
-﻿using Goreu.Entities;
-using System.Linq.Expressions;
-
-namespace Goreu.Repositories.Interface
+﻿namespace Goreu.Repositories.Interface
 {
    public interface IRepositoryBase<TEntity> where TEntity : EntityBase
     {
