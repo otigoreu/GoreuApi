@@ -776,8 +776,7 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(
-    string? rolId, string search, PaginationDto pagination)
+        public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetAsync(string? rolId, string search, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<UsuarioResponseDto>>();
 

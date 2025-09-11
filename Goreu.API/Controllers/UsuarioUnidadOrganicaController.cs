@@ -12,6 +12,25 @@
             this.service = _service;
         }
 
+
+        /// <summary>
+        /// Crea una nueva relación entre un Usuario y una Unidad Orgánica.
+        /// </summary>
+        /// <param name="dto">
+        /// Objeto de tipo <see cref="UsuarioUnidadOrganicaRequestDto"/> que contiene la información necesaria 
+        /// para registrar la relación, incluyendo:
+        /// - <c>IdUsuario</c>: Identificador único del usuario.
+        /// - <c>IdUnidadOrganica</c>: Identificador de la Unidad Orgánica.
+        /// - <c>Desde</c>: Fecha de inicio de la relación.
+        /// - <c>Hasta</c>: (Opcional) Fecha de fin de la relación.
+        /// - <c>Estado</c>: Estado actual del registro (activo por defecto).
+        /// </param>
+        /// <returns>
+        /// Retorna un objeto con el resultado de la operación:
+        /// - <c>200 OK</c> si el registro se creó exitosamente.
+        /// - <c>400 Bad Request</c> si los datos enviados no son válidos o la operación no pudo completarse.
+        /// - <c>500 Internal Server Error</c> si ocurre un error inesperado durante el procesamiento.
+        /// </returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UsuarioUnidadOrganicaRequestDto dto)
         {
@@ -19,12 +38,34 @@
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
+        /// <summary>
+        /// Actualiza una relación existente entre un Usuario y una Unidad Orgánica.
+        /// </summary>
+        /// <param name="id">
+        /// Identificador único de la relación Usuario - Unidad Orgánica que se desea actualizar.
+        /// </param>
+        /// <param name="dto">
+        /// Objeto de tipo <see cref="UsuarioUnidadOrganicaRequestDto"/> que contiene la información necesaria 
+        /// para actualizar la relación, incluyendo:
+        /// - <c>IdUsuario</c>: Identificador único del usuario.
+        /// - <c>IdUnidadOrganica</c>: Identificador de la Unidad Orgánica.
+        /// - <c>Desde</c>: Fecha de inicio de la relación.
+        /// - <c>Hasta</c>: (Opcional) Fecha de fin de la relación.
+        /// - <c>Estado</c>: Estado actual del registro (activo o inactivo).
+        /// </param>
+        /// <returns>
+        /// Retorna un objeto con el resultado de la operación:
+        /// - <c>200 OK</c> si la actualización se realizó exitosamente.
+        /// - <c>400 Bad Request</c> si los datos enviados no son válidos o la operación no pudo completarse.
+        /// - <c>500 Internal Server Error</c> si ocurre un error inesperado durante el procesamiento.
+        /// </returns>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromBody] UsuarioUnidadOrganicaRequestDto dto)
         {
             var result = await service.UpdateAsync(id, dto);
             return result.Success ? Ok(result) : BadRequest(result);
         }
+
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
@@ -33,15 +74,37 @@
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
+        /// <summary>
+        /// Finaliza una Unidad Orgánica de Usuario.
+        /// </summary>
+        /// <param name="id">Identificador único de la Unidad Orgánica de Usuario.</param>
+        /// <param name="request">Objeto con la observación de la anulación.</param>
+        /// <returns>
+        /// - <c>200 OK</c> si se finalizó correctamente.
+        /// - <c>404 Not Found</c> si no existe el registro.
+        /// - <c>400 Bad Request</c> si la operación no fue válida.
+        /// - <c>500 Internal Server Error</c> si ocurrió un error inesperado.
+        /// </returns>
         [HttpPatch("{id:int}/finalize")]
-        public async Task<IActionResult> Finalize(int id)
+        public async Task<IActionResult> Finalize(int id, [FromBody] UsuarioUnidadOrganica_FinalizeRequestDto request)
         {
-            var response = await service.FinalizeAsync(id);
+            try
+            {
+                var response = await service.FinalizeAsync(id, request.Observacion);
 
-            if (!response.Success)
-                return NotFound(response); // o BadRequest según el motivo
+                if (response == null)
+                    return NotFound($"No se encontró la Unidad Orgánica de Usuario con ID {id}.");
 
-            return Ok(response);
+                if (!response.Success)
+                    return BadRequest(response);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Message = "Ocurrió un error inesperado.", Details = ex.Message });
+            }
         }
 
         [HttpPatch("{id:int}/initialize")]

@@ -15,8 +15,6 @@ namespace Goreu.Services.Profiles
 
             CreateMap<UsuarioUnidadOrganica, UsuarioUnidadOrganica_UnidadOrganicaResponseDto>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.IdUsuario))
-                .ForMember(dest => dest.Desde, opt => opt.MapFrom(src => src.Desde == default ? DateTime.Now : src.Desde))
-                .ForMember(dest => dest.Hasta, opt => opt.MapFrom(src => src.Hasta ?? DateTime.Now))
                 .ForMember(dest => dest.Descripcion_UnidadOrganica, opt => opt.MapFrom(src => src.UnidadOrganica.Descripcion))
                 .ReverseMap();
         }

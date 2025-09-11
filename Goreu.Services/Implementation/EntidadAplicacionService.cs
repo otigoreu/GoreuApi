@@ -1,39 +1,51 @@
-﻿using AutoMapper;
-using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities;
-using Goreu.Repositories.Interface;
-using Goreu.Services.Interface;
-using Microsoft.Extensions.Logging;
-using System;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using Goreu.Repositories.Implementation;
 
 namespace Goreu.Services.Implementation
 {
     public class EntidadAplicacionService : ServiceBase<EntidadAplicacion, EntidadAplicacionRequestDto, EntidadAplicacionResponseDto>, IEntidadAplicacionService
     {
         private readonly IEntidadAplicacionRepository repository;
+        private readonly IRolRepository rolRepository;
+        private readonly IEntidadAplicacionRepository entidadAplicacionRepository;
+
         private readonly IAplicacionService serviceAplicacion;
         private readonly IEntidadService serviceEntidad;
 
-        public EntidadAplicacionService(IEntidadAplicacionRepository repository, IAplicacionService serviceAplicacion, ILogger<EntidadAplicacionService> logger, IMapper mapper) : base(repository, logger, mapper)
+        public EntidadAplicacionService(IEntidadAplicacionRepository repository, IRolRepository rolRepository, IEntidadAplicacionRepository entidadAplicacionRepository, IAplicacionService serviceAplicacion, ILogger<EntidadAplicacionService> logger, IMapper mapper) : base(repository, logger, mapper)
         {
             this.repository = repository; // ✅ Asignación correcta
+            this.rolRepository = rolRepository;
+            this.entidadAplicacionRepository = entidadAplicacionRepository;
             this.serviceAplicacion = serviceAplicacion;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<AplicacionResponseDto>>> GetAplicacionesAsync(int idEntidad)
+        public async Task<BaseResponseGeneric<ICollection<AplicacionResponseDto>>> GetAplicacionesAsync(int idEntidad, string rolId)
         {
             var response = new BaseResponseGeneric<ICollection<AplicacionResponseDto>>();
 
             try
             {
-                // Paso 1: Obtener todas las aplicaciones
-                var data = await repository.GetAplicacionesAsync(
-                    predicate: z => z.IdEntidad == idEntidad && z.Aplicacion.Estado,
-                    orderBy: z => z.Aplicacion.Descripcion,
-                    null);
-                
+                var rol = await rolRepository.GetAsync(rolId);
+                var entidadAplicacion = await entidadAplicacionRepository.GetAsync(rol.IdEntidadAplicacion);
+
+                ICollection<Aplicacion> data = rol.Nivel switch
+                {
+                    '3' => await repository.GetAplicacionesAsync(
+                        predicate: z => z.IdAplicacion == entidadAplicacion.IdAplicacion && z.Aplicacion.Estado,
+                        
+                        orderBy: z => z.Aplicacion.Descripcion,
+                        search: string.Empty,
+                        pagination: null
+                    ),
+                    '2' or '1' => await repository.GetAplicacionesAsync(
+                        predicate: z => z.IdEntidad == idEntidad && z.Aplicacion.Estado,
+                        orderBy: z => z.Aplicacion.Descripcion,
+                        search: string.Empty,
+                        pagination: null
+                    ),
+                    _ => new List<Aplicacion>()
+                };
+
                 response.Data = mapper.Map<ICollection<AplicacionResponseDto>>(data); 
                 response.Success = true;
             }

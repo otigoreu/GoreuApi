@@ -1,8 +1,4 @@
-﻿using Goreu.Dto.Response;
-using Goreu.Entities;
-using Goreu.Entities.Info;
-
-namespace Goreu.Repositories.Interface
+﻿namespace Goreu.Repositories.Interface
 {
     public interface IRolRepository
     {
@@ -17,6 +13,7 @@ namespace Goreu.Repositories.Interface
             int idEntidad,
             int idAplicacion,
             string? search,
-            PaginationDto? pagination);
+            PaginationDto? pagination,
+            string? rolId = null);
     }
 }

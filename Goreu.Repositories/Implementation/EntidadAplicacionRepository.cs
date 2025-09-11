@@ -1,4 +1,8 @@
-﻿namespace Goreu.Repositories.Implementation
+﻿using Goreu.Entities;
+using System;
+using System.Runtime.CompilerServices;
+
+namespace Goreu.Repositories.Implementation
 {
     public class EntidadAplicacionRepository : RepositoryBase<EntidadAplicacion>, IEntidadAplicacionRepository
     {
@@ -12,11 +16,15 @@
         public async Task<ICollection<Aplicacion>> GetAplicacionesAsync<TKey>(
             Expression<Func<EntidadAplicacion, bool>> predicate,
             Expression<Func<EntidadAplicacion, TKey>> orderBy,
+            string search,
             PaginationDto? pagination)
         {
+            search = string.IsNullOrWhiteSpace(search) ? "" : search;
+
             var queryable = context.Set<EntidadAplicacion>()
                 .Where(predicate)
-                .OrderBy(orderBy)
+                .Where(ea => string.IsNullOrEmpty(search) || ea.Aplicacion.Descripcion.Contains(search))
+                .OrderBy(ea => ea.Aplicacion.Descripcion)
                 .Select(ea => ea.Aplicacion)
                 .AsNoTracking();
 
@@ -29,11 +37,12 @@
             return await queryable.ToListAsync().ConfigureAwait(false);
         }
 
-
-        public async Task<ICollection<EntidadAplicacion>> GetAsync<TKey>(Expression<Func<EntidadAplicacion, bool>> predicate, Expression<Func<EntidadAplicacion, TKey>> orderBy, PaginationDto pagination)
+        public async Task<ICollection<EntidadAplicacion>> GetAsync<TKey>(
+            Expression<Func<EntidadAplicacion, bool>> predicate, 
+            Expression<Func<EntidadAplicacion, TKey>> orderBy, 
+            PaginationDto pagination)
         {
             var queryable = context.Set<EntidadAplicacion>()
-                
                 .Where(predicate)
                 .OrderBy(orderBy)
                 .AsNoTracking()

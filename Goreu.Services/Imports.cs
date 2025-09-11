@@ -1,6 +1,7 @@
 ﻿global using AutoMapper;
 global using Goreu.Dto.Request;
 global using Goreu.Dto.Response;
+global using Goreu.DtoResponse;
 global using Goreu.Entities;
 global using Goreu.Entities.Info;
 global using Goreu.Persistence;

@@ -1,6 +1,4 @@
-﻿using Goreu.Entities;
-
-namespace Goreu.Services.Implementation
+﻿namespace Goreu.Services.Implementation
 {
     public class UsuarioUnidadOrganicaService : ServiceBase<UsuarioUnidadOrganica, UsuarioUnidadOrganicaRequestDto, UsuarioUnidadOrganicaResponseDto>, IUsuarioUnidadOrganicaService
     {
@@ -131,6 +129,25 @@ namespace Goreu.Services.Implementation
             catch (Exception ex)
             {
                 response.ErrorMessage = "Error al listar las unidades orgánicas habilitadas para el usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
+
+        public async Task<BaseResponse> FinalizeAsync(int id, string observacionAnulacion)
+        {
+            var response = new BaseResponse();
+
+            try
+            {
+                await repository.FinalizeAsync(id, observacionAnulacion);
+
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = $"Error al finalizar la Unidad Orgánica de Usuario con ID {id}.";
                 logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
 

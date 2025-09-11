@@ -66,12 +66,21 @@
             return Ok(response);
         }
 
+        /// <summary>
+        /// Obtiene las aplicaciones activas asociadas a una entidad específica,
+        /// considerando el rol del usuario.
+        /// </summary>
+        /// <param name="idEntidad">Identificador único de la entidad.</param>
+        /// <param name="rolId">Identificador del rol asociado al usuario.</param>
+        /// <returns>
+        /// Retorna un resultado con el estado de la operación:
+        /// - <c>200 OK</c> con la lista de aplicaciones activas si la operación es exitosa.
+        /// - <c>500 Internal Server Error</c> si ocurre un error inesperado durante el procesamiento.
+        /// </returns>
         [HttpGet("entidades/{idEntidad}/aplicaciones/activos")]
-        public async Task<IActionResult> GetAplicaciones(
-            [FromRoute] int idEntidad)
+        public async Task<IActionResult> GetAplicaciones([FromRoute] int idEntidad, [FromQuery] string rolId)
         {
-            var result = await service.GetAplicacionesAsync(idEntidad);
-
+            var result = await service.GetAplicacionesAsync(idEntidad, rolId);
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
 

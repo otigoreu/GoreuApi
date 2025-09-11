@@ -69,7 +69,6 @@ namespace Goreu.Repositories.Implementation
                 FormattableStringFactory.Create(sql, search, idAplicacion), pagination);
         }
 
-
         public async Task<ICollection<UsuarioInfo>> GetByEntidadAsync(int idEntidad, string search, PaginationDto pagination)
         {
             search = string.IsNullOrWhiteSpace(search) ? "" : search;

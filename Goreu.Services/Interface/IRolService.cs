@@ -1,11 +1,4 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.DtoResponse;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Goreu.Services.Interface
 {
@@ -19,6 +12,6 @@ namespace Goreu.Services.Interface
         Task<BaseResponseGeneric<ICollection<RolResponseSingleDto>>> GetAsyncPerUser(string idUser);
         Task<BaseResponse> FinalizedAsync(string id);
         Task<BaseResponse> InitializedAsync(string id);
-        Task<BaseResponseGeneric<ICollection<RolPaginationResponseDto>>> GetAsync(int idEntidad, int idAplicacion, string? search, PaginationDto? pagination);
+        Task<BaseResponseGeneric<ICollection<RolPaginationResponseDto>>> GetAsync(int idEntidad, int idAplicacion, string? search, PaginationDto? pagination, string rolId);
     }
 }

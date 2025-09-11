@@ -4,6 +4,7 @@ using Goreu.Dto.Response;
 using Goreu.DtoResponse;
 using Goreu.Entities;
 using Goreu.Persistence;
+using Goreu.Repositories.Implementation;
 using Goreu.Repositories.Interface;
 using Goreu.Services.Interface;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,7 @@ namespace Goreu.Services.Implementation
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
         private readonly IRolRepository repository;
+        private readonly IEntidadAplicacionRepository entidadAplicacionRepository;
 
         public RolService(
             RoleManager<IdentityRole> rolManager,
@@ -28,7 +30,8 @@ namespace Goreu.Services.Implementation
             IConfiguration configuration,
             IMapper mapper,
             ApplicationDbContext context,
-            IRolRepository repository
+            IRolRepository repository,
+            IEntidadAplicacionRepository entidadAplicacionRepository
             )
         {
 
@@ -38,6 +41,7 @@ namespace Goreu.Services.Implementation
             this.mapper = mapper;
             this.context = context;
             this.repository = repository;
+            this.entidadAplicacionRepository = entidadAplicacionRepository;
         }
 
         //FUNCIONA
@@ -195,13 +199,26 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<RolPaginationResponseDto>>> GetAsync(int idEntidad, int idAplicacion, string? search, PaginationDto? pagination)
+        public async Task<BaseResponseGeneric<ICollection<RolPaginationResponseDto>>> GetAsync(
+            int idEntidad,
+            int idAplicacion,
+            string? search,
+            PaginationDto? pagination,
+            string? rolId)
         {
             var response = new BaseResponseGeneric<ICollection<RolPaginationResponseDto>>();
 
             try
             {
-                var data = await repository.GetAsync(idEntidad, idAplicacion, search, pagination);
+                var rol = await repository.GetAsync(rolId);
+                var entidadAplicacion = await entidadAplicacionRepository.GetAsync(rol.IdEntidadAplicacion);
+
+                ICollection<Rol> data = rol.Nivel switch
+                {
+                    '3' => await repository.GetAsync(idEntidad, idAplicacion, search, pagination, rolId),
+                    '2' or '1' => await repository.GetAsync(idEntidad, idAplicacion, search, pagination, rolId: null),
+                    _ => new List<Rol>()
+                };
 
                 response.Data = mapper.Map<ICollection<RolPaginationResponseDto>>(data);
                 response.Success = true;
@@ -214,5 +231,6 @@ namespace Goreu.Services.Implementation
 
             return response;
         }
+
     }
 }

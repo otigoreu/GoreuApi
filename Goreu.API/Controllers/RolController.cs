@@ -76,10 +76,11 @@
             [FromRoute] int idEntidad,
             [FromRoute] int idAplicacion,
             [FromQuery] string? search,
-            [FromQuery] PaginationDto? pagination
+            [FromQuery] PaginationDto? pagination,
+            [FromQuery] string? rolId
             )
         {
-            var response = await service.GetAsync(idEntidad, idAplicacion, search, pagination);
+            var response = await service.GetAsync(idEntidad, idAplicacion, search, pagination, rolId);
             return response.Success ? Ok(response) : BadRequest(response);
         }
     }

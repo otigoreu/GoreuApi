@@ -1,13 +1,4 @@
-﻿using Goreu.Dto.Response;
-using Goreu.DtoResponse;
-using Goreu.Entities;
-using Goreu.Entities.Info;
-using Goreu.Persistence;
-using Goreu.Repositories.Interface;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-
-namespace Goreu.Repositories.Implementation
+﻿namespace Goreu.Repositories.Implementation
 {
     public class RolRepository : IRolRepository
     {
@@ -81,14 +72,14 @@ namespace Goreu.Repositories.Implementation
                 join Administrador.Usuario u on u.Id=ur.UserId where u.Id={0}", idUser);
 
             return await query.ToListAsync();
-               
         }
 
         public async Task<ICollection<Rol>> GetAsync(
             int idEntidad,
             int idAplicacion,
             string? search,
-            PaginationDto? pagination)
+            PaginationDto? pagination,
+            string? rolId)
         {
             var queryable = context.Set<Rol>()
                 .Include(z => z.EntidadAplicacion.Entidad)
@@ -97,13 +88,20 @@ namespace Goreu.Repositories.Implementation
                          && z.EntidadAplicacion.IdAplicacion == idAplicacion)
                 .AsNoTracking();
 
+            // Filtro por rol específico
+            if (!string.IsNullOrWhiteSpace(rolId))
+            {
+                queryable = queryable.Where(z => z.Id == rolId);
+            }
+
             // Filtro de búsqueda
             if (!string.IsNullOrWhiteSpace(search))
             {
-                queryable = queryable.Where(z => z.Name.Contains(search));
+                var normalizedSearch = search.Trim().ToLower();
+                queryable = queryable.Where(z => z.Name.ToLower().Contains(normalizedSearch));
             }
 
-            // Ordenar
+            // Ordenar alfabéticamente por nombre
             queryable = queryable.OrderBy(z => z.Name);
 
             // Paginación
@@ -113,8 +111,44 @@ namespace Goreu.Repositories.Implementation
                 queryable = queryable.Paginate(pagination);
             }
 
-            return await queryable.ToListAsync();
+            return await queryable.ToListAsync().ConfigureAwait(false);
         }
 
+
+        //public async Task<ICollection<Rol>> GetAsync(
+        //    int idEntidad,
+        //    int idAplicacion,
+        //    string? search,
+        //    PaginationDto? pagination,
+        //    string rolId)
+        //{
+        //    var queryable = context.Set<Rol>()
+        //        .Include(z => z.EntidadAplicacion.Entidad)
+        //        .Include(z => z.EntidadAplicacion.Aplicacion)
+        //        .Where(z => z.EntidadAplicacion.IdEntidad == idEntidad
+        //                 && z.EntidadAplicacion.IdAplicacion == idAplicacion)
+        //        .AsNoTracking();
+
+        //    if (rolId != null)
+        //        queryable = queryable.Where(z => z.Id == rolId);
+
+        //    // Filtro de búsqueda
+        //    if (!string.IsNullOrWhiteSpace(search))
+        //    {
+        //        queryable = queryable.Where(z => z.Name.Contains(search));
+        //    }
+
+        //    // Ordenar
+        //    queryable = queryable.OrderBy(z => z.Name);
+
+        //    // Paginación
+        //    if (pagination is not null)
+        //    {
+        //        await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
+        //        queryable = queryable.Paginate(pagination);
+        //    }
+
+        //    return await queryable.ToListAsync();
+        //}
     }
 }

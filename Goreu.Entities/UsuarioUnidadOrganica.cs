@@ -8,7 +8,8 @@
         // Control de vigencia
         public DateTime Desde { get; set; }
         public DateTime? Hasta { get; set; } // Nullable si todavía tiene acceso
-        public bool Estado { get; set; }
+        public DateTime? FechaAnulacion { get; set; }
+        public string ObservacionAnulacion { get; set; }
 
         public Usuario Usuario { get; set; }
         public UnidadOrganica UnidadOrganica { get; set; }

@@ -14,6 +14,7 @@ namespace Goreu.Repositories.Interface
         Task<ICollection<Aplicacion>> GetAplicacionesAsync<TKey>(
             Expression<Func<EntidadAplicacion, bool>> predicate,
             Expression<Func<EntidadAplicacion, TKey>> orderBy,
+            string search,
             PaginationDto? pagination);
         Task<ICollection<EntidadAplicacion>> GetAsync<TKey>(
             Expression<Func<EntidadAplicacion, bool>> predicate, 

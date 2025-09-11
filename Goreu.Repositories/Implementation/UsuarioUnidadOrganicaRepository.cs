@@ -35,6 +35,21 @@ namespace Goreu.Repositories.Implementation
         //    return response;
         //}
 
+        public async Task FinalizeAsync(int id, string observacionAnulacion)
+        {
+            var item = await context.Set<UsuarioUnidadOrganica>()
+                .FirstOrDefaultAsync(x => x.Id == id); // sin AsNoTracking
+
+            if (item is null)
+                throw new InvalidOperationException($"No se encontró el registro con id {id}");
+
+            item.Estado = false;
+            item.ObservacionAnulacion = observacionAnulacion;
+            item.FechaAnulacion = DateTime.Now;
+
+            await context.SaveChangesAsync();
+        }
+
         public async Task<ICollection<UsuarioUnidadOrganica>> GetAsync<TKey>(
             Expression<Func<UsuarioUnidadOrganica, bool>> predicate,
             Expression<Func<UsuarioUnidadOrganica, TKey>> orderBy,
