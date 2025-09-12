@@ -24,24 +24,43 @@ builder.Services.AddIdentity<Usuario, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 // 4. JWT Authentication
+//////////////////////////////////con audiencia///////////////////////////////////////
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+//.AddJwtBearer(options =>
+//{
+//    var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:JWTKey"] ??
+//        throw new InvalidOperationException("JWT key not configured"));
+
+//    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidIssuer = builder.Configuration["JWT:Issuer"],
+
+//        ValidateAudience = true,
+//        ValidAudiences = builder.Configuration.GetSection("JWT:Audiences").Get<string[]>(),
+
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//        IssuerSigningKey = new SymmetricSecurityKey(key)
+//    };
+//});
+///////////////////////////sin audiencia/////////////////////////////////////////////////
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
+}).AddJwtBearer(options =>
 {
     var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:JWTKey"] ??
-        throw new InvalidOperationException("JWT key not configured"));
-
+        throw new InvalidOperationException("JWT key not configured."));
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-
-        ValidateAudience = true,
-        ValidAudiences = builder.Configuration.GetSection("JWT:Audiences").Get<string[]>(),
-
+        ValidateIssuer = false,
+        ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key)
@@ -104,27 +123,40 @@ builder.Services.AddAutoMapper(config =>
 builder.Services.AddTransient<UserDataSeeder>();
 
 // 6. CORS
+//////////////////////////////////con audiencia///////////////////////////////////////
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowConfiguredOrigins", policyBuilder =>
+//    {
+//        var allowedOrigins = builder.Configuration.GetSection("JWT:Audiences").Get<string[]>() ??
+//                             throw new InvalidOperationException("JWT Audiences not configured.");
+
+//        if (allowedOrigins.Any())
+//        {
+//            policyBuilder.WithOrigins(allowedOrigins)
+//                         .AllowAnyMethod()
+//                         .AllowAnyHeader()
+//                         .AllowCredentials()
+//                         .WithExposedHeaders("totalrecordsquantity");
+//        }
+//        else
+//        {
+//            throw new InvalidOperationException("No se configuraron orígenes válidos en JWT:Audiences.");
+//        }
+//    });
+//});
+///////////////////////////sin audiencia/////////////////////////////////////////////////
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowConfiguredOrigins", policyBuilder =>
+    options.AddPolicy("AllowAllOrigins", policy =>
     {
-        var allowedOrigins = builder.Configuration.GetSection("JWT:Audiences").Get<string[]>() ??
-                             throw new InvalidOperationException("JWT Audiences not configured.");
-
-        if (allowedOrigins.Any())
-        {
-            policyBuilder.WithOrigins(allowedOrigins)
-                         .AllowAnyMethod()
-                         .AllowAnyHeader()
-                         .AllowCredentials()
-                         .WithExposedHeaders("totalrecordsquantity");
-        }
-        else
-        {
-            throw new InvalidOperationException("No se configuraron orígenes válidos en JWT:Audiences.");
-        }
+        policy.AllowAnyOrigin();
+        policy.AllowAnyHeader().WithExposedHeaders(new string[] { "totalrecordsquantity" });
+        policy.AllowAnyMethod();
     });
 });
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 // 11. Controladores y HTTP Client
 builder.Services.AddControllers();
@@ -167,7 +199,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
-app.UseCors("AllowConfiguredOrigins");
+//app.UseCors("AllowConfiguredOrigins"); 
+app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
 

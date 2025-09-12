@@ -318,7 +318,6 @@ namespace Goreu.Persistence
             {
                 Name = Constantes.RolAdminSistema,
                 NormalizedName = Constantes.RolAdminSistema,
-                Nivel='1',
                 IdEntidadAplicacion =entidadApp1.Id
             };
             
@@ -326,7 +325,6 @@ namespace Goreu.Persistence
             {
                 Name = Constantes.RoleAdminEntidad,
                 NormalizedName = Constantes.RoleAdminEntidad,
-                Nivel='2',
                 IdEntidadAplicacion = entidadApp2.Id
             };
             
@@ -334,14 +332,12 @@ namespace Goreu.Persistence
             {
                 Name = Constantes.RolAdminAplicacion,
                 NormalizedName = Constantes.RolAdminAplicacion,
-                Nivel = '3',
                 IdEntidadAplicacion = entidadApp2.Id
             };
             var role4 = new Rol
             {
                 Name = "AdminAplicacionPlanilla",
                 NormalizedName = "AdminAplicacionPlanilla",
-                Nivel = '3',
                 IdEntidadAplicacion = entidadApp3.Id
             };
 
@@ -771,7 +767,9 @@ namespace Goreu.Persistence
                         {
 
                             IdUsuario = adminSistema.Id,
-                            IdUnidadOrganica = unidadOrganica1.Id
+                            IdUnidadOrganica = unidadOrganica1.Id,
+                            Desde= new DateTime(2025, 07, 10),
+                            ObservacionAnulacion="nada"
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica1 );
                         await context.SaveChangesAsync();
@@ -800,7 +798,9 @@ namespace Goreu.Persistence
                         {
 
                             IdUsuario = adminEntidad.Id,
-                            IdUnidadOrganica = unidadOrganica2.Id
+                            IdUnidadOrganica = unidadOrganica2.Id,
+                            Desde = new DateTime(2025, 07, 10),
+                            ObservacionAnulacion = "nada"
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica2);
                         await context.SaveChangesAsync();
@@ -830,7 +830,9 @@ namespace Goreu.Persistence
                         {
 
                             IdUsuario = adminAplicacion.Id,
-                            IdUnidadOrganica = unidadOrganica2.Id
+                            IdUnidadOrganica = unidadOrganica2.Id,
+                            Desde = new DateTime(2025, 07, 10),
+                            ObservacionAnulacion = "nada"
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica3);
                         await context.SaveChangesAsync();
@@ -860,7 +862,9 @@ namespace Goreu.Persistence
                         {
 
                             IdUsuario = adminAplicacionPlanilla.Id,
-                            IdUnidadOrganica = unidadOrganica6.Id
+                            IdUnidadOrganica = unidadOrganica6.Id,
+                            Desde = new DateTime(2025, 07, 10),
+                            ObservacionAnulacion = "nada"
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica3);
                         await context.SaveChangesAsync();

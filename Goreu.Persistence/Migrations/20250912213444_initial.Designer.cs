@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Goreu.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250908155750_Added_observacionAnulacion_fiel_USUARIOUNIDADORGANICA")]
-    partial class Added_observacionAnulacion_fiel_USUARIOUNIDADORGANICA
+    [Migration("20250912213444_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,10 +239,6 @@ namespace Goreu.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nivel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)");
 
                     b.HasKey("Id");
 
@@ -624,6 +620,9 @@ namespace Goreu.Persistence.Migrations
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("FechaAnulacion")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("Hasta")
                         .HasColumnType("datetime2");
 
@@ -800,10 +799,6 @@ namespace Goreu.Persistence.Migrations
 
                     b.Property<int>("IdEntidadAplicacion")
                         .HasColumnType("int");
-
-                    b.Property<string>("Nivel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)");
 
                     b.HasIndex("IdEntidadAplicacion");
 

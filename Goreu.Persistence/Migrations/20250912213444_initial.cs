@@ -112,7 +112,6 @@ namespace Goreu.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Nivel = table.Column<string>(type: "nvarchar(1)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -279,7 +278,6 @@ namespace Goreu.Persistence.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: true),
-                    Nivel = table.Column<string>(type: "nvarchar(1)", nullable: true),
                     IdEntidadAplicacion = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
@@ -546,6 +544,10 @@ namespace Goreu.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IdUsuario = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IdUnidadOrganica = table.Column<int>(type: "int", nullable: false),
+                    Desde = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Hasta = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FechaAnulacion = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ObservacionAnulacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

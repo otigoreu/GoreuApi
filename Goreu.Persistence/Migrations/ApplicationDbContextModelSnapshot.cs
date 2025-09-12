@@ -237,10 +237,6 @@ namespace Goreu.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nivel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)");
-
                     b.HasKey("Id");
 
                     b.ToTable("RolInfo");
@@ -800,10 +796,6 @@ namespace Goreu.Persistence.Migrations
 
                     b.Property<int>("IdEntidadAplicacion")
                         .HasColumnType("int");
-
-                    b.Property<string>("Nivel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1)");
 
                     b.HasIndex("IdEntidadAplicacion");
 

@@ -9,7 +9,6 @@ namespace Goreu.Dto.Response
     public class RolResponseSingleDto
     {
         public string Id { get; set; } = default!;
-        public char Nivel { get; set; } = default!;
         public string Name { get; set; } = default!;
     }
 }

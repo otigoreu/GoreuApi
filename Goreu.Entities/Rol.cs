@@ -4,7 +4,6 @@
     {
         public bool Estado { get; set; } = true;
         
-        public char Nivel { get; set; } = default!;
         public int IdEntidadAplicacion {get;set;}
 
         [ForeignKey("IdEntidadAplicacion")]

@@ -780,36 +780,36 @@ namespace Goreu.Services.Implementation
         {
             var response = new BaseResponseGeneric<ICollection<UsuarioResponseDto>>();
 
-            try
-            {
-                search = string.IsNullOrWhiteSpace(search) ? "" : search;
+            //try
+            //{
+            //    search = string.IsNullOrWhiteSpace(search) ? "" : search;
 
-                var rol = await rolRepository.GetAsync(rolId);
+            //    var rol = await rolRepository.GetAsync(rolId);
 
-                EntidadAplicacion? entidadAplicacion = null;
-                if (rol.Nivel is '2' or '3') // Solo cuando hace falta
-                {
-                    entidadAplicacion = await entidadAplicacionRepository.GetAsync(rol.IdEntidadAplicacion);
-                }
+            //    EntidadAplicacion? entidadAplicacion = null;
+            //    if (rol.Nivel is '2' or '3') // Solo cuando hace falta
+            //    {
+            //        entidadAplicacion = await entidadAplicacionRepository.GetAsync(rol.IdEntidadAplicacion);
+            //    }
 
-                ICollection<UsuarioInfo> data = rol.Nivel switch
-                {
-                    '3' => await userRepository.GetByRolAsync(entidadAplicacion!.IdAplicacion, search, pagination),
-                    '2' => await userRepository.GetByEntidadAsync(entidadAplicacion!.IdEntidad, search, pagination),
-                    '1' => await userRepository.GetAllAsync(search, pagination),
-                    _ => new List<UsuarioInfo>()
-                };
+            //    ICollection<UsuarioInfo> data = rol.Nivel switch
+            //    {
+            //        '3' => await userRepository.GetByRolAsync(entidadAplicacion!.IdAplicacion, search, pagination),
+            //        '2' => await userRepository.GetByEntidadAsync(entidadAplicacion!.IdEntidad, search, pagination),
+            //        '1' => await userRepository.GetAllAsync(search, pagination),
+            //        _ => new List<UsuarioInfo>()
+            //    };
 
-                response.Data = mapper.Map<ICollection<UsuarioResponseDto>>(data);
-                response.Success = true;
-            }
-            catch (Exception ex)
-            {
-                response.ErrorMessage = "Error al obtener usuarios.";
-                logger.LogError(ex,
-                    "{ErrorMessage}. Parámetros -> rolId: {RolId}, search: {Search}",
-                    response.ErrorMessage, rolId, search);
-            }
+            //    response.Data = mapper.Map<ICollection<UsuarioResponseDto>>(data);
+            //    response.Success = true;
+            //}
+            //catch (Exception ex)
+            //{
+            //    response.ErrorMessage = "Error al obtener usuarios.";
+            //    logger.LogError(ex,
+            //        "{ErrorMessage}. Parámetros -> rolId: {RolId}, search: {Search}",
+            //        response.ErrorMessage, rolId, search);
+            //}
 
             return response;
         }

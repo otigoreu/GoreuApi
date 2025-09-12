@@ -23,37 +23,37 @@ namespace Goreu.Services.Implementation
         {
             var response = new BaseResponseGeneric<ICollection<AplicacionResponseDto>>();
 
-            try
-            {
-                var rol = await rolRepository.GetAsync(rolId);
-                var entidadAplicacion = await entidadAplicacionRepository.GetAsync(rol.IdEntidadAplicacion);
+            //try
+            //{
+            //    var rol = await rolRepository.GetAsync(rolId);
+            //    var entidadAplicacion = await entidadAplicacionRepository.GetAsync(rol.IdEntidadAplicacion);
 
-                ICollection<Aplicacion> data = rol.Nivel switch
-                {
-                    '3' => await repository.GetAplicacionesAsync(
-                        predicate: z => z.IdAplicacion == entidadAplicacion.IdAplicacion && z.Aplicacion.Estado,
+            //    ICollection<Aplicacion> data = rol.Nivel switch
+            //    {
+            //        '3' => await repository.GetAplicacionesAsync(
+            //            predicate: z => z.IdAplicacion == entidadAplicacion.IdAplicacion && z.Aplicacion.Estado,
                         
-                        orderBy: z => z.Aplicacion.Descripcion,
-                        search: string.Empty,
-                        pagination: null
-                    ),
-                    '2' or '1' => await repository.GetAplicacionesAsync(
-                        predicate: z => z.IdEntidad == idEntidad && z.Aplicacion.Estado,
-                        orderBy: z => z.Aplicacion.Descripcion,
-                        search: string.Empty,
-                        pagination: null
-                    ),
-                    _ => new List<Aplicacion>()
-                };
+            //            orderBy: z => z.Aplicacion.Descripcion,
+            //            search: string.Empty,
+            //            pagination: null
+            //        ),
+            //        '2' or '1' => await repository.GetAplicacionesAsync(
+            //            predicate: z => z.IdEntidad == idEntidad && z.Aplicacion.Estado,
+            //            orderBy: z => z.Aplicacion.Descripcion,
+            //            search: string.Empty,
+            //            pagination: null
+            //        ),
+            //        _ => new List<Aplicacion>()
+            //    };
 
-                response.Data = mapper.Map<ICollection<AplicacionResponseDto>>(data); 
-                response.Success = true;
-            }
-            catch (Exception ex)
-            {
-                response.ErrorMessage = "Error al listar las aplicaciones para la entidad.";
-                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
-            }
+            //    response.Data = mapper.Map<ICollection<AplicacionResponseDto>>(data); 
+            //    response.Success = true;
+            //}
+            //catch (Exception ex)
+            //{
+            //    response.ErrorMessage = "Error al listar las aplicaciones para la entidad.";
+            //    logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            //}
 
             return response;
         }
