@@ -67,7 +67,7 @@
         public async Task<ICollection<RolInfo>> GetAsyncPerUser(string idUser)
         {
             var query = context.Set<RolInfo>().FromSqlRaw(
-                @"select r.Id,r.Nivel, r.Name from Administrador.Rol r 
+                @"select r.Id,r.Name from Administrador.Rol r 
                 join Administrador.UsuarioRol ur on r.Id=ur.RoleId 
                 join Administrador.Usuario u on u.Id=ur.UserId where u.Id={0}", idUser);
 
