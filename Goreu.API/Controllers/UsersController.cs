@@ -102,9 +102,9 @@
 
         [HttpGet]
         [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
-        public async Task<IActionResult> Get([FromQuery] string? rolId, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
+        public async Task<IActionResult> Get([FromQuery] int idEntidad, [FromQuery] int idAplicacion, [FromQuery] string? rolId, [FromQuery] string? search, [FromQuery] PaginationDto? pagination)
         {
-            var response = await service.GetAsync(rolId, search, pagination);
+            var response = await service.GetAsync(idEntidad, idAplicacion, rolId, search, pagination);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 

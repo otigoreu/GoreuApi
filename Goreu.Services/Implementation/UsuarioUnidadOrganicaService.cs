@@ -22,7 +22,7 @@
             try
             {
                 // Paso 1: Obtener todas las usuarios
-                var todasLosUsuarios = await serviceUsuario.GetAsync("definir", descripcion, pagination);
+                var todasLosUsuarios = await serviceUsuario.GetAsync(idEntidad: 1 , idAplicacion: 1, rolId: null, descripcion, pagination);
 
                 // Paso 2: Obtener las aplicaciones asociadas a la entidad
                 var usuariosUniadorganica = await repository.GetAsync(ea => ea.IdUnidadOrganica == idUnidadorganica);

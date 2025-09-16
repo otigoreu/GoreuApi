@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Goreu.Repositories.Implementation
 {
@@ -18,6 +19,8 @@ namespace Goreu.Repositories.Implementation
             //return await context.Set<Usuario>().Include(x => x.UsuarioAplicaciones).Where(x => x.Id == id).FirstOrDefaultAsync();
             throw new NotImplementedException();
         }
+
+        public Task<Usuario?> GetByPersonaAsync(int idPersona) => context.Set<Usuario>().FirstOrDefaultAsync(x => x.IdPersona == idPersona);
 
         public async Task<ICollection<UsuarioInfo>> GetAsyncAll(string? userName, PaginationDto pagination)
         {
@@ -59,34 +62,36 @@ namespace Goreu.Repositories.Implementation
             return await queryable.Paginate(pagination).ToListAsync();
         }
 
-        public async Task<ICollection<UsuarioInfo>> GetByRolAsync(int idAplicacion, string search, PaginationDto pagination)
+        //public async Task<ICollection<UsuarioInfo>> GetByRolAsync(int idAplicacion, string search, PaginationDto pagination)
+        //{
+        //    search = string.IsNullOrWhiteSpace(search) ? "" : search;
+
+        //    var sql = GetUsuarioInfoQuery("WHERE e.idAplicacion = {1}");
+
+        //    return await ExecuteUsuarioInfoQueryAsync(
+        //        FormattableStringFactory.Create(sql, search, idAplicacion), pagination);
+        //}
+
+        public async Task<ICollection<UsuarioInfo>> GetByRolAsync(int idAplicacion, string? rolId, string search, PaginationDto pagination)
         {
             search = string.IsNullOrWhiteSpace(search) ? "" : search;
 
-            var sql = GetUsuarioInfoQuery("WHERE e.idAplicacion = {1}");
+            // Arrancamos con el WHERE base
+            var where = new StringBuilder("WHERE e.idAplicacion = {1}");
+            var parameters = new List<object?> { search, idAplicacion };
+
+            // Si existe rol, lo agregamos
+            if (!string.IsNullOrEmpty(rolId))
+            {
+                where.Append(" AND d.Id = {2}");
+                parameters.Add(rolId);
+            }
+
+            // Ahora construimos el SQL completo pasando el WHERE dinámico
+            var sql = GetUsuarioInfoQuery(where.ToString());
 
             return await ExecuteUsuarioInfoQueryAsync(
-                FormattableStringFactory.Create(sql, search, idAplicacion), pagination);
-        }
-
-        public async Task<ICollection<UsuarioInfo>> GetByEntidadAsync(int idEntidad, string search, PaginationDto pagination)
-        {
-            search = string.IsNullOrWhiteSpace(search) ? "" : search;
-
-            var sql = GetUsuarioInfoQuery("WHERE e.idEntidad = {1}");
-
-            return await ExecuteUsuarioInfoQueryAsync(
-                FormattableStringFactory.Create(sql, search, idEntidad), pagination);
-        }
-
-        public async Task<ICollection<UsuarioInfo>> GetAllAsync(string search, PaginationDto pagination)
-        {
-            search = string.IsNullOrWhiteSpace(search) ? "" : search;
-
-            var sql = GetUsuarioInfoQuery();
-
-            return await ExecuteUsuarioInfoQueryAsync(
-                FormattableStringFactory.Create(sql, search), pagination);
+                FormattableStringFactory.Create(sql, parameters.ToArray()), pagination);
         }
 
         private async Task<ICollection<UsuarioInfo>> ExecuteUsuarioInfoQueryAsync(
@@ -111,6 +116,7 @@ namespace Goreu.Repositories.Implementation
             return $@"
                 SELECT	
                     b.Id,
+                    d.Name AS Rol_Descripcion,
                     b.IdPersona,
                     b.Email,
                     b.UserName,
@@ -135,7 +141,7 @@ namespace Goreu.Repositories.Implementation
                 LEFT JOIN [Administrador].[UsuarioUnidadOrganica] h ON a.UserId = h.IdUsuario
                 {extraWhere}
                 GROUP BY 
-                    b.Id, b.IdPersona, b.Email, b.UserName, 
+                    b.Id, d.Name, b.IdPersona, b.Email, b.UserName, 
                     c.Nombres, c.ApellidoPat, c.ApellidoMat, 
                     f.Descripcion, g.Descripcion";
         }

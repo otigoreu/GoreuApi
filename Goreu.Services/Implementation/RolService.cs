@@ -203,31 +203,22 @@ namespace Goreu.Services.Implementation
             int idEntidad,
             int idAplicacion,
             string? search,
-            PaginationDto? pagination,
-            string? rolId)
+            PaginationDto? pagination)
         {
             var response = new BaseResponseGeneric<ICollection<RolPaginationResponseDto>>();
 
-            //try
-            //{
-            //    var rol = await repository.GetAsync(rolId);
-            //    var entidadAplicacion = await entidadAplicacionRepository.GetAsync(rol.IdEntidadAplicacion);
+            try
+            {
+                ICollection<Rol> data = await repository.GetAsync(idEntidad, idAplicacion, search, pagination);
 
-            //    ICollection<Rol> data = rol.Nivel switch
-            //    {
-            //        '3' => await repository.GetAsync(idEntidad, idAplicacion, search, pagination, rolId),
-            //        '2' or '1' => await repository.GetAsync(idEntidad, idAplicacion, search, pagination, rolId: null),
-            //        _ => new List<Rol>()
-            //    };
-
-            //    response.Data = mapper.Map<ICollection<RolPaginationResponseDto>>(data);
-            //    response.Success = true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    response.ErrorMessage = "Error al listar los roles para la entidad y aplicacion.";
-            //    logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
-            //}
+                response.Data = mapper.Map<ICollection<RolPaginationResponseDto>>(data);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al listar los roles para la entidad y aplicacion.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
 
             return response;
         }

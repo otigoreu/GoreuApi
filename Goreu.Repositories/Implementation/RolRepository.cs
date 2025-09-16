@@ -67,7 +67,7 @@
         public async Task<ICollection<RolInfo>> GetAsyncPerUser(string idUser)
         {
             var query = context.Set<RolInfo>().FromSqlRaw(
-                @"select r.Id,r.Nivel, r.Name from Administrador.Rol r 
+                @"select r.Id, r.Name from Administrador.Rol r 
                 join Administrador.UsuarioRol ur on r.Id=ur.RoleId 
                 join Administrador.Usuario u on u.Id=ur.UserId where u.Id={0}", idUser);
 
@@ -88,11 +88,8 @@
                          && z.EntidadAplicacion.IdAplicacion == idAplicacion)
                 .AsNoTracking();
 
-            // Filtro por rol específico
-            if (!string.IsNullOrWhiteSpace(rolId))
-            {
-                queryable = queryable.Where(z => z.Id == rolId);
-            }
+
+            var lis = queryable.ToList();
 
             // Filtro de búsqueda
             if (!string.IsNullOrWhiteSpace(search))
@@ -113,42 +110,5 @@
 
             return await queryable.ToListAsync().ConfigureAwait(false);
         }
-
-
-        //public async Task<ICollection<Rol>> GetAsync(
-        //    int idEntidad,
-        //    int idAplicacion,
-        //    string? search,
-        //    PaginationDto? pagination,
-        //    string rolId)
-        //{
-        //    var queryable = context.Set<Rol>()
-        //        .Include(z => z.EntidadAplicacion.Entidad)
-        //        .Include(z => z.EntidadAplicacion.Aplicacion)
-        //        .Where(z => z.EntidadAplicacion.IdEntidad == idEntidad
-        //                 && z.EntidadAplicacion.IdAplicacion == idAplicacion)
-        //        .AsNoTracking();
-
-        //    if (rolId != null)
-        //        queryable = queryable.Where(z => z.Id == rolId);
-
-        //    // Filtro de búsqueda
-        //    if (!string.IsNullOrWhiteSpace(search))
-        //    {
-        //        queryable = queryable.Where(z => z.Name.Contains(search));
-        //    }
-
-        //    // Ordenar
-        //    queryable = queryable.OrderBy(z => z.Name);
-
-        //    // Paginación
-        //    if (pagination is not null)
-        //    {
-        //        await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
-        //        queryable = queryable.Paginate(pagination);
-        //    }
-
-        //    return await queryable.ToListAsync();
-        //}
     }
 }

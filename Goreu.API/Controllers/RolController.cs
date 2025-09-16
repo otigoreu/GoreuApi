@@ -1,4 +1,7 @@
-﻿namespace Goreu.API.Controllers
+﻿using Goreu.Dto.Response;
+using Goreu.DtoResponse;
+
+namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/roles")]
@@ -71,16 +74,33 @@
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
 
+        /// <summary>
+        /// Obtiene la lista de roles asociados a una entidad y aplicación, 
+        /// con soporte de búsqueda y paginación.
+        /// </summary>
+        /// <param name="idEntidad">Identificador único de la entidad.</param>
+        /// <param name="idAplicacion">Identificador único de la aplicación.</param>
+        /// <param name="search">Texto opcional para filtrar resultados.</param>
+        /// <param name="pagination">Objeto opcional con parámetros de paginación (página, tamaño, etc.).</param>
+        /// <param name="rolId">Identificador opcional del rol para filtrar resultados.</param>
+        /// <returns>
+        /// Un resultado HTTP con los siguientes posibles códigos de estado:
+        /// - <c>200 OK</c>: Devuelve la lista de roles paginada y filtrada.
+        /// - <c>400 Bad Request</c>: Si hubo un error en los parámetros de entrada o en la operación.
+        /// - <c>500 Internal Server Error</c>: Si ocurrió un error inesperado en el servidor.
+        /// </returns>
         [HttpGet("entidad/{idEntidad}/Aplicacion/{idAplicacion}")]
+        //[ProducesResponseType(typeof(BaseResponseGeneric<ICollection<RolPaginationResponseDto>>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(BaseResponseGeneric<ICollection<RolPaginationResponseDto>>), StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get(
             [FromRoute] int idEntidad,
             [FromRoute] int idAplicacion,
             [FromQuery] string? search,
-            [FromQuery] PaginationDto? pagination,
-            [FromQuery] string? rolId
+            [FromQuery] PaginationDto? pagination
             )
         {
-            var response = await service.GetAsync(idEntidad, idAplicacion, search, pagination, rolId);
+            var response = await service.GetAsync(idEntidad, idAplicacion, search, pagination);
             return response.Success ? Ok(response) : BadRequest(response);
         }
     }

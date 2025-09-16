@@ -19,11 +19,11 @@ namespace Goreu.Dto.Request
         [Required]
         public int IdPersona { get; set; }
         
-        [Required]
-        public int IdUnidadOrganica{ get; set; }
+        //[Required]
+        //public int IdUnidadOrganica{ get; set; }
 
         [Required]
-        public string idRol { get; set; }
+        public string RolId { get; set; }
 
         public string Password { get; set; } = default!;
 
