@@ -10,5 +10,6 @@ namespace Goreu.Repositories.Interface
         Task<ICollection<Entidad>> GetAsync<TKey>(Expression<Func<Entidad, bool>> predicate, Expression<Func<Entidad, TKey>> orderBy, PaginationDto? pagination = null);
 
         Task <EntidadInfo> GetAsyncPerUser(string iUser);
+        Task<EntidadInfo> GetAsyncPerRol(string idRol);
     }
 }

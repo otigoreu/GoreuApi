@@ -11,5 +11,6 @@ namespace Goreu.Repositories.Interface
 
         Task<ICollection<AplicacionInfo>> GetAsyncPerUser(string idUser);
 
+        Task<AplicacionInfo> GetAsyncPerRol(string idRol);
     }
 }

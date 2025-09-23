@@ -30,6 +30,26 @@
             return response;
         }
 
+        public async Task<BaseResponseGeneric<AplicacionResponseDto>> GetAsyncPerRol(string idRol)
+        {
+            var response = new BaseResponseGeneric<AplicacionResponseDto>();
+
+            try
+            {
+                var data = await repository.GetAsyncPerRol(idRol);
+                response.Data = mapper.Map<AplicacionResponseDto>(data);
+                response.Success = true;
+
+            }
+            catch (Exception ex)
+            {
+
+                response.ErrorMessage = "Ocurrio un error al obtener los datos";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
         public async Task<BaseResponseGeneric<ICollection<AplicacionResponseDto>>> GetAsyncPerUser(string idUser)
         {
             var response = new BaseResponseGeneric<ICollection<AplicacionResponseDto>>();

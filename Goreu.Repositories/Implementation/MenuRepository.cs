@@ -22,11 +22,30 @@ namespace Goreu.Repositories.Implementation
         }
 
 
-        public async Task<ICollection<Menu>> GetByIdAplicationAsync(int idAplication)
+        public async Task<ICollection<MenuInfo>> GetByIdAplicationAsync(int idAplication)
         {
-            return await context.Set<Menu>().Include(x => x.MenuRoles)
-               .Where(x => x.IdAplicacion == idAplication)
-               .ToListAsync();
+            var queryable = context.Set<Menu>()
+              .Include(x => x.Aplicacion)
+              .Where(x => x.IdAplicacion == idAplication)
+              .IgnoreQueryFilters()
+              .AsNoTracking()
+              .Select(x => new MenuInfo
+              {
+                  Id = x.Id,
+                  Descripcion = x.Descripcion,
+                  Icono = x.Icono,
+                  Ruta = x.Ruta,
+                  IdAplicacion = x.Aplicacion.Id,
+                  Aplicacion = x.Aplicacion.Descripcion,
+                  IdMenuPadre = x.IdMenuPadre,
+                  Estado = x.Estado
+
+              }).AsQueryable();
+
+            await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
+            return await queryable.ToListAsync();
+
+
         }
 
         public async Task<List<Menu>> GetMenusByApplicationAndRolesAsync(int applicationId, List<string> roleIds)

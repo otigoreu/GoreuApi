@@ -81,6 +81,13 @@
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
+        [HttpGet("perrol")]
+        public async Task<IActionResult> Getrol(string idRol)
+        {
+            var result = await service.GetAsyncPerRol(idRol);
+
+            return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
+        }
 
     }
 }

@@ -264,6 +264,22 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
+        public async Task<BaseResponseGeneric<ICollection<MenuInfo>>> GetByAplicationAsyncSingle(int idAplication)
+        {
+            var response = new BaseResponseGeneric<ICollection<MenuInfo>>();
+            try
+            {
 
+                response.Data = mapper.Map<ICollection<MenuInfo>>(await repository.GetByIdAplicationAsync(idAplication));
+                response.Success = true;
+
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrió un error al obtener la información";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
     }
 }

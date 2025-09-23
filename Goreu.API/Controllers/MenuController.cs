@@ -33,6 +33,13 @@
             var response = await service.GetByAplicationAsync(idAplication, userName);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        [HttpGet("single/{idAplication:int}")]
+        public async Task<IActionResult> GetByAplicationsingle(int idAplication)
+        {
+           
+            var response = await service.GetByAplicationAsyncSingle(idAplication);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Post(MenuRequestDto request)

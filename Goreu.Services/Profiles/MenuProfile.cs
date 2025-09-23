@@ -15,6 +15,7 @@ namespace Goreu.Services.Profiles
             CreateMap<MenuRequestDtoSingle, Menu>();
 
             CreateMap<Menu, MenuResponseDto>();
+            CreateMap<Menu, MenuInfo>();
 
 
         }

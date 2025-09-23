@@ -258,6 +258,7 @@ namespace Goreu.Services.Implementation
                };
 
             var roles = await userManager.GetRolesAsync(user);
+
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
@@ -278,13 +279,6 @@ namespace Goreu.Services.Implementation
                 NroDoc = persona.NroDoc
             };
 
-            ////Entidad
-            var dataEntidad = await entidadRepository.GetAsyncPerUser(user.Id);
-            var entidadDto = new EntidadResponseDto();
-
-            entidadDto = mapper.Map<EntidadResponseDto>(dataEntidad);
-
-
             ////UnidadOrganica
             var dataUnidad = await unidadOrganicaRepository.GetAsyncPerUser(user.Id);
             var unidadOrganicaDto = new List<UnidadOrganicaResponseSingleDto>();
@@ -304,6 +298,12 @@ namespace Goreu.Services.Implementation
             var rolesResponseDto= new List<RolResponseSingleDto>();
 
             rolesResponseDto = mapper.Map<List<RolResponseSingleDto>>(dataroles);
+
+            ////Entidad
+            var dataEntidad = await entidadRepository.GetAsyncPerRol(dataroles.First().Id);
+            var entidadDto = new EntidadResponseDto();
+
+            entidadDto = mapper.Map<EntidadResponseDto>(dataEntidad);
 
 
             ////Agregar múltiples audiencias como claims dinámicamente

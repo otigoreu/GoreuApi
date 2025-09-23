@@ -27,6 +27,16 @@
             return response;
         }
 
+        public async Task<EntidadInfo> GetAsyncPerRol(string idRol)
+        {
+            var query = context.Set<EntidadInfo>().FromSqlRaw(
+               @"select e.id, e.Descripcion,e.Ruc ,e.Estado from Administrador.Entidad e 
+                join Administrador.EntidadAplicacion ea on e.Id=ea.IdEntidad 
+                join Administrador.Rol r on r.IdEntidadAplicacion=ea.IdAplicacion where r.id={0}", idRol);
+
+            return await query.SingleOrDefaultAsync();
+        }
+
         public async Task <EntidadInfo> GetAsyncPerUser(string idUser)
         {
             var query = context.Set<EntidadInfo>().FromSqlRaw(

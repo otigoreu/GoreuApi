@@ -36,6 +36,15 @@ namespace Goreu.Repositories.Implementation
             return response;
         }
 
+        public async Task<AplicacionInfo> GetAsyncPerRol(string idRol)
+        {
+            var query = context.Set<AplicacionInfo>().FromSqlRaw(
+                @"select a.id, a.Descripcion, a.Estado from Administrador.Aplicacion a 
+                join Administrador.EntidadAplicacion ea on a.Id=ea.IdAplicacion 
+                join Administrador.Rol r on r.IdEntidadAplicacion=ea.IdAplicacion where r.id={0}", idRol);
+
+            return await query.SingleOrDefaultAsync();
+        }
 
         public async Task<ICollection<AplicacionInfo>> GetAsyncPerUser(string idUser)
         {

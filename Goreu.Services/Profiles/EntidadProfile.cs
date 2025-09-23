@@ -15,6 +15,7 @@ namespace Goreu.Services.Profiles
 
             CreateMap<EntidadRequestDto, Entidad>();
             CreateMap<EntidadInfo, EntidadResponseDto>();
+            CreateMap<EntidadInfo, EntidadSingleResponseDto>();
         }
     }
 }

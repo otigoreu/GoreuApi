@@ -9,5 +9,7 @@ namespace Goreu.Services.Interface
         Task<BaseResponseGeneric<ICollection<EntidadResponseDto>>> GetAsync(string userId, string rolId, string? descripcion = null, PaginationDto? pagination = null);
 
         Task<BaseResponseGeneric<EntidadResponseDto>> GetAsyncPerUser(string idUser);
+
+        Task<BaseResponseGeneric<EntidadSingleResponseDto>> GetAsyncPerRol(string idRol);
     }
 }
