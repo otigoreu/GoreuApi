@@ -17,13 +17,13 @@ namespace Goreu.Services.Implementation
         private readonly ILogger<MenuService> logger;
         private readonly IMapper mapper;
         private readonly UserManager<Usuario> usuario;
-        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly RoleManager<Rol> roleManager;
 
         public MenuService(IMenuRepository repository,
             ILogger<MenuService> logger,
             IMapper mapper,
             UserManager<Usuario> usuario,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<Rol> roleManager)
         {
             this.repository = repository;
             this.logger = logger;

@@ -14,7 +14,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<AppSettings>(builder.Configuration);
 
 // 3. Identity
-builder.Services.AddIdentity<Usuario, IdentityRole>(options =>
+builder.Services.AddIdentity<Usuario, Rol>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;

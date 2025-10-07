@@ -17,7 +17,7 @@ namespace Goreu.Services.Implementation
         private readonly IMapper mapper;
         private readonly IEmailService emailService;
         private readonly ApplicationDbContext context;
-        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly RoleManager<Rol> roleManager;
         private readonly IRolRepository rolRepository;
         private readonly IUserRepository userRepository;
         private readonly IAplicacionRepository aplicacionRepository;
@@ -33,7 +33,7 @@ namespace Goreu.Services.Implementation
             SignInManager<Usuario> signInManager,
             IMapper mapper,
             ApplicationDbContext context,
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<Rol> roleManager,
             IRolRepository rolRepository,
             IPersonaRepository personaRepository,
             IEntidadRepository entidadRepository,

@@ -24,7 +24,7 @@ namespace Goreu.Persistence
             //User repository
             var userManager = service.GetRequiredService<UserManager<Usuario>>();
             //Role repository
-            var roleManager = service.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = service.GetRequiredService<RoleManager<Rol>>();
             //Menu Repository
 
             #region Entidad

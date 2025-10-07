@@ -15,7 +15,7 @@ namespace Goreu.Services.Implementation
 {
     public class RolService : IRolService
     {
-        private readonly RoleManager<IdentityRole> rolManager;
+        private readonly RoleManager<Rol> rolManager;
         private readonly ILogger<RolService> logger;
         private readonly IConfiguration configuration;
         private readonly SignInManager<Rol> singInManager;
@@ -25,7 +25,7 @@ namespace Goreu.Services.Implementation
         private readonly IEntidadAplicacionRepository entidadAplicacionRepository;
 
         public RolService(
-            RoleManager<IdentityRole> rolManager,
+            RoleManager<Rol> rolManager,
             ILogger<RolService> logger,
             IConfiguration configuration,
             IMapper mapper,

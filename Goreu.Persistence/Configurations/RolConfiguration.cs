@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Goreu.Persistence.Configurations
 {
-    public class RolConfiguration : IEntityTypeConfiguration<IdentityRole>
+    public class RolConfiguration : IEntityTypeConfiguration<Rol>
     {
-        public void Configure(EntityTypeBuilder<IdentityRole> builder)
+        public void Configure(EntityTypeBuilder<Rol> builder)
         {
             
             builder.ToTable(nameof(Rol), "Administrador");

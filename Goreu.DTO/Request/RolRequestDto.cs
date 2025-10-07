@@ -4,5 +4,6 @@
     {
         public string Name { get; set; } = default!;
         public string NormalizedName { get; set; } = default!;
+        public int IdEntidadAplicacion { get; set; }
     }
 }
