@@ -33,6 +33,7 @@ namespace Goreu.Persistence
             modelBuilder.Entity<EntidadInfo>().HasNoKey();
             modelBuilder.Entity<MenuInfoRol>().HasNoKey();
             modelBuilder.Entity<RolInfo>();
+            modelBuilder.Entity<RolEntidadAplicacionInfo>();
 
             // UsuarioInfo no tiene clave (Keyless)
             modelBuilder.Entity<UsuarioInfo>().HasNoKey().ToView("UsuarioInfoView"); // nombre ficticio

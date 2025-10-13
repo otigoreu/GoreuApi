@@ -223,5 +223,21 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
+        public async Task<BaseResponseGeneric<ICollection<RolEntidadAplicacionInfo>>> GetWithAllEntidadAplicacionsync()
+        {
+            var response = new BaseResponseGeneric<ICollection<RolEntidadAplicacionInfo>>();
+            try
+            {
+                
+                response.Data = await repository.GetWithAllEntidadAplicacionsync();
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrio un error al obtener los datos";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
     }
 }

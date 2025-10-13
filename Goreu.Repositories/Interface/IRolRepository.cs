@@ -3,6 +3,7 @@
     public interface IRolRepository
     {
         Task<ICollection<Rol>> GetAllAsync();
+        Task<ICollection<RolEntidadAplicacionInfo>> GetWithAllEntidadAplicacionsync();
         Task<ICollection<RolInfo>> GetAsyncPerUser(string idUser);
         Task<Rol?> GetAsync(string id);
         Task<string> AddAsync(Rol rol);

@@ -21,6 +21,12 @@ namespace Goreu.API.Controllers
             var response = await service.GetAsync();
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        [HttpGet("Withentidadaplicacion")]
+        public async Task<IActionResult> GetWithEntidadAplicacin()
+        {
+            var response = await service.GetWithAllEntidadAplicacionsync();
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
 
         [HttpGet("id")]
         public async Task<IActionResult> Get(string id)

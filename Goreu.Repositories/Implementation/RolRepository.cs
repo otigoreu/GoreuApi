@@ -110,5 +110,17 @@
 
             return await queryable.ToListAsync().ConfigureAwait(false);
         }
+
+        public async Task<ICollection<RolEntidadAplicacionInfo>> GetWithAllEntidadAplicacionsync()
+        {
+            var query = context.Set<RolEntidadAplicacionInfo>().FromSqlRaw(
+                 @"select r.Id, r.Name, r.NormalizedName, r.Estado, r.IdEntidadAplicacion 
+                    ,concat(e.Descripcion,'-',a.Descripcion) as EntidadAplicacion from Administrador.Rol r 
+	                    join Administrador.EntidadAplicacion ea on ea.Id=r.IdEntidadAplicacion
+	                    join Administrador.Aplicacion a on a.Id=ea.IdAplicacion
+	                    join Administrador.Entidad e on e.Id=ea.IdEntidad");
+
+            return await query.ToListAsync();
+        }
     }
 }
