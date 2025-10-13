@@ -6,10 +6,12 @@
     public class UsersController : ControllerBase
     {
         private readonly IUserService service;
+        private readonly IConfiguration configuration;
 
-        public UsersController(IUserService service)
+        public UsersController(IUserService service, IConfiguration configuration)
         {
             this.service = service;
+            this.configuration = configuration;
         }
 
         [HttpPost("Register")]
@@ -31,7 +33,10 @@
         [AllowAnonymous]
         public async Task<IActionResult> RequestTokenToResetPassword(ResetPasswordRequestDto request)
         {
-            var response = await service.RequestTokenToResetPasswordAsync(request);
+            // Determinar URL según entorno
+            var frontResetPassword = configuration["FrontResetPassword:url"];
+
+            var response = await service.RequestTokenToResetPasswordAsync(frontResetPassword, request);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
@@ -48,6 +53,7 @@
         {
             //Obtener eil del token actual
             var userName = HttpContext.User.Claims.First(x => x.Type == ClaimTypes.Name).Value;
+
             var response = await service.ChangePasswordAsyncUserName(userName, request);
             return response.Success ? Ok(response) : BadRequest(response);
         }
@@ -129,5 +135,24 @@
 
             return Ok(response);
         }
+
+        [HttpPatch("{id}/force-password")]
+        public async Task<IActionResult> ForcePasswordChange([FromRoute] string id)
+        {
+            var response = await service.ForcePasswordChangeAsync(id);
+
+            if (!response.Success)
+            {
+                // Si el servicio detecta que el usuario no existe
+                if (response.ErrorMessage?.Contains("No se encontró") == true)
+                    return NotFound(response);
+
+                // Otros errores → BadRequest
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
     }
 }

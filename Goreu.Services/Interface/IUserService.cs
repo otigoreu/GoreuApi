@@ -11,7 +11,7 @@ namespace Goreu.Services.Interface
         Task<BaseResponseGeneric<string>> RegisterAsync(RegisterRequestDto request);
         Task<BaseResponseGeneric<LoginResponseDto>> LoginAsync(LoginRequestDto request);
         //-----------------------------------------------------------------------------------------
-        Task<BaseResponse> RequestTokenToResetPasswordAsync(ResetPasswordRequestDto request);
+        Task<BaseResponseGeneric<string>> RequestTokenToResetPasswordAsync(string frontResetPassword, ResetPasswordRequestDto request);
         Task<BaseResponse> ResetPasswordAsync(NewPasswordRequestDto request);
         Task<BaseResponse> ChangePasswordAsyncEmail(string email, ChangePasswordRequestDto request);
         Task<BaseResponse> ChangePasswordAsyncUserName(string userName, ChangePasswordRequestDto request);
@@ -31,7 +31,6 @@ namespace Goreu.Services.Interface
 
         Task<BaseResponse> FinalizeAsync(string id);
         Task<BaseResponse> InitializeAsync(string id);
-       
-
+        Task<BaseResponse> ForcePasswordChangeAsync(string userId);
     }
 }

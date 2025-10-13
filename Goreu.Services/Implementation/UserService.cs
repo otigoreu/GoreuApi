@@ -1,4 +1,5 @@
-﻿using Goreu.Repositories.Implementation;
+﻿using Goreu.Dto.Response;
+using Goreu.Repositories.Implementation;
 using Microsoft.AspNetCore.Identity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -23,7 +24,6 @@ namespace Goreu.Services.Implementation
         private readonly IAplicacionRepository aplicacionRepository;
         private readonly IUsuarioUnidadOrganicaRepository usuarioUnidadOrganicaRepository;
         private readonly IEntidadAplicacionRepository entidadAplicacionRepository;
-
 
         public UserService(
             UserManager<Usuario> userManager,
@@ -92,7 +92,8 @@ namespace Goreu.Services.Implementation
                         UserName = request.UserName,
                         Email = request.Email,
                         IdPersona = request.IdPersona,
-                        EmailConfirmed = true
+                        EmailConfirmed = true,
+                        MustChangePassword = true
                     };
 
                     var addUserResult = await userManager.CreateAsync(newUser, request.Password);
@@ -243,8 +244,7 @@ namespace Goreu.Services.Implementation
             }
             return response;
         }
-        ////---------------------------------------------------------------------------------------------
-        ////Crear Token
+        
         private async Task<LoginResponseDto> ConstruirToken(Usuario user)
         {
 
@@ -252,7 +252,7 @@ namespace Goreu.Services.Implementation
                {
 
                    ////new Claim(ClaimTypes.Email,user.Email ?? string.Empty), //Nunca enviar data sensible en un claim
-                   new Claim(ClaimTypes.Name,user.UserName ?? string.Empty), //Nunca enviar data sensible en un claim
+                   new Claim(ClaimTypes.Name, user.UserName ?? string.Empty), //Nunca enviar data sensible en un claim
                    ////new Claim(ClaimTypes.Name,$"{user.FirstName} {user.LastName}")
 
                };
@@ -292,7 +292,6 @@ namespace Goreu.Services.Implementation
             var dataApp = await aplicacionRepository.GetAsyncPerUser(user.Id);
             aplicacionesDto = mapper.Map<List<AplicacionResponseDto>>(dataApp);
 
-
             ////Roles
             var dataroles=await rolRepository.GetAsyncPerUser(user.Id);
             var rolesResponseDto= new List<RolResponseSingleDto>();
@@ -304,7 +303,6 @@ namespace Goreu.Services.Implementation
             var entidadDto = new EntidadResponseDto();
 
             entidadDto = mapper.Map<EntidadResponseDto>(dataEntidad);
-
 
             ////Agregar múltiples audiencias como claims dinámicamente
             var audiences = options.Value.Jwt.Audiences;
@@ -324,6 +322,7 @@ namespace Goreu.Services.Implementation
                 signingCredentials: credenciales,
                 expires: expiracion
                 );
+
             return new LoginResponseDto
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
@@ -333,56 +332,86 @@ namespace Goreu.Services.Implementation
                 Entidad=entidadDto,
                 Persona = personaDto,
                 UnidadOrganicas= unidadOrganicaDto,
-                Aplicaciones = aplicacionesDto
+                Aplicaciones = aplicacionesDto,
+                MustChangePassword = user.MustChangePassword
             };
         }
 
         ////---------------------------------------------------------------------------------------------
         ////Enviar Token a Correo
-        public async Task<BaseResponse> RequestTokenToResetPasswordAsync(ResetPasswordRequestDto request)
+        public async Task<BaseResponseGeneric<string>> RequestTokenToResetPasswordAsync(string frontResetPassword, ResetPasswordRequestDto request)
         {
-            var response = new BaseResponse();
+            var response = new BaseResponseGeneric<string>();
+
             try
             {
-                var userIdentity = await userManager.FindByEmailAsync(request.Email);
-                if (userIdentity is null)
+                var user = await userRepository.GetAsync(z => z.UserName == request.NumeroDocumento);
+
+                if (user is null)
                 {
                     throw new SecurityException("Usuario no existe");
                 }
 
-                var token = await userManager.GeneratePasswordResetTokenAsync(userIdentity);
+                // Generar token
+                var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
-                var persona = new PersonaInfo();
-                persona = mapper.Map<PersonaInfo>((await personaRepository.GetAsync(predicate: s => s.Email == request.Email)).FirstOrDefault());
-              
+                // Obtener persona asociada
+                var personaEntity = (await personaRepository.GetAsync(s => s.Id == user.IdPersona)).FirstOrDefault();
+                var persona = mapper.Map<PersonaInfo>(personaEntity);
 
+                logger.LogInformation("Token generado para {User}: {Token}", user.UserName, token);
 
-                Console.WriteLine("TOKEN CREADO"+token);
+                // Construir enlace con token y correo
+                var resetUrl = $"{frontResetPassword}?token={Uri.EscapeDataString(token)}&correo={user.Email}";
 
+                // Cuerpo del correo con estilo
+                var body = $@"
+                                <p>Estimado <strong>{persona.nombres} {persona.apellidoPat} {persona.apellidoMat}</strong>,</p>
+                                <p>Hemos recibido una solicitud para restablecer la contraseña de su cuenta.</p>
+                                <p>Para continuar, por favor haga clic en el siguiente botón:</p>
 
-                Console.WriteLine("ENVIANDO CORREO .........AL CORREO: "+request.Email+ " al señor: "+persona.nombres  );
-                ////Enviar un email con el token para reestablecer la contraseña
-                await emailService.SendEmailAsync(request.Email, "Reestablecer clave", "" +
-                    @$"
-                    <p> Estimado {persona.nombres} {persona.apellidoPat} {persona.apellidoMat} </p>
-                    <p> Para reestablecer su clave, por favor copie el siguiente codigo</p>
-                    <p> <strong> {token} </strong> </p>
-                    <hr />
-                    Atte. <br />
-                    Goreu © 2025
-                    ");
+                                <p style='text-align:center; margin:20px 0;'>
+                                    <a href='{resetUrl}' 
+                                       style='display:inline-block; background-color:#1976d2; color:#fff; 
+                                              padding:12px 24px; text-decoration:none; border-radius:6px; 
+                                              font-weight:bold;' target='_blank'>
+                                        Restablecer contraseña
+                                    </a>
+                                </p>
 
-                Console.WriteLine("PASO EL METODO <SendEmailAsync> Y ENVIO EL CORREO");
+                                <p>Si el botón no funciona, copie y pegue este enlace en su navegador:</p>
+                                <p><a href='{resetUrl}'>{resetUrl}</a></p>
+
+                                <hr />
+                                <p style='font-size:12px; color:#666;'>
+                                    Si usted no solicitó este cambio, puede ignorar este mensaje.<br/>
+                                    Atentamente,<br/>
+                                    <strong>Goreu © 2025</strong>
+                                </p>
+                            ";
+
+                await emailService.SendEmailAsync(user.Email, "Reestablecer clave", body);
+
+                logger.LogInformation("Correo de reseteo enviado a {Email}", user.Email);
 
                 response.Success = true;
+                response.Data = user.Email;
+            }
+            catch (SecurityException ex)
+            {
+                response.ErrorMessage = ex.Message;
+                logger.LogWarning(ex, "Solicitud inválida de reset password para {Documento}", request.NumeroDocumento);
             }
             catch (Exception ex)
             {
                 response.ErrorMessage = "Ocurrió un error al solicitar el token para resetear la clave";
                 logger.LogCritical(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
+
             return response;
         }
+
+
         ////--------------------------------------------------------------------------------------------
         ////Resetet password
         public async Task<BaseResponse> ResetPasswordAsync(NewPasswordRequestDto request)
@@ -484,37 +513,45 @@ namespace Goreu.Services.Implementation
             {
                 var userIdentity = await userManager.FindByNameAsync(userName);
 
-
                 if (userIdentity is null)
                 {
-                    Console.WriteLine("usuario 2 :" + userIdentity.UserName);
-
-
+                    response.Success = false;
+                    response.ErrorMessage = "Usuario no encontrado.";
+                    return response;
                 }
-
+                
                 var result = await userManager.ChangePasswordAsync(userIdentity, request.OldPassword, request.NewPassword);
-                response.Success = result.Succeeded;
+
                 if (!result.Succeeded)
                 {
-
-                    response.ErrorMessage = string.Join(" ", result.Errors.Select(x => x.Description).ToArray());
+                    // Si hay errores, devolverlos
+                    response.Success = false;
+                    response.ErrorMessage = string.Join(" ", result.Errors.Select(x => x.Description));
+                    
+                    return response;
                 }
-                else
-                {
 
-                    var persona = new PersonaInfo();
-                    persona = mapper.Map<PersonaInfo>((await personaRepository.GetAsync(predicate: s => s.Email == userIdentity.Email)).FirstOrDefault());
+                userIdentity.MustChangePassword = false;
+                await userManager.UpdateAsync(userIdentity);
 
-                    logger.LogInformation("Se cambio la clave para {email}", userIdentity.Email);
-                    ////Enviar un email de confirmacion de clave cambiada
-                    await emailService.SendEmailAsync(userIdentity.Email, "Confiracion de cambio de clave",
-                    @$"
-                    <P> Estimado {persona.nombres} {persona.apellidoPat} {persona.apellidoMat}</p>
-                    <p> Se ha cambiado su clave corecctaente</p>
+                // Mapear persona
+                var persona = await personaRepository.GetAsync(s => s.Email == userIdentity.Email);
+                var personaInfo = mapper.Map<PersonaInfo>(persona.FirstOrDefault());
+
+                // Log y envío de correo
+                logger.LogInformation("Se cambió la clave para {Email}", userIdentity.Email);
+
+                await emailService.SendEmailAsync(
+                    userIdentity.Email,
+                    "Confirmación de cambio de clave",
+                    $@"
+                    <p>Estimado {personaInfo.nombres} {personaInfo.apellidoPat} {personaInfo.apellidoMat},</p>
+                    <p>Se ha cambiado su clave correctamente.</p>
                     <hr />
                     Atte. <br />
                     Tramite Goreu @ 2024");
-                }
+
+                response.Success = true;
             }
             catch (Exception ex)
             {
@@ -910,7 +947,30 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
-       
+        public async Task<BaseResponse> ForcePasswordChangeAsync(string userId)
+        {
+            var response = new BaseResponse { Success = true };
+
+            try
+            {
+                await userRepository.MarkPasswordAsMustChangeAsync(userId);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                response.Success = false;
+                response.ErrorMessage = $"No se encontró un usuario con el ID '{userId}'.";
+                logger.LogWarning(ex, response.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessage = "Ocurrió un error al marcar la contraseña como obligatoria.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
+
     }
 }
 

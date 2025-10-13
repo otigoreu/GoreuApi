@@ -9,8 +9,12 @@ namespace Goreu.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
             builder.ToTable(nameof(Usuario), "Administrador");
+
             builder.Property(x => x.UserName).IsUnicode(false);
+
             builder.Property(x => x.Email).IsUnicode(false);
+
+            builder.Property(x => x.MustChangePassword).HasDefaultValue(false); // 👈 valor por defecto
 
             builder.HasOne(ua => ua.Persona)
                    .WithMany(u => u.Usuarios)

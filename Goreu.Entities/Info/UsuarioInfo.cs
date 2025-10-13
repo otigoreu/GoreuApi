@@ -13,6 +13,8 @@
         public string Entidad_Descripcion { get; set; } = default!;
         public string Aplicacion_Descripcion { get; set; } = default!;
         public string Rol_Descripcion { get; set; } = default!;
-        public int CantidadUnidadOrganica { get; set; } 
+        public int CantidadUnidadOrganica { get; set; }
+        public bool MustChangePassword { get; set; }
+        public bool Estado { get; set; }
     }
 }

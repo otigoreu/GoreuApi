@@ -51,19 +51,20 @@ builder.Services.AddIdentity<Usuario, Rol>(options =>
 ///////////////////////////sin audiencia/////////////////////////////////////////////////
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // esquema por defecto: JWT
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // si no hay auth -> usa JWT challenge
 }).AddJwtBearer(options =>
 {
-    var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:JWTKey"] ??
-        throw new InvalidOperationException("JWT key not configured."));
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:JWTKey"] 
+        ?? throw new InvalidOperationException("JWT key not configured."));
+    
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        ValidateIssuer = false,               // no valida quién emitió el token
+        ValidateAudience = false,             // no valida la audiencia
+        ValidateLifetime = true,              // sí valida expiración
+        ValidateIssuerSigningKey = true,      // sí valida la firma
+        IssuerSigningKey = new SymmetricSecurityKey(key) // clave para validar la firma
     };
 });
 

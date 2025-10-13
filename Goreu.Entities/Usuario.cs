@@ -4,6 +4,7 @@
     {
         public int IdPersona { get; set; }
         public bool Estado { get; set; } = true;
+        public bool MustChangePassword { get; set; }
         public Persona Persona {get; set;}
         public ICollection<UsuarioUnidadOrganica> UsuarioUnidadOrganicas { get; set; }
         //public ICollection<UsuarioRol> UsuarioRols { get; set; }

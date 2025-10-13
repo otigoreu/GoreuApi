@@ -11,6 +11,7 @@
         public string Entidad_Descripcion { get; set; }
         public string Aplicacion_Descripcion { get; set; }
         public string Rol_Descripcion { get; set; }
+        public bool MustChangePassword { get; set; }
 
     }
 }

@@ -20,6 +20,14 @@ namespace Goreu.Repositories.Implementation
             throw new NotImplementedException();
         }
 
+        public async Task<Usuario?> GetAsync(Expression<Func<Usuario, bool>> predicate)
+        {
+            return await context.Users
+                .Include(z => z.Persona)
+                .Include(z => z.UsuarioUnidadOrganicas.Where(ea => ea.Estado))
+                .FirstOrDefaultAsync(predicate);
+        }
+
         public Task<Usuario?> GetByPersonaAsync(int idPersona) => context.Set<Usuario>().FirstOrDefaultAsync(x => x.IdPersona == idPersona);
 
         public async Task<ICollection<UsuarioInfo>> GetAsyncAll(string? userName, PaginationDto pagination)
@@ -125,7 +133,9 @@ namespace Goreu.Repositories.Implementation
                     c.ApellidoMat,
                     f.Descripcion AS Entidad_Descripcion,
                     g.Descripcion AS Aplicacion_Descripcion,
-                    COUNT(h.IdUnidadOrganica) AS CantidadUnidadOrganica
+                    COUNT(h.IdUnidadOrganica) AS CantidadUnidadOrganica,
+                    b.MustChangePassword,
+                    a.Estado
                 FROM [Administrador].[UsuarioRol] a
                 INNER JOIN [Administrador].[Usuario] b ON a.UserId = b.Id
                 INNER JOIN [Administrador].[Persona] c ON b.IdPersona = c.Id
@@ -143,7 +153,7 @@ namespace Goreu.Repositories.Implementation
                 GROUP BY 
                     b.Id, d.Name, b.IdPersona, b.Email, b.UserName, 
                     c.Nombres, c.ApellidoPat, c.ApellidoMat, 
-                    f.Descripcion, g.Descripcion";
+                    f.Descripcion, g.Descripcion, b.MustChangePassword, a.Estado";
         }
 
         public async Task FinalizeAsync(string id)
@@ -168,6 +178,22 @@ namespace Goreu.Repositories.Implementation
 
             item.Estado = true;
             await context.SaveChangesAsync();
+        }
+
+        public async Task MarkPasswordAsMustChangeAsync(string userId)
+        {
+            var user = await context.Set<Usuario>()
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user is null)
+                throw new KeyNotFoundException($"No se encontró un usuario con ID '{userId}'.");
+
+            user.MustChangePassword = true;
+
+            var affected = await context.SaveChangesAsync();
+
+            if (affected == 0)
+                throw new InvalidOperationException($"No se pudo actualizar el usuario con ID '{userId}'.");
         }
     }
 }

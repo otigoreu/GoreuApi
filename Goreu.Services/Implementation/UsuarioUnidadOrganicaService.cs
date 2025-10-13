@@ -106,6 +106,56 @@
             return response;
         }
 
+        public async Task<BaseResponse> ValidarAsync(UsuarioUnidadOrganicaRequestDto request)
+        {
+            var response = new BaseResponse();
+            try
+            {
+                // Obtener directamente el último registro por Id
+                var data = await repository.GetAsync(
+                    predicate: z => z.IdUnidadOrganica == request.IdUnidadOrganica
+                                 && z.IdUsuario == request.IdUsuario,
+                    orderBy: z => z.Id,
+                    true
+                );
+
+                var last = data.FirstOrDefault();
+
+                if (last is null)
+                {
+                    response.Success = true;
+                    return response;
+                }
+
+                if (last.Estado)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "El usuario ya tiene un perfil activo en esta aplicación.";
+                    return response;
+                }
+
+                DateTime fechaBaja = last.Hasta?.Date ?? last.FechaAnulacion!.Value.Date;
+
+                if (request.Desde.Date <= fechaBaja.Date)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "La fecha de inicio no puede ser menor o igual que la última fecha de baja del usuario con este perfil.";
+                    return response;
+                }
+
+                // Si pasa todas las validaciones
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.ErrorMessage = "Ocurrió un error al validar el usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
+
         public async Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetUnidadOrganicasAsync(string userId)
         {
             var response = new BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>();

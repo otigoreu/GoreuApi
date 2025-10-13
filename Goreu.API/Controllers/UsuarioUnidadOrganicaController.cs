@@ -34,8 +34,16 @@
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UsuarioUnidadOrganicaRequestDto dto)
         {
+            var validacion = await service.ValidarAsync(dto);
+
+            if (!validacion.Success)
+                return BadRequest(validacion);
+
             var response = await service.AddAsync(dto);
-            return response.Success ? Ok(response) : BadRequest(response);
+
+            return response.Success
+                ? Ok(response)
+                : BadRequest(response);
         }
 
         /// <summary>

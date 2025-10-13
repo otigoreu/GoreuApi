@@ -25,10 +25,20 @@
             return await context.Set<TEntity>().Where(predicate).AsNoTracking().ToListAsync();
         }
 
-        public virtual async Task<ICollection<TEntity>> GetAsync<Tkey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, Tkey>> orderBy)
+        //public virtual async Task<ICollection<TEntity>> GetAsync<Tkey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, Tkey>> orderBy)
+        //{
+        //    return await context.Set<TEntity>().Where(predicate).OrderBy(orderBy).AsNoTracking().ToListAsync();
+        //}
+
+        public virtual async Task<ICollection<TEntity>> GetAsync<Tkey>(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, Tkey>> orderBy, bool descending = false)
         {
-            return await context.Set<TEntity>().Where(predicate).OrderBy(orderBy).AsNoTracking().ToListAsync();
+            var query = context.Set<TEntity>().Where(predicate);
+
+            query = descending ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
+
+            return await query.AsNoTracking().ToListAsync();
         }
+
 
         public virtual async Task<int> AddAsync(TEntity entity)
         {
