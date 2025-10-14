@@ -362,7 +362,7 @@ namespace Goreu.Services.Implementation
                 logger.LogInformation("Token generado para {User}: {Token}", user.UserName, token);
 
                 // Construir enlace con token y correo
-                var resetUrl = $"{frontResetPassword}?token={Uri.EscapeDataString(token)}&correo={user.Email}";
+                var resetUrl = $"{frontResetPassword}?token={Uri.EscapeDataString(token)}&correo={user.Email}&nombreCompleto={persona.apellidoPat} {persona.apellidoMat} {persona.nombres}";
 
                 // Cuerpo del correo con estilo
                 var body = $@"
