@@ -1,6 +1,5 @@
 ﻿global using Goreu.Dto.Request;
 global using Goreu.Dto.Request.Pide.Credenciales;
-global using Goreu.Dto.Request.Pide.Integraciones;
 global using Goreu.Entities;
 global using Goreu.Persistence;
 global using Goreu.Repositories.Implementation;

@@ -71,7 +71,6 @@ builder.Services.AddAuthentication(options =>
 // 5. Autorización
 builder.Services.AddAuthorization();
 
-
 // 7. Repositorios (Acceso a Datos)
 builder.Services.AddTransient<IAplicacionRepository, AplicacionRepository>();
 builder.Services.AddTransient<IEntidadAplicacionRepository, EntidadAplicacionRepository>();
@@ -85,7 +84,6 @@ builder.Services.AddTransient<IUsuarioUnidadOrganicaRepository, UsuarioUnidadOrg
 builder.Services.AddTransient<ITipoDocumentoRepository, TipoDocumentoRepository>();
 builder.Services.AddTransient<ICredencialReniecRepository, CredencialReniecRepository>();
 builder.Services.AddTransient<IHistorialRepository, HistorialRepository>();
-
 
 // 8. Servicios (Lógica de Negocio)
 builder.Services.AddTransient<IAplicacionService, AplicacionService>();
@@ -101,7 +99,8 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ITipoDocumentoService, TipoDocumentoService>();
 builder.Services.AddTransient<ICredencialReniecService, CredencialReniecService>();
 builder.Services.AddTransient<IHistorialService, HistorialService>();
-
+builder.Services.AddTransient<IReniecApiClient, ReniecApiClient>();
+builder.Services.AddTransient<IReniecService, ReniecService>();
 
 // 9. AutoMapper
 builder.Services.AddAutoMapper(config =>
@@ -117,7 +116,6 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<UsuarioUnidadOrganicaProfile>();
     config.AddProfile<TipoDocumentoProfile>();
     config.AddProfile<CredencialReniecProfile>();
-    
 });
 
 // 10. Semilla de Datos

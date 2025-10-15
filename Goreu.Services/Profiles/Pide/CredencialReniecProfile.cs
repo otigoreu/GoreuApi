@@ -11,6 +11,8 @@ namespace Goreu.Services.Profiles.Pide
         {
             CreateMap<CredencialReniec, CredencialReniecResponseDto>();
             CreateMap<AddCredencialReniecRequestDto, CredencialReniec>();
+
+            CreateMap<CredencialReniecInfo, AddCredencialReniecRequestDto>();
         }
     }
 }

@@ -194,7 +194,5 @@ namespace Goreu.Services.Implementation.Pide
             }
             return response;
         }
-
-
     }
 }
