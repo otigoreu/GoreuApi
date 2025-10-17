@@ -1,6 +1,4 @@
-﻿
-
-using Goreu.Entities.Pide;
+﻿using Goreu.Entities.Pide;
 
 namespace Goreu.Entities
 {
@@ -18,7 +16,5 @@ namespace Goreu.Entities
         // Relación uno a muchos
         public ICollection<Usuario> Usuarios { get; set; }
         public CredencialReniec CredencialReniec { get; set; }
-
-
     }
 }

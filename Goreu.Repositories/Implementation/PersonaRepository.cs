@@ -23,11 +23,9 @@ namespace Goreu.Repositories.Implementation
             this.httpContext = httpContext;
         }
 
-
         public async Task<ICollection<Persona>> GetAsync(string? search, PaginationDto? pagination)
         {
-            var queryable = context.Set<Persona>()
-                .AsNoTracking();
+            var queryable = context.Set<Persona>().AsNoTracking();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -43,27 +41,11 @@ namespace Goreu.Repositories.Implementation
                 queryable = queryable.Paginate(pagination);
             }
 
-            return await queryable.ToListAsync();
+
+            var response = await queryable.ToListAsync();
+            return response;
         }
 
-        //public async Task<ICollection<Persona>> GetAsync(string? search, PaginationDto? pagination)
-        //{
-        //    //eager loading optimizado
-        //    var queryable = context.Set<Persona>()
-        //        .Where(x => $"{x.Nombres} {x.ApellidoPat} {x.ApellidoMat}".Contains(search ?? string.Empty))
-        //        .AsNoTracking()
-        //        .AsQueryable();
-
-        //    if (pagination is not null)
-        //    {
-        //        await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
-        //        queryable = queryable.Paginate(pagination);
-        //    }
-
-        //    var response = await queryable.ToListAsync();
-        //    return response;
-        //}
-        
         public async Task<ICollection<PersonaInfo>> GetAsyncEmail(string? email, PaginationDto pagination)
         {
             //eager loading optimizado

@@ -12,10 +12,12 @@ namespace Goreu.Dto.Response
         public string Nombres { get; set; } = default!;
         public string ApellidoPat { get; set; } = default!;
         public string ApellidoMat { get; set; } = default!;
+
         public DateTime FechaNac { get; set; }
         public string Email { get; set; } = default!;
         public int IdTipoDoc { get; set; }
         public string NroDoc { get; set; } = default!;
         public string NombreCompleto { get; set; } = default!;
+        public bool Estado { get; set; }
     }
 }

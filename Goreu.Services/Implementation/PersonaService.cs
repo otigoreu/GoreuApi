@@ -38,7 +38,7 @@
             {
                 var data = await repository.GetAsync(id);
                 response.Data = mapper.Map<PersonaResponseDto>(data);
-                Console.WriteLine("Persona",response.Data.Nombres);
+                Console.WriteLine("Persona", response.Data.Nombres);
                 response.Success = true;
             }
             catch (Exception ex)
@@ -156,20 +156,30 @@
             return response;
         }
 
-        public async Task<BaseResponseGeneric<PersonaResponseDto>> GetAsyncNumdoc(string numdoc)
+        public async Task<BaseResponseGeneric<PersonaResponseDto>> GetByNumDocumentoAsync(string numDocumento)
         {
             var response = new BaseResponseGeneric<PersonaResponseDto>();
+
             try
             {
-                var data = await repository.GetAsyncNumdoc(numdoc);
-                response.Data = mapper.Map<PersonaResponseDto>(data);
+                var result = await repository.GetAsync(s => s.NroDoc == numDocumento);
+
+                if (result == null || !result.Any())
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "No se encontró una persona con ese número de documento.";
+                    return response;
+                }
+
+                response.Data = mapper.Map<PersonaResponseDto>(result.First());
                 response.Success = true;
             }
             catch (Exception ex)
             {
-                response.ErrorMessage = "Ocurrio un error al obtener los datos";
-                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+                response.ErrorMessage = "Ocurrió un error al obtener los datos.";
+                logger.LogError(ex, "{ErrorMessage} | Documento: {Documento} | Detalle: {Message}", response.ErrorMessage, numDocumento, ex.Message);
             }
+
             return response;
         }
     }
