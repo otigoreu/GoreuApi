@@ -58,5 +58,29 @@
             // 📦 Devuelve la lista final
             return await queryable.ToListAsync();
         }
+
+        public async Task FinalizeAsync(Guid id)
+        {
+            var item = await context.Set<UsuarioRol>()
+                .FirstOrDefaultAsync(x => x.Id == id); // sin AsNoTracking
+
+            if (item is null)
+                throw new InvalidOperationException($"No se encontró el registro con id {id}");
+
+            item.Estado = false;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task InitializeAsync(Guid id)
+        {
+            var item = await context.Set<UsuarioRol>()
+                .FirstOrDefaultAsync(x => x.Id == id); // sin AsNoTracking
+
+            if (item is null)
+                throw new InvalidOperationException($"No se encontró el registro con id {id}");
+
+            item.Estado = true;
+            await context.SaveChangesAsync();
+        }
     }
 }

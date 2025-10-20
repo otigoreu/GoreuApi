@@ -78,5 +78,26 @@ namespace Goreu.API.Controllers
             return BadRequest(response);
         }
 
+        [HttpPatch("{id}/finalize")]
+        public async Task<IActionResult> Finalize(Guid id)
+        {
+            var response = await userRoleService.FinalizeAsync(id);
+
+            if (!response.Success)
+                return NotFound(response); // o BadRequest según el motivo
+
+            return Ok(response);
+        }
+
+        [HttpPatch("{id}/initialize")]
+        public async Task<IActionResult> Initialize(Guid id)
+        {
+            var response = await userRoleService.InitializeAsync(id);
+
+            if (!response.Success)
+                return NotFound(response); // o BadRequest según el motivo
+
+            return Ok(response);
+        }
     }
 }

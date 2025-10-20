@@ -41,5 +41,38 @@
 
             return response;
         }
+
+        public async Task<BaseResponse> FinalizeAsync(Guid id)
+        {
+            var response = new BaseResponse();
+            try
+            {
+                await userRolRepository.FinalizeAsync(id);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al finalizar el usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
+        public async Task<BaseResponse> InitializeAsync(Guid id)
+        {
+            var response = new BaseResponse();
+            try
+            {
+                await userRolRepository.InitializeAsync(id);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al inicializar el usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
     }
 }

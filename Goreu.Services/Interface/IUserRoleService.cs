@@ -7,5 +7,9 @@
              int idAplicacion,
              string? search,
              PaginationDto? pagination);
+
+        Task<BaseResponse> FinalizeAsync(Guid id);
+
+        Task<BaseResponse> InitializeAsync(Guid id);
     }
 }
