@@ -5,7 +5,8 @@ namespace Goreu.Services.Interface
     public interface IRolService
     {
         Task<BaseResponseGeneric<string>> AddSync(RolRequestDto request);
-        Task<BaseResponseGeneric<ICollection<RolEntidadAplicacionInfo>>> GetWithAllEntidadAplicacionsync();
+        Task<BaseResponseGeneric<ICollection<RolEntidadAplicacionInfo>>> GetWithAllEntidadAplicacionAsync(int idEntidad,int idAplicacion);
+        Task<BaseResponseGeneric<ICollection<RolEntidadAplicacionCounterInfo>>> GetWithAllEntidadAplicacionCounterAsync(int idEntidad, int idAplicacion);
         Task<BaseResponse> DeleteAsync(string id);
         Task<BaseResponse> UpdateAsync(string id, RolRequestDto request);
         Task<BaseResponseGeneric<ICollection<RolResponseDto>>> GetAsync();

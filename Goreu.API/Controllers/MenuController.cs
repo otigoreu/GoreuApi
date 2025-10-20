@@ -18,6 +18,20 @@
             var response = await service.GetAsync(displayName);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+        [HttpGet("getAllByEntidadAndAplicacion")]
+        public async Task<IActionResult> GetAllByEntidadAndAplicacion(int idEntidad, int idAplicacion)
+        {
+
+            var response = await service.GetAllByEntidadAndAplicacion(idEntidad, idAplicacion);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+        [HttpGet("getAllByRol")]
+        public async Task<IActionResult> GetAllByRol(string idRol)
+        {
+
+            var response = await service.GetAllByRol(idRol);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
         [HttpGet("displayNameWithRole")]
         public async Task<IActionResult> GetWithRole(string? displayName)
         {

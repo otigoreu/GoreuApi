@@ -144,7 +144,7 @@ namespace Goreu.Services.Implementation
             var response = new BaseResponseGeneric<ICollection<RolResponseSingleDto>>();
             try
             {
-               var data=await repository.GetAsyncPerUser(idUser);
+                var data = await repository.GetAsyncPerUser(idUser);
                 response.Data = mapper.Map<ICollection<RolResponseSingleDto>>(data);
                 response.Success = true;
 
@@ -223,13 +223,30 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<RolEntidadAplicacionInfo>>> GetWithAllEntidadAplicacionsync()
+        public async Task<BaseResponseGeneric<ICollection<RolEntidadAplicacionInfo>>> GetWithAllEntidadAplicacionAsync(int idEntidad, int idAplicacion)
         {
             var response = new BaseResponseGeneric<ICollection<RolEntidadAplicacionInfo>>();
             try
             {
-                
-                response.Data = await repository.GetWithAllEntidadAplicacionsync();
+
+                response.Data = await repository.GetWithAllEntidadAplicacionAsync(idEntidad, idAplicacion);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrio un error al obtener los datos";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
+        public async Task<BaseResponseGeneric<ICollection<RolEntidadAplicacionCounterInfo>>> GetWithAllEntidadAplicacionCounterAsync(int idEntidad, int idAplicacion)
+        {
+            var response = new BaseResponseGeneric<ICollection<RolEntidadAplicacionCounterInfo>>();
+            try
+            {
+
+                response.Data = await repository.GetWithAllEntidadAplicacionCounterAsync(idEntidad, idAplicacion);
                 response.Success = true;
             }
             catch (Exception ex)

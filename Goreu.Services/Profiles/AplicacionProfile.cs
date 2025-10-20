@@ -1,10 +1,4 @@
-﻿using AutoMapper;
-using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities;
-using Goreu.Entities.Info;
-
-namespace Goreu.Services.Profiles
+﻿namespace Goreu.Services.Profiles
 {
     public class AplicacionProfile : Profile
     {

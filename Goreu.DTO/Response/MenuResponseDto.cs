@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Goreu.Dto.Response
+﻿namespace Goreu.Dto.Response
 {
     public class MenuResponseDto
     {
@@ -14,6 +8,6 @@ namespace Goreu.Dto.Response
         public string Ruta { get; set; } = default!;
         public int IdAplicacion { get; set; }
         public int? IdMenuPadre { get; set; }
-        public string Estado { get; set; } = default!;
+        public bool Estado { get; set; } 
     }
 }

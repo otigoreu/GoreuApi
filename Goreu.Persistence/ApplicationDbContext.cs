@@ -27,8 +27,15 @@
             modelBuilder.Entity<UnidadOrganicaInfo>().HasNoKey();
             modelBuilder.Entity<EntidadInfo>().HasNoKey();
             modelBuilder.Entity<MenuInfoRol>().HasNoKey();
+<<<<<<< Updated upstream
             modelBuilder.Entity<RolInfo>().HasNoKey();
             modelBuilder.Entity<RolEntidadAplicacionInfo>().HasNoKey();
+=======
+            modelBuilder.Entity<MenuInfo>();
+            modelBuilder.Entity<RolInfo>();
+            modelBuilder.Entity<RolEntidadAplicacionInfo>();
+            modelBuilder.Entity<RolEntidadAplicacionCounterInfo>();
+>>>>>>> Stashed changes
 
             // UsuarioInfo se mapea a una vista o consulta sin clave
             modelBuilder.Entity<UsuarioInfo>().HasNoKey().ToView("UsuarioInfoView");

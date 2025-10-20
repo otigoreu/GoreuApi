@@ -22,9 +22,15 @@ namespace Goreu.API.Controllers
             return response.Success ? Ok(response) : BadRequest(response);
         }
         [HttpGet("Withentidadaplicacion")]
-        public async Task<IActionResult> GetWithEntidadAplicacin()
+        public async Task<IActionResult> GetWithEntidadAplicacion(int idEntidad,int idAplicacion)
         {
-            var response = await service.GetWithAllEntidadAplicacionsync();
+            var response = await service.GetWithAllEntidadAplicacionAsync(idEntidad,idAplicacion);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+        [HttpGet("WithentidadaplicacionCounter")]
+        public async Task<IActionResult> GetWithEntidadAplicacionCounter(int idEntidad, int idAplicacion)
+        {
+            var response = await service.GetWithAllEntidadAplicacionCounterAsync(idEntidad, idAplicacion);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 

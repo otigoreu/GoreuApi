@@ -1,8 +1,4 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities.Info;
-
-namespace Goreu.Services.Interface
+﻿namespace Goreu.Services.Interface
 {
     public interface IMenuService
     {
@@ -10,6 +6,8 @@ namespace Goreu.Services.Interface
         Task<BaseResponseGeneric<int>> AddAsyncSingle(MenuRequestDtoSingle request);
         Task<BaseResponseGeneric<ICollection<MenuResponseDto>>> GetByAplicationAsync(int idAplication, string email);
         Task<BaseResponseGeneric<ICollection<MenuInfo>>> GetByAplicationAsyncSingle(int idAplication);
+        Task<BaseResponseGeneric<ICollection<MenuResponseDto>>> GetAllByEntidadAndAplicacion(int idEntidad,int idAplication);
+        Task<BaseResponseGeneric<ICollection<MenuResponseDto>>> GetAllByRol(string idRol);
         Task<BaseResponseGeneric<ICollection<MenuInfo>>> GetAsync(string? Descripcion);
         Task<BaseResponseGeneric<ICollection<MenuInfoRol>>> GetAsyncWithRole(string? Descripcion);
         Task<BaseResponse> DeleteAsync(int id);

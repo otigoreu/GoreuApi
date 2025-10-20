@@ -281,5 +281,41 @@ namespace Goreu.Services.Implementation
             }
             return response;
         }
+
+        public async Task<BaseResponseGeneric<ICollection<MenuResponseDto>>> GetAllByEntidadAndAplicacion(int idEntidad, int idAplication)
+        {
+            var response = new BaseResponseGeneric<ICollection<MenuResponseDto>>();
+            try
+            {
+
+                response.Data = mapper.Map<ICollection<MenuResponseDto>>(await repository.GetAllByEntidadAndAplicacion(idEntidad, idAplication));
+                //response.Data = await repository.GetAllByEntidadAndAplicacion(idEntidad, idAplication);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrio un error al obtener los datos";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
+        public async Task<BaseResponseGeneric<ICollection<MenuResponseDto>>> GetAllByRol(string idRol)
+        {
+            var response = new BaseResponseGeneric<ICollection<MenuResponseDto>>();
+            try
+            {
+
+                response.Data = mapper.Map<ICollection<MenuResponseDto>>(await repository.GetAllByRol(idRol));
+                //response.Data = await repository.GetAllByEntidadAndAplicacion(idEntidad, idAplication);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrio un error al obtener los datos";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
     }
 }

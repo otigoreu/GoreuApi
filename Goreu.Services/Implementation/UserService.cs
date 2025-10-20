@@ -1,9 +1,4 @@
-﻿using Goreu.Dto.Response;
-using Goreu.Repositories.Implementation;
-using Microsoft.AspNetCore.Identity;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace Goreu.Services.Implementation
+﻿namespace Goreu.Services.Implementation
 {
     public class UserService : IUserService
     {

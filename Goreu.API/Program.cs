@@ -85,6 +85,7 @@ builder.Services.AddTransient<IUsuarioUnidadOrganicaRepository, UsuarioUnidadOrg
 builder.Services.AddTransient<ITipoDocumentoRepository, TipoDocumentoRepository>();
 builder.Services.AddTransient<ICredencialReniecRepository, CredencialReniecRepository>();
 builder.Services.AddTransient<IHistorialRepository, HistorialRepository>();
+builder.Services.AddTransient<IMenuRolRepository, MenuRolRepository>();
 
 // 8. Servicios (Lógica de Negocio)
 builder.Services.AddTransient<IAplicacionService, AplicacionService>();
@@ -101,8 +102,13 @@ builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 builder.Services.AddTransient<ITipoDocumentoService, TipoDocumentoService>();
 builder.Services.AddTransient<ICredencialReniecService, CredencialReniecService>();
 builder.Services.AddTransient<IHistorialService, HistorialService>();
+<<<<<<< Updated upstream
 builder.Services.AddTransient<IReniecApiClient, ReniecApiClient>();
 builder.Services.AddTransient<IReniecService, ReniecService>();
+=======
+builder.Services.AddTransient<IMenuRolService,MenuRolService>();
+
+>>>>>>> Stashed changes
 
 // 9. AutoMapper
 builder.Services.AddAutoMapper(config =>
@@ -119,6 +125,11 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<UsuarioUnidadOrganicaProfile>();
     config.AddProfile<TipoDocumentoProfile>();
     config.AddProfile<CredencialReniecProfile>();
+<<<<<<< Updated upstream
+=======
+    config.AddProfile<MenuRolProfile>();
+    
+>>>>>>> Stashed changes
 });
 
 // 10. Semilla de Datos

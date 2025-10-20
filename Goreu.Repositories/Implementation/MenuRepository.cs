@@ -1,4 +1,5 @@
-﻿using Goreu.Entities;
+﻿using Goreu.Dto.Response;
+using Goreu.Entities;
 using Goreu.Entities.Info;
 using Goreu.Persistence;
 using Goreu.Repositories.Interface;
@@ -52,7 +53,7 @@ namespace Goreu.Repositories.Implementation
         {
             return await context.Set<Menu>()
                .Where(menu => menu.IdAplicacion == applicationId &&
-                              menu.MenuRoles.Any(mr => roleIds.Contains(mr.IdRol)))
+                              menu.MenuRoles.Any(mr => roleIds.Contains(mr.IdRol) && mr.Estado==true))
                .ToListAsync();
         }
 
@@ -129,6 +130,30 @@ namespace Goreu.Repositories.Implementation
 
             return await query.ToListAsync();
 
+        }
+
+        public async Task<ICollection<Menu>> GetAllByEntidadAndAplicacion(int idEntidad, int idAplicacion)
+        {
+            var quey = context.Set<Menu>().FromSqlRaw(
+                @"select distinct m.Id,m.Descripcion, m.Icono, m.Ruta,m.IdAplicacion ,m.IdMenuPadre, m.Estado
+		            from Administrador.Menu m 
+					join Administrador.Aplicacion a on m.IdAplicacion=a.Id
+					join Administrador.EntidadAplicacion ea on ea.IdAplicacion=a.Id		            
+		            join Administrador.Entidad e on e.Id=ea.IdEntidad
+		            where e.Id={0} and a.Id={1}", idEntidad,idAplicacion);
+            return await quey.ToListAsync();
+
+        }
+
+        public async Task<ICollection<Menu>> GetAllByRol(string idRol)
+        {
+            var quey = context.Set<Menu>().FromSqlRaw(
+                @"select m.Id,m.Descripcion, m.Icono, m.Ruta,m.IdAplicacion ,m.IdMenuPadre, m.Estado
+		            from Administrador.Menu m 
+		            join Administrador.MenuRol mr on mr.IdMenu=m.Id 
+		            join Administrador.Rol r on r.Id=mr.IdRol
+		            where r.Id={0}", idRol);
+            return await quey.ToListAsync();
         }
     }
 }

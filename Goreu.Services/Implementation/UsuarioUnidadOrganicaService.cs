@@ -27,7 +27,7 @@
                 // Paso 2: Obtener las aplicaciones asociadas a la entidad
                 var usuariosUniadorganica = await repository.GetAsync(ea => ea.IdUnidadOrganica == idUnidadorganica);
 
-                // Paso 3: Hacer join izquierdo entre todas las aplicaciones y las aplicaciones asociadas
+                // Paso 3: Hacer join izquierdo entre todas las UnidadesOrganicas y las usuarios asociadas
                 var resultado = todasLosUsuarios
                     .Data
                     .Select(app =>
