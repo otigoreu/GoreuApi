@@ -21,6 +21,19 @@ namespace Goreu.Repositories.Implementation
             this.httpContextAccessor = httpContextAccessor;
         }
 
+        public async Task<ICollection<Aplicacion>> GetAllbyEntidad<TKey>(int idEntidad, Expression<Func<Aplicacion, TKey>> orderBy, PaginationDto pagination)
+        {
+            var queryable = context.Set<Aplicacion>()
+                .Where(app => app.EntidadAplicaciones.Any(ea => ea.IdEntidad==idEntidad))
+                .OrderBy(orderBy)
+                .AsNoTracking()
+                .AsQueryable();
+            await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
+            var response = await queryable.Paginate(pagination).ToListAsync();
+
+            return response;
+        }
+
         public async Task<ICollection<Aplicacion>> GetAsync<TKey>(Expression<Func<Aplicacion, bool>> predicate, Expression<Func<Aplicacion, TKey>> orderBy, PaginationDto pagination)
         {
             var queryable = context.Set<Aplicacion>()

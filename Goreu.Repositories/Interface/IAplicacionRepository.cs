@@ -8,9 +8,8 @@ namespace Goreu.Repositories.Interface
     public interface IAplicacionRepository : IRepositoryBase<Aplicacion>
     {
         Task<ICollection<Aplicacion>> GetAsync<TKey>(Expression<Func<Aplicacion, bool>> predicate, Expression<Func<Aplicacion, TKey>> orderBy, PaginationDto pagination);
-
+        Task<ICollection<Aplicacion>> GetAllbyEntidad<TKey>(int idEntidad, Expression<Func<Aplicacion, TKey>> orderBy, PaginationDto pagination);
         Task<ICollection<AplicacionInfo>> GetAsyncPerUser(string idUser);
-
         Task<AplicacionInfo> GetAsyncPerRol(string idRol);
     }
 }

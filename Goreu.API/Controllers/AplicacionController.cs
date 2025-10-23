@@ -13,9 +13,9 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AplicacionRequestDto dto)
+        public async Task<IActionResult> Post(int idEntidad,[FromBody] AplicacionRequestDto dto)
         {
-            var response = await service.AddAsync(dto);
+            var response = await service.AddAsync(idEntidad, dto);
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
@@ -78,6 +78,13 @@
         public async Task<IActionResult> Get(string idUser)
         {
             var result = await service.GetAsyncPerUser(idUser);
+
+            return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
+        }
+        [HttpGet("byEntidad")]
+        public async Task<IActionResult> GetAlbyEntidad(int idEntidad, [FromQuery] PaginationDto pagination)
+        {
+            var result = await service.GetAllbyEntidad(idEntidad,pagination);
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }

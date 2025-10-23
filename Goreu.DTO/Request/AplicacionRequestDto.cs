@@ -9,6 +9,6 @@ namespace Goreu.Dto.Request
     public class AplicacionRequestDto
     {
         public string Descripcion { get; set; } = default!;
-        public List<int> idMenus { get; set; }
+        
     }
 }

@@ -68,12 +68,10 @@
 
         [HttpGet]
         public async Task<IActionResult> Get(
-            [FromQuery] string userId,
-            [FromQuery] string rolId,
             [FromQuery] string? search,
             [FromQuery] PaginationDto? pagination = null)
         {
-            var result = await service.GetAsync(userId, rolId, search ?? string.Empty, pagination);
+            var result = await service.GetAsync( search ?? string.Empty, pagination);
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }

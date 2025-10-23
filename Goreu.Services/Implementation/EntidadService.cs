@@ -29,54 +29,25 @@ namespace Goreu.Services.Implementation
             this.user_uoService = user_uoService;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<EntidadResponseDto>>> GetAsync(string userId, string rolId, string? descripcion, PaginationDto? pagination)
+        public async Task<BaseResponseGeneric<ICollection<EntidadResponseDto>>> GetAsync(string? descripcion, PaginationDto? pagination)
         {
             var response = new BaseResponseGeneric<ICollection<EntidadResponseDto>>();
-            //try
-            //{
-            //    descripcion ??= string.Empty; // Evita nulls
-            //    ICollection<Entidad> data;
+            try
+            {
 
-            //    var user = await userService.GetUserByIdAsync(userId);
-            //    if (user?.Data == null)
-            //    {
-            //        response.ErrorMessage = "Usuario no encontrado.";
-            //        return response;
-            //    }
+                var data = await repository.GetAsync(
+                    predicate: s => s.Descripcion.Contains(descripcion ?? string.Empty),
+                    orderBy: x => x.Descripcion,
+                    pagination);
 
-            //    var rol = await rolService.GetAsync(rolId);
-            //    if (rol?.Data == null)
-            //    {
-            //        response.ErrorMessage = "Rol no encontrado.";
-            //        return response;
-            //    }
-
-            //    Expression<Func<Entidad, bool>> predicate;
-            //    if (rol.Data.Nivel == '1')
-            //    {  // -->> Sistema
-            //        predicate = s => s.Descripcion.Contains(descripcion);
-            //    }
-            //    else              
-            //    {
-            //        var entidadaplicacion = await entidadaplicacionService.GetAsync(rol.Data.idEntidadAplicacion);
-
-            //        predicate = s => s.Id == entidadaplicacion.Data.IdEntidad &&
-            //                     s.Descripcion.Contains(descripcion);
-            //    }
-
-            //    data = await repository.GetAsync(
-            //        predicate: predicate,
-            //        orderBy: x => x.Descripcion,
-            //        pagination);
-
-            //    response.Data = mapper.Map<ICollection<EntidadResponseDto>>(data);
-            //    response.Success = true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    response.ErrorMessage = "Error al filtrar las unidades orgánicas por descripción.";
-            //    logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
-            //}
+                response.Data = mapper.Map<ICollection<EntidadResponseDto>>(data);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al filtrar las unidades orgánicas por descripción.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
 
             return response;
         }
