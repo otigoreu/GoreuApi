@@ -249,7 +249,7 @@ namespace Goreu.Persistence
                 ApellidoPat = "Ponce",
                 ApellidoMat = "Morales",
                 FechaNac = new DateTime(1982, 07, 10),
-                Email = "edercin@gmail.com",
+                //Email = "edercin@gmail.com",
                 IdTipoDoc = tipodoc1.Id,
                 NroDoc = "43056714",
 
@@ -262,7 +262,7 @@ namespace Goreu.Persistence
                 ApellidoPat = "Lopez",
                 ApellidoMat = "Vasquez",
                 FechaNac = new DateTime(1990, 05, 31),
-                Email = "edercinsoft@gmail.com",
+                //Email = "edercinsoft@gmail.com",
                 IdTipoDoc = tipodoc2.Id,
                 NroDoc = "46519259",
 
@@ -273,7 +273,7 @@ namespace Goreu.Persistence
                 ApellidoPat = "Llenera",
                 ApellidoMat = "Lima",
                 FechaNac = new DateTime(1985, 02, 01),
-                Email = "pp.llerenalima@gmail.com",
+                //Email = "pp.llerenalima@gmail.com",
                 IdTipoDoc = tipodoc1.Id,
                 NroDoc = "42928945",
 
@@ -285,7 +285,7 @@ namespace Goreu.Persistence
                 ApellidoPat = "Stark",
                 ApellidoMat = "Taricuarima",
                 FechaNac = new DateTime(1985, 02, 01),
-                Email = "viernes@gmail.com",
+                //Email = "viernes@gmail.com",
                 IdTipoDoc = tipodoc1.Id,
                 NroDoc = "11223344",
 

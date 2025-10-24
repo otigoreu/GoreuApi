@@ -3,7 +3,7 @@
     public interface IPersonaService
     {
         Task<BaseResponseGeneric<ICollection<PersonaResponseDto>>> GetAsync(string? nombres, PaginationDto? pagination);
-        Task<BaseResponseGeneric<PersonaInfo>> GetAsyncBYEmail(string email);
+        //Task<BaseResponseGeneric<PersonaInfo>> GetAsyncBYEmail(string email);
         Task<BaseResponseGeneric<PersonaResponseDto>> GetAsync(int id);
         Task<BaseResponseGeneric<PersonaResponseDto>> GetByNumDocumentoAsync(string numdoc);
         Task<BaseResponseGeneric<int>> AddAsync(PersonaRequestDto resquest);

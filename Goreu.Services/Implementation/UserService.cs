@@ -357,8 +357,7 @@
 
             //Persona
             var persona = await personaRepository.GetAsync(user.IdPersona);
-            Console.WriteLine("user =" + user.IdPersona);
-            Console.WriteLine("Persona =" + persona.Id);
+            
             var personaDto = new PersonaResponseDto
             {
                 Id = persona.Id,
@@ -366,7 +365,7 @@
                 ApellidoPat = persona.ApellidoPat,
                 ApellidoMat = persona.ApellidoMat,
                 FechaNac = persona.FechaNac,
-                Email = persona.Email,
+                //Email = persona.Email,
                 NroDoc = persona.NroDoc
             };
 
@@ -529,7 +528,7 @@
                 else
                 {
                     var persona = new PersonaInfo();
-                    persona = mapper.Map<PersonaInfo>((await personaRepository.GetAsync(predicate: s => s.Email == request.Email)).FirstOrDefault());
+                    persona = mapper.Map<PersonaInfo>((await personaRepository.GetAsync(predicate: s => s.Id == userIdentity.IdPersona)).FirstOrDefault());
                     //Enviar un email de confirmacion de clave cambiada
                     await emailService.SendEmailAsync(request.Email, "Confiracion de cambio de clave",
                     @$"
@@ -573,7 +572,7 @@
                 else
                 {
                     var persona = new PersonaInfo();
-                    persona = mapper.Map<PersonaInfo>((await personaRepository.GetAsync(predicate: s => s.Email == email)).FirstOrDefault());
+                    persona = mapper.Map<PersonaInfo>((await personaRepository.GetAsync(predicate: s => s.Id == userIdentity.IdPersona)).FirstOrDefault());
                     logger.LogInformation("Se cambio la clave para {email}", userIdentity.Email);
                     //Enviar un email de confirmacion de clave cambiada
                     await emailService.SendEmailAsync(email, "Confiracion de cambio de clave",
@@ -626,7 +625,7 @@
                 await userManager.UpdateAsync(userIdentity);
 
                 // Mapear persona
-                var persona = await personaRepository.GetAsync(s => s.Email == userIdentity.Email);
+                var persona = await personaRepository.GetAsync(s => s.Id == userIdentity.IdPersona);
                 var personaInfo = mapper.Map<PersonaInfo>(persona.FirstOrDefault());
 
                 // Log y envío de correo

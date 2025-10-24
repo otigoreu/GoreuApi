@@ -25,12 +25,12 @@ namespace Goreu.API.Controllers
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
 
-        [HttpGet("email")]
-        public async Task<IActionResult> Get(string? email)
-        {
-            var response = await service.GetAsyncBYEmail(email);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+        //[HttpGet("email")]
+        //public async Task<IActionResult> Get(string? email)
+        //{
+        //    var response = await service.GetAsyncBYEmail(email);
+        //    return response.Success ? Ok(response) : BadRequest(response);
+        //}
 
         /// <summary>
         /// Consulta los datos personales de una persona registrada en el sistema,
