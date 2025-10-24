@@ -123,22 +123,22 @@
             return response;
         }
 
-        //public async Task<BaseResponseGeneric<PersonaInfo>> GetAsyncBYEmail(string email)
-        //{
-        //    var response = new BaseResponseGeneric<PersonaInfo>();
-        //    try
-        //    {
+        public async Task<BaseResponseGeneric<PersonaInfo>> GetAsyncBYEmail(string email)
+        {
+            var response = new BaseResponseGeneric<PersonaInfo>();
+            try
+            {
 
-        //        response.Data = mapper.Map<PersonaInfo>((await repository.GetAsync(predicate: s => s.Email == email)).FirstOrDefault());
-        //        response.Success = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.ErrorMessage = "Ocurrio un error al obtener los datos";
-        //        logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
-        //    }
-        //    return response;
-        //}
+                response.Data = mapper.Map<PersonaInfo>((await repository.GetAsync(predicate: s => s.Email == email)).FirstOrDefault());
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Ocurrio un error al obtener los datos";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
 
         public async Task<BaseResponse> InitializedAsync(int id)
         {

@@ -46,29 +46,30 @@ namespace Goreu.Repositories.Implementation
             return response;
         }
 
-        //public async Task<ICollection<PersonaInfo>> GetAsyncEmail(string? email, PaginationDto pagination)
-        //{
-        //    //eager loading optimizado
-        //    var queryable = context.Set<Persona>()
-        //        .Where(x => x.Email.Contains(email ?? string.Empty))
-        //        .AsNoTracking()
-        //        .Select(x => new PersonaInfo
-        //        {
-        //            Id = x.Id,
-        //            nombres = x.Nombres,
-        //            apellidoPat = x.ApellidoPat,
-        //            apellidoMat = x.ApellidoMat,
-        //            fechaNac = x.FechaNac,
-        //            email = x.Email,
-        //            idTipoDoc = x.IdTipoDoc,
-        //            nroDoc = x.NroDoc,
-        //            estado = x.Estado
+        public async Task<ICollection<PersonaInfo>> GetAsyncEmail(string? email, PaginationDto pagination)
+        {
+            //eager loading optimizado
+            var queryable = context.Set<Persona>()
+                .Where(x => x.Email.Contains(email ?? string.Empty))
+                .AsNoTracking()
+                .Select(x => new PersonaInfo
+                {
+                    Id = x.Id,
+                    nombres = x.Nombres,
+                    apellidoPat = x.ApellidoPat,
+                    apellidoMat = x.ApellidoMat,
+                    fechaNac = x.FechaNac,
+                    email = x.Email,
+                    idTipoDoc = x.IdTipoDoc,
+                    nroDoc = x.NroDoc,
+                    estado = x.Estado
 
-        //        }).AsQueryable();
+                }).AsQueryable();
 
-        //    await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
-        //    return await queryable.OrderBy(x => x.Id).Paginate(pagination).ToListAsync();
-        //}
+            await httpContext.HttpContext.InsertarPaginacionHeader(queryable);
+            return await queryable.OrderBy(x => x.Id).Paginate(pagination).ToListAsync();
+
+        }
         
         public async Task FinalizedAsync(int id)
         {

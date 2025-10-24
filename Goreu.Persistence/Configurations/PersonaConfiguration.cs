@@ -20,6 +20,7 @@ namespace Goreu.Persistence.Configurations
             builder.Property(x => x.FechaNac)
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("GETDATE()");
+            builder.Property(x => x.Email).HasMaxLength(50).IsUnicode(false);
             builder.Property(x => x.NroDoc).HasMaxLength(9).IsUnicode(false);
 
             //builder.HasQueryFilter(x => x.Estado);

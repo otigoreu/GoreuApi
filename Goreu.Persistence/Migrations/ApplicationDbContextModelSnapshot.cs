@@ -187,44 +187,6 @@ namespace Goreu.Persistence.Migrations
                     b.ToTable("EntidadInfo");
                 });
 
-            modelBuilder.Entity("Goreu.Entities.Info.MenuInfo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Aplicacion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Estado")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Icono")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IdAplicacion")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IdMenuPadre")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Ruta")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MenuInfo");
-                });
-
             modelBuilder.Entity("Goreu.Entities.Info.MenuInfoRol", b =>
                 {
                     b.Property<string>("Aplicacion")
@@ -266,35 +228,12 @@ namespace Goreu.Persistence.Migrations
                     b.ToTable("MenuInfoRol");
                 });
 
-            modelBuilder.Entity("Goreu.Entities.Info.RolEntidadAplicacionCounterInfo", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CantidadMenus")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Estado")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("IdEntidadAplicacion")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RolEntidadAplicacionCounterInfo");
-                });
-
             modelBuilder.Entity("Goreu.Entities.Info.RolEntidadAplicacionInfo", b =>
                 {
+                    b.Property<string>("EntidadAplicacion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
@@ -490,6 +429,12 @@ namespace Goreu.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
@@ -736,25 +681,29 @@ namespace Goreu.Persistence.Migrations
 
             modelBuilder.Entity("Goreu.Entities.UsuarioRol", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<bool>("Estado")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("UserId", "RoleId");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UsuarioRol", "Administrador");
                 });
