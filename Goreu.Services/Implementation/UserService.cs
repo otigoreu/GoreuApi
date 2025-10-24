@@ -19,6 +19,7 @@
         private readonly IAplicacionRepository aplicacionRepository;
         private readonly IUsuarioUnidadOrganicaRepository usuarioUnidadOrganicaRepository;
         private readonly IEntidadAplicacionRepository entidadAplicacionRepository;
+        private readonly IUserRoleRepository userRoleRepository;
 
         public UserService(
             UserManager<Usuario> userManager,
@@ -37,7 +38,8 @@
             IEmailService emailService,
             IAplicacionRepository aplicacionRepository,
             IUsuarioUnidadOrganicaRepository usuarioUnidadOrganicaRepository,
-            IEntidadAplicacionRepository entidadAplicacionRepository
+            IEntidadAplicacionRepository entidadAplicacionRepository,
+            IUserRoleRepository userRoleRepository
             )
         {
             this.userManager = userManager;
@@ -57,20 +59,20 @@
             this.aplicacionRepository = aplicacionRepository;
             this.usuarioUnidadOrganicaRepository = usuarioUnidadOrganicaRepository;
             this.entidadAplicacionRepository = entidadAplicacionRepository;
+            this.userRoleRepository = userRoleRepository;
         }
         ////---------------------------------------------------------------------------------------------
         ////Registar Usuario
-
         public async Task<BaseResponseGeneric<string>> RegisterAsync(RegisterRequestDto request)
         {
             var response = new BaseResponseGeneric<string>();
 
+            using var transaction = await context.Database.BeginTransactionAsync();
+
             try
             {
-                // 🔹 Validar si ya existe un usuario con esa persona
                 var existingUser = await userRepository.GetByPersonaAsync(request.IdPersona);
 
-                // 🔹 Obtener el rol solicitado
                 var existingRol = await rolRepository.GetAsync(request.RolId);
                 if (existingRol == null)
                 {
@@ -81,7 +83,7 @@
 
                 if (existingUser == null)
                 {
-                    // 🔹 Crear un nuevo usuario
+                    // Crear usuario
                     var newUser = new Usuario
                     {
                         UserName = request.UserName,
@@ -100,52 +102,146 @@
                         return response;
                     }
 
-                    var addUserRoleResult = await userManager.AddToRoleAsync(newUser, existingRol.Name);
-                    if (!addUserRoleResult.Succeeded)
+                    //var addUserRoleResult = await userManager.AddToRoleAsync(newUser, existingRol.Name);
+                    var addedUserRole = await userRoleRepository.AddAsync(new UsuarioRol
                     {
-                        response.Success = false;
-                        response.ErrorMessage = string.Join("; ", addUserRoleResult.Errors.Select(e => e.Description));
-                        return response;
-                    }
+                        UserId = newUser.Id,
+                        RoleId = existingRol.Id,
+                        Estado = true
+                    });
+
+                    if (addedUserRole == null)
+                        throw new Exception("No se pudo crear el vínculo Usuario-Rol.");
 
                     response.Success = true;
                     response.ErrorMessage = "Usuario registrado correctamente con el rol asignado.";
                 }
                 else
                 {
-                    // 🔹 Validar si ya tiene ese rol
-                    bool alreadyInRole = await userManager.IsInRoleAsync(existingUser, existingRol.Name);
+                    //bool alreadyInRole = await userManager.IsInRoleAsync(existingUser, existingRol.Name);
+                    var alreadyInRole = await userRoleRepository.GetAsync(existingUser.Id, existingRol.Id);
 
-                    if (alreadyInRole)
-                    {
-                        response.Success = false;
-                        response.ErrorMessage = "El usuario ya existe y tiene asignado este rol.";
-                    }
+                    if (alreadyInRole != null)
+                        throw new Exception("El usuario ya existe y tiene asignado este rol.");
                     else
                     {
-                        var addUserRoleResult = await userManager.AddToRoleAsync(existingUser, existingRol.Name);
-
-                        if (!addUserRoleResult.Succeeded)
+                        var addedUserRole = await userRoleRepository.AddAsync(new UsuarioRol
                         {
-                            response.Success = false;
-                            response.ErrorMessage = string.Join("; ", addUserRoleResult.Errors.Select(e => e.Description));
-                            return response;
-                        }
+                            UserId = existingUser.Id,
+                            RoleId = existingRol.Id,
+                            Estado = true
+                        });
+
+                        if (addedUserRole == null)
+                            throw new Exception("No se pudo crear el vínculo Usuario-Rol.");
 
                         response.Success = true;
                         response.ErrorMessage = "Rol adicional asignado al usuario existente.";
                     }
                 }
+
+                // 🔹 Si todo sale bien, confirmamos la transacción
+                await transaction.CommitAsync();
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync(); // 🔹 Revertimos todo si algo falla
+
                 response.Success = false;
-                response.ErrorMessage = "Ocurrió un error inesperado al registrar el usuario.";
+                response.ErrorMessage = ex.Message;
+
                 logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
 
             return response;
         }
+
+
+        //public async Task<BaseResponseGeneric<string>> RegisterAsync(RegisterRequestDto request)
+        //{
+        //    var response = new BaseResponseGeneric<string>();
+
+        //    try
+        //    {
+        //        // 🔹 Validar si ya existe un usuario con esa persona
+        //        var existingUser = await userRepository.GetByPersonaAsync(request.IdPersona);
+
+        //        // 🔹 Obtener el rol solicitado
+        //        var existingRol = await rolRepository.GetAsync(request.RolId);
+        //        if (existingRol == null)
+        //        {
+        //            response.Success = false;
+        //            response.ErrorMessage = "El rol especificado no existe.";
+        //            return response;
+        //        }
+
+        //        if (existingUser == null)
+        //        {
+        //            // 🔹 Crear un nuevo usuario
+        //            var newUser = new Usuario
+        //            {
+        //                UserName = request.UserName,
+        //                Email = request.Email,
+        //                IdPersona = request.IdPersona,
+        //                EmailConfirmed = true,
+        //                MustChangePassword = true
+        //            };
+
+        //            var addUserResult = await userManager.CreateAsync(newUser, request.Password);
+
+        //            if (!addUserResult.Succeeded)
+        //            {
+        //                response.Success = false;
+        //                response.ErrorMessage = string.Join("; ", addUserResult.Errors.Select(e => e.Description));
+        //                return response;
+        //            }
+
+        //            var addUserRoleResult = await userManager.AddToRoleAsync(newUser, existingRol.Name);
+        //            if (!addUserRoleResult.Succeeded)
+        //            {
+        //                response.Success = false;
+        //                response.ErrorMessage = string.Join("; ", addUserRoleResult.Errors.Select(e => e.Description));
+        //                return response;
+        //            }
+
+        //            response.Success = true;
+        //            response.ErrorMessage = "Usuario registrado correctamente con el rol asignado.";
+        //        }
+        //        else
+        //        {
+        //            // 🔹 Validar si ya tiene ese rol
+        //            bool alreadyInRole = await userManager.IsInRoleAsync(existingUser, existingRol.Name);
+
+        //            if (alreadyInRole)
+        //            {
+        //                response.Success = false;
+        //                response.ErrorMessage = "El usuario ya existe y tiene asignado este rol.";
+        //            }
+        //            else
+        //            {
+        //                var addUserRoleResult = await userManager.AddToRoleAsync(existingUser, existingRol.Name);
+
+        //                if (!addUserRoleResult.Succeeded)
+        //                {
+        //                    response.Success = false;
+        //                    response.ErrorMessage = string.Join("; ", addUserRoleResult.Errors.Select(e => e.Description));
+        //                    return response;
+        //                }
+
+        //                response.Success = true;
+        //                response.ErrorMessage = "Rol adicional asignado al usuario existente.";
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.Success = false;
+        //        response.ErrorMessage = "Ocurrió un error inesperado al registrar el usuario.";
+        //        logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+        //    }
+
+        //    return response;
+        //}
 
 
         //public async Task<BaseResponseGeneric<string>> RegisterAsync(RegisterRequestDto request)

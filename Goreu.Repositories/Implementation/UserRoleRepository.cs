@@ -13,15 +13,28 @@
 
         public async Task<ICollection<UsuarioRol>> GetUsuarioAsync(int idEntidad, int idAplicacion, string search, PaginationDto pagination)
         {
+            //var queryable = context.Set<UsuarioRol>()
+            //    .AsNoTracking()
+            //    .Include(x => x.Rol)
+            //    .Include(x => x.Usuario)
+            //    .Include(x => x.Usuario.Persona)
+            //    .Include(x => x.Usuario.UsuarioUnidadOrganicas)
+            //    .Where(x =>
+            //        x.Rol.EntidadAplicacion.IdEntidad == idEntidad &&
+            //        x.Rol.EntidadAplicacion.IdAplicacion == idAplicacion);
+
             var queryable = context.Set<UsuarioRol>()
                 .AsNoTracking()
                 .Include(x => x.Rol)
                 .Include(x => x.Usuario)
-                .Include(x => x.Usuario.Persona)
-                .Include(x => x.Usuario.UsuarioUnidadOrganicas)
+                    .ThenInclude(u => u.Persona)
+                .Include(x => x.Usuario)
+                    .ThenInclude(u => u.UsuarioUnidadOrganicas.Where(z => z.UnidadOrganica.IdEntidad == idEntidad))
                 .Where(x =>
-                    x.Rol.EntidadAplicacion.IdEntidad == idEntidad &&
-                    x.Rol.EntidadAplicacion.IdAplicacion == idAplicacion);
+                x.Rol.EntidadAplicacion.IdEntidad == idEntidad &&
+                x.Rol.EntidadAplicacion.IdAplicacion == idAplicacion);
+                //x.Usuario.UsuarioUnidadOrganicas.Any(z => z.UnidadOrganica.IdEntidad == idEntidad));
+
 
             // 🔍 Filtro de búsqueda solo si hay texto
             if (!string.IsNullOrWhiteSpace(search))
@@ -42,7 +55,7 @@
             if (pagination is not null)
             {
                 // Evita valores negativos
-                pagination.Page = pagination.Page <= 0 ? 1 : pagination.Page;
+                pagination.Page = pagination.Page < 0 ? 0 : pagination.Page;
                 pagination.RecordsPerPage = pagination.RecordsPerPage <= 0 ? 50 : pagination.RecordsPerPage;
 
                 queryable = queryable
@@ -57,6 +70,21 @@
 
             // 📦 Devuelve la lista final
             return await queryable.ToListAsync();
+        }
+
+        public async Task<Guid> AddAsync(UsuarioRol entity)
+        {
+            await context.AddAsync(entity);
+            await context.SaveChangesAsync();
+            return entity.Id;
+        }
+
+        public async Task<UsuarioRol?> GetAsync(string userId, string rolId)
+        {
+            return await context
+               .Set<UsuarioRol>()
+               .AsNoTracking()
+               .FirstOrDefaultAsync(x => x.UserId == userId && x.RoleId == rolId);
         }
 
         public async Task FinalizeAsync(Guid id)

@@ -9,6 +9,9 @@
             // 🔹 Nueva clave primaria
             builder.HasKey(ur => ur.Id);
 
+            // ✅ Clave compuesta esperada por Identity
+            builder.HasKey(ur => new { ur.UserId, ur.RoleId });
+
             // 🔹 Generación automática del GUID
             builder.Property(ur => ur.Id)
                    .HasDefaultValueSql("NEWID()")

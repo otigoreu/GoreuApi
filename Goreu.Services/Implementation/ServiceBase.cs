@@ -31,9 +31,10 @@
             return response;
         }
 
-        public virtual async Task<BaseResponse> UpdateAsync(int id, TRequest request)
+        public virtual async Task<BaseResponseGeneric<int>> UpdateAsync(int id, TRequest request)
         {
-            var response = new BaseResponse();
+            var response = new BaseResponseGeneric<int>();
+
             try
             {
                 var entity = await repository.GetAsync(id);
@@ -45,6 +46,8 @@
 
                 mapper.Map(request, entity);
                 await repository.UpdateAsync();
+
+                response.Data = id; // ✅ devolvemos el ID actualizado
                 response.Success = true;
             }
             catch (Exception ex)
@@ -52,8 +55,33 @@
                 response.ErrorMessage = "Error al actualizar la entidad.";
                 logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
             }
+
             return response;
         }
+
+        //public virtual async Task<BaseResponse> UpdateAsync(int id, TRequest request)
+        //{
+        //    var response = new BaseResponse();
+        //    try
+        //    {
+        //        var entity = await repository.GetAsync(id);
+        //        if (entity is null)
+        //        {
+        //            response.ErrorMessage = $"La entidad con ID {id} no existe.";
+        //            return response;
+        //        }
+
+        //        mapper.Map(request, entity);
+        //        await repository.UpdateAsync();
+        //        response.Success = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        response.ErrorMessage = "Error al actualizar la entidad.";
+        //        logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+        //    }
+        //    return response;
+        //}
 
         public virtual async Task<BaseResponse> DeleteAsync(int id)
         {

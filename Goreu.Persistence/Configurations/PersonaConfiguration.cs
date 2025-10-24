@@ -9,6 +9,9 @@ namespace Goreu.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Persona> builder)
         {
+            //nombre de la tabla
+            builder.ToTable(nameof(Persona), "Administrador");
+
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Nombres).HasMaxLength(50);
             builder.Property(x => x.ApellidoPat).HasMaxLength(50);
@@ -20,8 +23,6 @@ namespace Goreu.Persistence.Configurations
             builder.Property(x => x.Email).HasMaxLength(50).IsUnicode(false);
             builder.Property(x => x.NroDoc).HasMaxLength(9).IsUnicode(false);
 
-            //nombre de la tabla
-            builder.ToTable(nameof(Persona), "Administrador");
             //builder.HasQueryFilter(x => x.Estado);
 
             //relacion con TipoDocuemnto
