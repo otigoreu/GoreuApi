@@ -125,6 +125,7 @@ namespace Goreu.Persistence
             var unidadOrganica1 = new UnidadOrganica
             {
                 Descripcion = "SISTEMA",
+                Abrev="sis",
                 IdEntidad = entidad1.Id,
                 Dependencia = null
 
@@ -135,6 +136,7 @@ namespace Goreu.Persistence
             var unidadOrganica2 = new UnidadOrganica
             {
                 Descripcion = "OTI",
+                Abrev = "oti",
                 IdEntidad = entidad2.Id,
                 Dependencia = null
 
@@ -144,6 +146,7 @@ namespace Goreu.Persistence
             var unidadOrganica3 = new UnidadOrganica
             {
                 Descripcion = "Contabilidad",
+                Abrev = "cont",
                 IdEntidad = entidad2.Id,
                 Dependencia = null
 
@@ -152,6 +155,7 @@ namespace Goreu.Persistence
             var unidadOrganica4= new UnidadOrganica
             {
                 Descripcion = "Tesoreria",
+                Abrev = "teso",
                 IdEntidad = entidad2.Id,
                 Dependencia = null
 
@@ -160,6 +164,7 @@ namespace Goreu.Persistence
             var unidadOrganica5 = new UnidadOrganica
             {
                 Descripcion = "Logistica",
+                Abrev = "log",
                 IdEntidad = entidad2.Id,
                 Dependencia = null
 
@@ -168,6 +173,7 @@ namespace Goreu.Persistence
             var unidadOrganica6= new UnidadOrganica
             {
                 Descripcion = "RRHH",
+                Abrev = "rrhh",
                 IdEntidad = entidad2.Id,
                 Dependencia = null
 
@@ -704,6 +710,7 @@ namespace Goreu.Persistence
             var adminSistema = new Usuario()
             {
                 UserName = "43056714",
+                Iniciales = "abg",
                 Email = "edercin@gmail.com",
                 EmailConfirmed = true
             };
@@ -717,6 +724,7 @@ namespace Goreu.Persistence
             var adminEntidad = new Usuario()
             {
                 UserName = "46519259",
+                Iniciales = "abc",
                 Email = "edercinsoft@gmail.com",
                 EmailConfirmed = true
             };
@@ -728,6 +736,7 @@ namespace Goreu.Persistence
             var adminAplicacion = new Usuario()
             {
                 UserName = "42928945",
+                Iniciales = "def",
                 Email = "pp.llerenalima@gmail.com",
                 EmailConfirmed = true
             };
@@ -738,6 +747,7 @@ namespace Goreu.Persistence
             var adminAplicacionPlanilla = new Usuario()
             {
                 UserName = "11223344",
+                Iniciales = "ghi",
                 Email = "viernes@gmail.com",
                 EmailConfirmed = true
             };
@@ -751,16 +761,30 @@ namespace Goreu.Persistence
                 adminSistema.IdPersona = persona1.Id;
 
                 var result = await userManager.CreateAsync(adminSistema, "Edeher*2024");
+                
                 if (result.Succeeded)
                 {
+                    
                     // Obtenemos el registro del usuario
                     adminSistema = await userManager.FindByEmailAsync(adminSistema.Email);
+                    
                     // Aqui agregamos el Rol de Administrador para el usuario Admin
 
                     if (adminSistema is not null)
                     {
+                       
+                        //await userManager.AddToRoleAsync(adminSistema, role1.Name);
 
-                        await userManager.AddToRoleAsync(adminSistema, role1.Name);
+
+                        var usuariorol1 = new UsuarioRol
+                        {
+                            UserId = adminSistema.Id,
+                            RoleId = role1.Id,
+                            Estado = true
+
+                        };
+                        context.Set<UsuarioRol>().Add(usuariorol1);
+                        await context.SaveChangesAsync();
 
 
                         var usuarioUnidadOrganica1 = new UsuarioUnidadOrganica
@@ -793,7 +817,19 @@ namespace Goreu.Persistence
                     if (adminEntidad is not null)
                     {
 
-                        await userManager.AddToRoleAsync(adminEntidad, role2.Name);
+                       // await userManager.AddToRoleAsync(adminEntidad, role2.Name);
+
+                        var usuariorol2 = new UsuarioRol
+                        {
+                            UserId = adminEntidad.Id,
+                            RoleId = role2.Id,
+                            Estado = true
+
+                        };
+                        context.Set<UsuarioRol>().Add(usuariorol2);
+                        await context.SaveChangesAsync();
+
+
                         var usuarioUnidadOrganica2 = new UsuarioUnidadOrganica
                         {
 
@@ -825,7 +861,18 @@ namespace Goreu.Persistence
                     if (adminAplicacion is not null)
                     {
 
-                        await userManager.AddToRoleAsync(adminAplicacion, role3.Name);
+                        //await userManager.AddToRoleAsync(adminAplicacion, role3.Name);
+
+                        var usuariorol3 = new UsuarioRol
+                        {
+                            UserId = adminAplicacion.Id,
+                            RoleId = role3.Id,
+                            Estado = true
+
+                        };
+                        context.Set<UsuarioRol>().Add(usuariorol3);
+                        await context.SaveChangesAsync();
+
                         var usuarioUnidadOrganica3 = new UsuarioUnidadOrganica
                         {
 
@@ -857,7 +904,17 @@ namespace Goreu.Persistence
                     if (adminAplicacionPlanilla is not null)
                     {
 
-                        await userManager.AddToRoleAsync(adminAplicacionPlanilla, role4.Name);
+                        //await userManager.AddToRoleAsync(adminAplicacionPlanilla, role4.Name);
+
+                        var usuariorol4 = new UsuarioRol
+                        {
+                            UserId = adminAplicacionPlanilla.Id,
+                            RoleId = role4.Id,
+                            Estado = true
+
+                        };
+                        context.Set<UsuarioRol>().Add(usuariorol4);
+                        await context.SaveChangesAsync();
                         var usuarioUnidadOrganica3 = new UsuarioUnidadOrganica
                         {
 

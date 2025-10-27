@@ -3,6 +3,7 @@
     public class Usuario : IdentityUser
     {
         public int IdPersona { get; set; }
+        public string Iniciales { get; set; }
         public bool Estado { get; set; } = true;
         public bool MustChangePassword { get; set; }
         public Persona Persona {get; set;}

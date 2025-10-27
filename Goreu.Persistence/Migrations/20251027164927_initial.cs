@@ -89,6 +89,25 @@ namespace Goreu.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MenuInfo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Icono = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Ruta = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdAplicacion = table.Column<int>(type: "int", nullable: false),
+                    Aplicacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdMenuPadre = table.Column<int>(type: "int", nullable: true),
+                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MenuInfo", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MenuInfoRol",
                 columns: table => new
                 {
@@ -108,15 +127,44 @@ namespace Goreu.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RolInfo",
+                name: "RolEntidadAplicacionCounterInfo",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NormalizedName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdEntidadAplicacion = table.Column<int>(type: "int", nullable: false),
+                    CantidadMenus = table.Column<int>(type: "int", nullable: false),
+                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolEntidadAplicacionCounterInfo", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RolEntidadAplicacionInfo",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NormalizedName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdEntidadAplicacion = table.Column<int>(type: "int", nullable: false),
+                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RolInfo",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RolInfo", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -141,6 +189,7 @@ namespace Goreu.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Abrev = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdEntidad = table.Column<int>(type: "int", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -219,6 +268,7 @@ namespace Goreu.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Abrev = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
                     IdEntidad = table.Column<int>(type: "int", nullable: false),
                     IdDependencia = table.Column<int>(type: "int", nullable: true),
                     Estado = table.Column<bool>(type: "bit", nullable: false)
@@ -328,7 +378,9 @@ namespace Goreu.Persistence.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IdPersona = table.Column<int>(type: "int", nullable: false),
+                    Iniciales = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false),
+                    MustChangePassword = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     UserName = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
@@ -514,7 +566,8 @@ namespace Goreu.Persistence.Migrations
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
+                    Estado = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -525,14 +578,14 @@ namespace Goreu.Persistence.Migrations
                         principalSchema: "Administrador",
                         principalTable: "Rol",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UsuarioRol_Usuario_UserId",
                         column: x => x.UserId,
                         principalSchema: "Administrador",
                         principalTable: "Usuario",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -740,11 +793,20 @@ namespace Goreu.Persistence.Migrations
                 schema: "Seguridad");
 
             migrationBuilder.DropTable(
+                name: "MenuInfo");
+
+            migrationBuilder.DropTable(
                 name: "MenuInfoRol");
 
             migrationBuilder.DropTable(
                 name: "MenuRol",
                 schema: "Administrador");
+
+            migrationBuilder.DropTable(
+                name: "RolEntidadAplicacionCounterInfo");
+
+            migrationBuilder.DropTable(
+                name: "RolEntidadAplicacionInfo");
 
             migrationBuilder.DropTable(
                 name: "RolInfo");

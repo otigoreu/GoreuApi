@@ -187,6 +187,44 @@ namespace Goreu.Persistence.Migrations
                     b.ToTable("EntidadInfo");
                 });
 
+            modelBuilder.Entity("Goreu.Entities.Info.MenuInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Aplicacion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Icono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdAplicacion")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdMenuPadre")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ruta")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MenuInfo");
+                });
+
             modelBuilder.Entity("Goreu.Entities.Info.MenuInfoRol", b =>
                 {
                     b.Property<string>("Aplicacion")
@@ -228,12 +266,35 @@ namespace Goreu.Persistence.Migrations
                     b.ToTable("MenuInfoRol");
                 });
 
-            modelBuilder.Entity("Goreu.Entities.Info.RolEntidadAplicacionInfo", b =>
+            modelBuilder.Entity("Goreu.Entities.Info.RolEntidadAplicacionCounterInfo", b =>
                 {
-                    b.Property<string>("EntidadAplicacion")
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CantidadMenus")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("IdEntidadAplicacion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NormalizedName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RolEntidadAplicacionCounterInfo");
+                });
+
+            modelBuilder.Entity("Goreu.Entities.Info.RolEntidadAplicacionInfo", b =>
+                {
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
@@ -268,6 +329,10 @@ namespace Goreu.Persistence.Migrations
 
             modelBuilder.Entity("Goreu.Entities.Info.UnidadOrganicaInfo", b =>
                 {
+                    b.Property<string>("Abrev")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -576,6 +641,10 @@ namespace Goreu.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Abrev")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -624,6 +693,11 @@ namespace Goreu.Persistence.Migrations
 
                     b.Property<int>("IdPersona")
                         .HasColumnType("int");
+
+                    b.Property<string>("Iniciales")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -681,29 +755,25 @@ namespace Goreu.Persistence.Migrations
 
             modelBuilder.Entity("Goreu.Entities.UsuarioRol", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("Estado")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("UsuarioRol", "Administrador");
                 });

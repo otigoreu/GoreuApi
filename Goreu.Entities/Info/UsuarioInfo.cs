@@ -3,7 +3,7 @@
     public class UsuarioInfo
     {
         public string Id { get; set; } = default!;
-        
+        public string Iniciales { get; set; } = default!;
         public int IdPersona { get; set; }
         public string Email { get; set; } = default!;
         public string UserName { get; set; } = default!;

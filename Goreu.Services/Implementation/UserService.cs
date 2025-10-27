@@ -357,8 +357,7 @@
 
             //Persona
             var persona = await personaRepository.GetAsync(user.IdPersona);
-            Console.WriteLine("user =" + user.IdPersona);
-            Console.WriteLine("Persona =" + persona.Id);
+
             var personaDto = new PersonaResponseDto
             {
                 Id = persona.Id,
@@ -370,9 +369,12 @@
                 NroDoc = persona.NroDoc
             };
 
+            Console.WriteLine("USER: "+user.Id);
             ////UnidadOrganica
             var dataUnidad = await unidadOrganicaRepository.GetAsyncPerUser(user.Id);
             var unidadOrganicaDto = new List<UnidadOrganicaResponseSingleDto>();
+
+            Console.WriteLine("unidad"+dataUnidad);
 
             unidadOrganicaDto = mapper.Map<List<UnidadOrganicaResponseSingleDto>>(dataUnidad);
 
@@ -380,14 +382,19 @@
             List<int> idAplicaciones = new List<int>();
             var aplicacionesDto = new List<AplicacionResponseDto>();
 
+
             var dataApp = await aplicacionRepository.GetAsyncPerUser(user.Id);
             aplicacionesDto = mapper.Map<List<AplicacionResponseDto>>(dataApp);
+           
 
             ////Roles
             var dataroles=await rolRepository.GetAsyncPerUser(user.Id);
+            
+
             var rolesResponseDto= new List<RolResponseSingleDto>();
 
             rolesResponseDto = mapper.Map<List<RolResponseSingleDto>>(dataroles);
+            
 
             ////Entidad
             var dataEntidad = await entidadRepository.GetAsyncPerRol(dataroles.First().Id);
@@ -679,6 +686,7 @@
                     listResponse.Add(new UsuarioResponseDto
                     {
                         Id = user.Id,
+                        Iniciales=user.Iniciales,
                         UserName = user.UserName,
                         Email = user.Email ?? string.Empty,
                         Estado=user.Estado
@@ -719,6 +727,7 @@
                     var userDto = new UsuarioResponseDto
                     {
                         Id = user.Id,
+                        Iniciales=user.Iniciales,
                         Email = user.Email ?? string.Empty,
                         UserName = user.UserName,
                         Estado = user.Estado

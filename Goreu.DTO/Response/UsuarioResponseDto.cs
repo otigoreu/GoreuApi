@@ -3,6 +3,7 @@
     public class UsuarioResponseDto
     {
         public string Id { get; set; } = default!;
+        public string Iniciales { get;set; } = default!;
         public string Email { get; set; } = default!;
         public string UserName { get; set; } = default!;
         public bool Estado { get; set; }
