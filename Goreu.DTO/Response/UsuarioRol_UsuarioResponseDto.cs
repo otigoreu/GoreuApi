@@ -7,11 +7,11 @@
         public Guid Id { get; set; }
         public bool Estado { get; set; }
 
-        public string UserId { get; set; } = default!;
         public string UserName { get; set; } = default!;
-        public string Rol_Descripcion { get; set; }
+        //public string Rol_Descripcion { get; set; }
         public string NombreCompleto { get; set; }
-        public int CantidadUnidadOrganica { get; set; }
+        public int CantidadUnidadOrganica { get; set; } = 0;
+        public int CantidadRol { get; set; } = 0;
         public bool MustChangePassword { get; set; }
     }
 }

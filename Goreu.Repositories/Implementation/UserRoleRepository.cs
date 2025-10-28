@@ -11,64 +11,62 @@
             this.httpContext = httpContext;
         }
 
-        public async Task<ICollection<UsuarioRol>> GetUsuarioAsync(int idEntidad, int idAplicacion, string search, PaginationDto pagination)
+        public async Task<ICollection<Usuario>> GetUsuarioAsync(
+            int idEntidad,
+            int idAplicacion,
+            string? rolId,
+            string? search,
+            PaginationDto? pagination)
         {
-            //var queryable = context.Set<UsuarioRol>()
-            //    .AsNoTracking()
-            //    .Include(x => x.Rol)
-            //    .Include(x => x.Usuario)
-            //    .Include(x => x.Usuario.Persona)
-            //    .Include(x => x.Usuario.UsuarioUnidadOrganicas)
-            //    .Where(x =>
-            //        x.Rol.EntidadAplicacion.IdEntidad == idEntidad &&
-            //        x.Rol.EntidadAplicacion.IdAplicacion == idAplicacion);
+            // 1️⃣ Base query
+            var queryable = context.Set<Usuario>()
+                            .AsNoTracking()
+                            .Include(u => u.Persona)
+                            .Include(u => u.UsuarioUnidadOrganicas
+                                .Where(z => z.UnidadOrganica.IdEntidad == idEntidad))
+                            .Include(u => u.UsuarioRoles.Where(z=> z.Rol.EntidadAplicacion.IdEntidad == idEntidad))
+                                .ThenInclude(ur => ur.Rol)
+                            .Where(u =>
+                                !u.UsuarioRoles.Any() || // sin rol
+                                u.UsuarioRoles.Any(r =>
+                                    r.Rol.EntidadAplicacion.IdEntidad == idEntidad &&
+                                    r.Rol.EntidadAplicacion.IdAplicacion == idAplicacion));
 
-            var queryable = context.Set<UsuarioRol>()
-                .AsNoTracking()
-                .Include(x => x.Rol)
-                .Include(x => x.Usuario)
-                    .ThenInclude(u => u.Persona)
-                .Include(x => x.Usuario)
-                    .ThenInclude(u => u.UsuarioUnidadOrganicas.Where(z => z.UnidadOrganica.IdEntidad == idEntidad))
-                .Where(x =>
-                x.Rol.EntidadAplicacion.IdEntidad == idEntidad &&
-                x.Rol.EntidadAplicacion.IdAplicacion == idAplicacion);
-                //x.Usuario.UsuarioUnidadOrganicas.Any(z => z.UnidadOrganica.IdEntidad == idEntidad));
+            if (rolId != null)
+                queryable = queryable.Where(u =>
+                    u.UsuarioRoles.Any(ur => ur.RoleId == rolId));
 
-
-            // 🔍 Filtro de búsqueda solo si hay texto
+            // 2️⃣ Filtro de búsqueda
             if (!string.IsNullOrWhiteSpace(search))
             {
                 queryable = queryable.Where(x =>
-                    x.Usuario.UserName.Contains(search) ||
-                    x.Usuario.Persona.Nombres.Contains(search) ||
-                    x.Usuario.Persona.ApellidoPat.Contains(search) ||
-                    x.Usuario.Persona.ApellidoMat.Contains(search));
+                    x.UserName.Contains(search) ||
+                    x.Persona.Nombres.Contains(search) ||
+                    x.Persona.ApellidoPat.Contains(search) ||
+                    x.Persona.ApellidoMat.Contains(search));
             }
 
-            // 📄 Inserta header de total de registros
+            // 3️⃣ Inserta header de paginación (total registros)
             var contextHttp = httpContext.HttpContext;
             if (contextHttp is not null)
                 await contextHttp.InsertarPaginacionHeader(queryable);
 
-            // 🧭 Aplica paginación (segura)
+            // 4️⃣ Paginación
             if (pagination is not null)
             {
-                // Evita valores negativos
                 pagination.Page = pagination.Page < 0 ? 0 : pagination.Page;
                 pagination.RecordsPerPage = pagination.RecordsPerPage <= 0 ? 50 : pagination.RecordsPerPage;
 
                 queryable = queryable
-                    .OrderBy(x => x.UserId)
+                    .OrderBy(x => x.Id)
                     .Paginate(pagination);
             }
             else
             {
-                // Si no se envía paginación, devuelve todo ordenado
-                queryable = queryable.OrderBy(x => x.UserId);
+                queryable = queryable.OrderBy(x => x.Id);
             }
 
-            // 📦 Devuelve la lista final
+            // 5️⃣ Devuelve la lista de usuarios
             return await queryable.ToListAsync();
         }
 
@@ -86,6 +84,8 @@
                .AsNoTracking()
                .FirstOrDefaultAsync(x => x.UserId == userId && x.RoleId == rolId);
         }
+
+        //public async Task<UsuarioRol> GetAsync()
 
         public async Task FinalizeAsync(Guid id)
         {

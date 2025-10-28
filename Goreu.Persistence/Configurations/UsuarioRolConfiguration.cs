@@ -22,7 +22,7 @@
 
             // 🔹 Relaciones
             builder.HasOne(ur => ur.Usuario)
-                   .WithMany()
+                   .WithMany(u => u.UsuarioRoles)
                    .HasForeignKey(ur => ur.UserId)
                    .OnDelete(DeleteBehavior.Restrict);
 

@@ -57,6 +57,7 @@ namespace Goreu.API.Controllers
         public async Task<IActionResult> Get(
             [FromQuery] int idEntidad,
             [FromQuery] int idAplicacion,
+            [FromQuery] string? rolId,
             [FromQuery] string? search,
             [FromQuery] PaginationDto? pagination)
         {
@@ -70,7 +71,7 @@ namespace Goreu.API.Controllers
                 });
             }
 
-            var response = await userRoleService.GetUsuarioAsync(idEntidad, idAplicacion, search, pagination);
+            var response = await userRoleService.GetUsuarioAsync(idEntidad, idAplicacion, rolId, search, pagination);
 
             if (response.Success)
                 return Ok(response);

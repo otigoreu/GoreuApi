@@ -4,18 +4,15 @@
     {
         public UserRoleProfile()
         {
-            CreateMap<UsuarioRol, UsuarioRol_UsuarioResponseDto>()
-
-                .ForMember(dest => dest.UserName,
-                    opt => opt.MapFrom(src => src.Usuario.UserName))
-                .ForMember(dest => dest.Rol_Descripcion,
-                    opt => opt.MapFrom(src => src.Rol.Name))
+            CreateMap<Usuario, UsuarioRol_UsuarioResponseDto>()
                 .ForMember(dest => dest.NombreCompleto,
-                    opt => opt.MapFrom(src => $"{src.Usuario.Persona.ApellidoPat} {src.Usuario.Persona.ApellidoMat}, {src.Usuario.Persona.Nombres}"))
+                    opt => opt.MapFrom(src => $"{src.Persona.ApellidoPat} {src.Persona.ApellidoMat}, {src.Persona.Nombres}"))
                 .ForMember(dest => dest.CantidadUnidadOrganica,
-                        opt => opt.MapFrom(src => src.Usuario.UsuarioUnidadOrganicas.Count))
+                        opt => opt.MapFrom(src => src.UsuarioUnidadOrganicas.Count))
+                .ForMember(dest => dest.CantidadRol,
+                        opt => opt.MapFrom(src => src.UsuarioRoles.Count))
                 .ForMember(dest => dest.MustChangePassword,
-                        opt => opt.MapFrom(src => src.Usuario.MustChangePassword));
+                        opt => opt.MapFrom(src => src.MustChangePassword));
         }
     }
 }

@@ -5,6 +5,7 @@
         Task<BaseResponseGeneric<ICollection<UsuarioRol_UsuarioResponseDto>>> GetUsuarioAsync(
              int idEntidad,
              int idAplicacion,
+             string? rolId,
              string? search,
              PaginationDto? pagination);
 

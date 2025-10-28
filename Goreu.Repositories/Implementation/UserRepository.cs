@@ -55,6 +55,8 @@ namespace Goreu.Repositories.Implementation
 
         }
 
+        
+
         public async Task<ICollection<Usuario>> GetAsync<TKey>(Expression<Func<Usuario, bool>> predicate, Expression<Func<Usuario, TKey>> orderBy, PaginationDto pagination)
         {
             var queryable = context.Users

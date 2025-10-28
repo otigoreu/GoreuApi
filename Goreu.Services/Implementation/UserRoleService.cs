@@ -19,6 +19,7 @@
         public async Task<BaseResponseGeneric<ICollection<UsuarioRol_UsuarioResponseDto>>> GetUsuarioAsync(
             int idEntidad,
             int idAplicacion,
+            string? rolId,
             string? search,
             PaginationDto? pagination)
         {
@@ -28,7 +29,7 @@
             {
                 search = string.IsNullOrWhiteSpace(search) ? "" : search;
 
-                var data = await userRolRepository.GetUsuarioAsync(idEntidad, idAplicacion, search, pagination);
+                var data = await userRolRepository.GetUsuarioAsync(idEntidad, idAplicacion, rolId, search, pagination);
 
                 response.Data = mapper.Map<ICollection<UsuarioRol_UsuarioResponseDto>>(data);
                 response.Success = true;

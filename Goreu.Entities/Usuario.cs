@@ -7,9 +7,10 @@
         public bool Estado { get; set; } = true;
         public bool MustChangePassword { get; set; }
         public Persona Persona {get; set;}
-        public ICollection<UsuarioUnidadOrganica> UsuarioUnidadOrganicas { get; set; }
-        //public ICollection<UsuarioRol> UsuarioRols { get; set; }
-        public ICollection<Historial> Historials { get; set; } = new List<Historial>();
+
+        public virtual ICollection<UsuarioUnidadOrganica> UsuarioUnidadOrganicas { get; set; } = new List<UsuarioUnidadOrganica>();
+        public virtual ICollection<UsuarioRol> UsuarioRoles { get; set; } = new List<UsuarioRol>();
+        public virtual ICollection<Historial> Historiales { get; set; } = new List<Historial>();
         //public ICollection<IdentityUserRole<string>> UsuarioRoles { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace Goreu.Persistence.Configurations
 
             builder
               .HasOne(ua => ua.Usuario)
-              .WithMany(u => u.Historials)
+              .WithMany(u => u.Historiales)
               .HasForeignKey(ua => ua.idUsuario);
         }
     }

@@ -9,5 +9,6 @@
         [ForeignKey("IdEntidadAplicacion")]
         public EntidadAplicacion EntidadAplicacion { get; set; }
         public ICollection<MenuRol> MenuRoles { get; set; }
+        //public ICollection<UsuarioRol> UsuarioRoles { get; set; }
     }
 }

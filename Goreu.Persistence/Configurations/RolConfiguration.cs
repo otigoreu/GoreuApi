@@ -9,11 +9,13 @@ namespace Goreu.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Rol> builder)
         {
-            
             builder.ToTable(nameof(Rol), "Administrador");
             builder.Property(x => x.Name).IsUnicode(false);
             builder.Property(x => x.NormalizedName).IsUnicode(false);
 
+            //builder.HasMany(r => r.UsuarioRoles)
+            //  .WithOne(ur => ur.Rol)
+            //  .HasForeignKey(ur => ur.RoleId);
         }
     }
 }

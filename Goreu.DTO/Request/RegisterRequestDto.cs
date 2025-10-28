@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.ComponentModel.DataAnnotations;
 namespace Goreu.Dto.Request
 {
     public class RegisterRequestDto
     {
+        public bool EsEdicion { get; set; }
         [Required]
         public string UserName { get; set; } = default!;
 
@@ -16,14 +11,12 @@ namespace Goreu.Dto.Request
         [EmailAddress]
         public string Email { get; set; } = default!;
 
-        [Required]
-        public int IdPersona { get; set; }
-        
-        //[Required]
-        //public int IdUnidadOrganica{ get; set; }
+        public string Iniciales { get; set; } = default!;
 
         [Required]
-        public string RolId { get; set; }
+        public int IdPersona { get; set; }
+
+        public string? RolId { get; set; }
 
         public string Password { get; set; } = default!;
 
