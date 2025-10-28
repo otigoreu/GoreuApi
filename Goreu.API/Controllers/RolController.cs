@@ -33,12 +33,7 @@ namespace Goreu.API.Controllers
             var response = await service.GetWithAllEntidadAplicacionCounterAsync(idEntidad, idAplicacion);
             return response.Success ? Ok(response) : BadRequest(response);
         }
-        [HttpGet("Counter")]
-        public async Task<IActionResult> GetCounter(int idEntidad, int idAplicacion)
-        {
-            var response = await service.GetCounterAsync(idEntidad, idAplicacion);
-            return response.Success ? Ok(response) : BadRequest(response);
-        }
+
 
         [HttpGet("id")]
         public async Task<IActionResult> Get(string id)
