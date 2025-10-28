@@ -126,17 +126,20 @@
         public async Task<ICollection<RolEntidadAplicacionCounterInfo>> GetWithAllEntidadAplicacionCounterAsync(int idEntidad, int idAplicacion)
         {
             var query = context.Set<RolEntidadAplicacionCounterInfo>().FromSqlRaw(
-                @"select r.Id, r.Name, r.NormalizedName, r.Estado, r.IdEntidadAplicacion 
-                        ,COUNT(mr.Id) as CantidadMenus 
+                @"select r.Id, r.Name, r.NormalizedName, r.Estado, r.IdEntidadAplicacion, COUNT(mr.Id) as CantidadMenus 
                         from Administrador.Rol r 
-	                    join Administrador.EntidadAplicacion ea on ea.Id=r.IdEntidadAplicacion
-	                    join Administrador.Aplicacion a on a.Id=ea.IdAplicacion
-	                    join Administrador.Entidad e on e.Id=ea.IdEntidad 
                         left join Administrador.MenuRol mr on r.Id=mr.IdRol
-                        where e.Id={0} and a.Id={1} and mr.Estado='true'
+						join Administrador.EntidadAplicacion ea on ea.Id=r.IdEntidadAplicacion
+						where ea.IdEntidad={0} and ea.IdAplicacion={1}
                         group by r.Id, r.Name, r.NormalizedName, r.Estado, r.IdEntidadAplicacion", idEntidad, idAplicacion);
 
             return await query.ToListAsync();
+
+
+
+
         }
+
+       
     }
 }
