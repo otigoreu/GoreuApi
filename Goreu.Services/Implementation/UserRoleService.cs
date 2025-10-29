@@ -43,6 +43,42 @@
             return response;
         }
 
+        public async Task<BaseResponseGeneric<ICollection<RolConAsignacionDto>>> GetRolesConAsignacionAsync(int idEntidad, int idAplicacion, string userId, string? search, PaginationDto? pagination)
+        {
+            var response = new BaseResponseGeneric<ICollection<RolConAsignacionDto>>();
+
+            try
+            {
+                var data = await userRolRepository.GetRolesConAsignacionAsync(idEntidad, idAplicacion, userId);
+
+                response.Data = data;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al obtener los roles del usuario.";
+                logger.LogError(ex, "{ErrorMessage}. Parámetros -> search: {Search}", response.ErrorMessage, search);
+            }
+
+            return response;
+        }
+
+        public async Task<BaseResponse> AsignarRoleAsync(int idEntidad, int idAplicacion, string userId, string rolId, bool selected)
+        {
+            var response = new BaseResponse();
+            try
+            {
+                await userRolRepository.AsignarRoleAsync(idEntidad, idAplicacion, userId, rolId, selected);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al Asignar rol al usuario.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
         public async Task<BaseResponse> FinalizeAsync(Guid id)
         {
             var response = new BaseResponse();
@@ -58,6 +94,8 @@
             }
             return response;
         }
+
+
 
         public async Task<BaseResponse> InitializeAsync(Guid id)
         {

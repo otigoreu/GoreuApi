@@ -1,4 +1,7 @@
-﻿namespace Goreu.Repositories.Implementation
+﻿using Goreu.Dto.Response;
+using Goreu.Entities;
+
+namespace Goreu.Repositories.Implementation
 {
     public class UserRoleRepository : IUserRoleRepository
     {
@@ -85,7 +88,69 @@
                .FirstOrDefaultAsync(x => x.UserId == userId && x.RoleId == rolId);
         }
 
-        //public async Task<UsuarioRol> GetAsync()
+        public async Task<ICollection<RolConAsignacionDto>> GetRolesConAsignacionAsync(int idEntidad, int idAplicacion, string userId)
+        {
+            var query =
+                from rol in context.Set<Rol>()
+                    .Where(r => r.EntidadAplicacion.IdEntidad == idEntidad && r.EntidadAplicacion.IdAplicacion == idAplicacion)
+                join usuarioRol in context.Set<UsuarioRol>()
+                    .Where(ur => ur.UserId == userId)
+                    on rol.Id equals usuarioRol.RoleId into asignaciones
+                from asignacion in asignaciones.DefaultIfEmpty() // 👈 left join
+                select new RolConAsignacionDto
+                {
+                    Id = rol.Id,
+                    Descripcion = rol.Name,
+                    Asignado = asignacion != null // 👈 true si tiene asignación
+                };
+
+            return await query.AsNoTracking().ToListAsync();
+        }
+
+        public async Task AsignarRoleAsync(int idEntidad, int idAplicacion, string userId, string rolId, bool selected)
+        {
+            // 🔍 Validaciones rápidas de entrada
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentException("El identificador del usuario no puede estar vacío.", nameof(userId));
+
+            if (string.IsNullOrWhiteSpace(rolId))
+                throw new ArgumentException("El identificador del rol no puede estar vacío.", nameof(rolId));
+
+            // 📦 Buscar si ya existe la relación entre el usuario y el rol
+            var existing = await context.Set<UsuarioRol>()
+                .Include(ur => ur.Rol)
+                .Where(ur =>
+                    ur.UserId == userId &&
+                    ur.RoleId == rolId &&
+                    ur.Rol.EntidadAplicacion.IdEntidad == idEntidad &&
+                    ur.Rol.EntidadAplicacion.IdAplicacion == idAplicacion)
+                .FirstOrDefaultAsync();
+
+            if (existing is null)
+            {
+                // 🆕 Si no existe, crear solo si se debe asignar
+                if (selected)
+                {
+                    await context.Set<UsuarioRol>().AddAsync(new UsuarioRol
+                    {
+                        UserId = userId,
+                        RoleId = rolId,
+                        Estado = true
+                    });
+                    await context.SaveChangesAsync();
+                }
+                // 🚫 Si no está seleccionado, no se crea nada
+                return;
+            }
+
+            // 🔴 Si existe y se quiere desasignar, eliminar
+            if (existing is not null && !selected)
+            {
+                context.Remove(existing);
+                await context.SaveChangesAsync();
+                return;
+            }
+        }
 
         public async Task FinalizeAsync(Guid id)
         {
