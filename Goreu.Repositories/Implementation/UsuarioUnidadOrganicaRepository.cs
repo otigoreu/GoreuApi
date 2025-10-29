@@ -1,4 +1,5 @@
 ﻿using Goreu.Dto.Request;
+using Goreu.Dto.Response;
 using Goreu.Entities;
 using Goreu.Persistence;
 using Goreu.Repositories.Interface;
@@ -17,23 +18,6 @@ namespace Goreu.Repositories.Implementation
         {
             this.httpContextAccessor = httpContextAccessor;
         }
-
-        //public async Task<ICollection<UsuarioUnidadOrganica>> GetAsync<TKey>(Expression<Func<UsuarioUnidadOrganica, bool>> predicate, Expression<Func<UsuarioUnidadOrganica, TKey>> orderBy, PaginationDto pagination)
-        //{
-        //    var queryable = context.Set<UsuarioUnidadOrganica>()
-        //        .Include(x => x.Usuario)
-        //        .Include(x => x.UnidadOrganica)
-
-        //        .Where(predicate)
-        //        .OrderBy(orderBy)
-        //        .AsNoTracking()
-        //        .AsQueryable();
-
-        //    await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
-        //    var response = await queryable.Paginate(pagination).ToListAsync();
-
-        //    return response;
-        //}
 
         public async Task FinalizeAsync(int id, string observacionAnulacion)
         {
@@ -80,5 +64,46 @@ namespace Goreu.Repositories.Implementation
             return context.Set<UsuarioUnidadOrganica>()
                .FirstOrDefault(z => z.IdUnidadOrganica == idUnidadOrganica && z.IdUsuario == idUsuario);
         }
+
+        public async Task<ICollection<Usuario>> GetUsuariosAsignadosAsync(
+            int idEntidad,
+            int idAplicacion,
+            int idUnidadOrganica)
+        {
+            var usuarios = await context.Set<Usuario>()
+                .Include(u => u.Persona) // ✅ EF entiende esta navegación
+                .AsNoTracking()
+                .Where(u =>
+                    u.UsuarioRoles.Any(ur =>
+                        ur.Rol.EntidadAplicacion.IdEntidad == idEntidad &&
+                        ur.Rol.EntidadAplicacion.IdAplicacion == idAplicacion) &&
+                    u.UsuarioUnidadOrganicas.Any(uuo =>
+                        uuo.UnidadOrganica.IdEntidad == idEntidad &&
+                        uuo.UnidadOrganica.Id == idUnidadOrganica))
+                .ToListAsync();
+
+            return usuarios;
+        }
+
+
+        //public async Task<ICollection<Usuario>> GetUsuariosAsignadosAsync(int idEntidad, int idAplicacion, int idUnidadOrganica)
+        //{
+        //    var query = from a in context.Set<UsuarioRol>()
+        //             .Where(z => z.Rol.EntidadAplicacion.IdEntidad == idEntidad
+        //                      && z.Rol.EntidadAplicacion.IdAplicacion == idAplicacion)
+        //                join b in context.Set<UsuarioUnidadOrganica>()
+        //                    .Where(z => z.UnidadOrganica.IdEntidad == idEntidad
+        //                             && z.UnidadOrganica.Id == idUnidadOrganica)
+        //                    on a.UserId equals b.IdUsuario
+        //                select b.Usuario;
+
+        //    var usuarios = await query
+        //        .Include(u => u.Persona) // 👈 ahora sí aplica
+        //        .AsNoTracking()
+        //        .ToListAsync();
+
+        //    return await query.AsNoTracking().ToListAsync();
+        //}
+
     }
 }

@@ -6,8 +6,8 @@
         Task<BaseResponseGeneric<ICollection<UsuarioUnidadOrganica_UnidadOrganicaResponseDto>>> GetUnidadOrganicasConEstado_ByUsuarioAsync(int idEntidad, string search, PaginationDto pagination, string userId);
         Task<BaseResponseGeneric<UsuarioUnidadOrganicaResponseDto>> GetAsync(int idUnidadOrganica, string idUsuario);
         Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetUnidadOrganicasAsync(string idUsuario);
+        Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetUsuariosAsignadosAsync(int idEntidad, int idAplicacion, int idUnidadOrganica);
         Task<BaseResponse> FinalizeAsync(int id, string observacionAnulacion);
-
         Task<BaseResponse> ValidarAsync(UsuarioUnidadOrganicaRequestDto request);
     }
 }

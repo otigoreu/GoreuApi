@@ -106,6 +106,29 @@
             return response;
         }
 
+        public async Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetUsuariosAsignadosAsync(int idEntidad, int idAplicacion, int idUnidadOrganica)
+        {
+            var response = new BaseResponseGeneric<ICollection<UsuarioResponseDto>>();
+            try
+            {
+                var data = await repository.GetUsuariosAsignadosAsync(idEntidad, idAplicacion, idUnidadOrganica);
+                if (data is null)
+                {
+                    response.ErrorMessage = $"La Unidad Organica con ID {idUnidadOrganica} y la aplicacion con ID {idAplicacion} no existe.";
+                    return response;
+                }
+
+                response.Data = mapper.Map<ICollection<UsuarioResponseDto>>(data);
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al obtener los usuarios asignados.";
+                logger.LogError(ex, "{ErrorMessage} {Exception}", response.ErrorMessage, ex.Message);
+            }
+            return response;
+        }
+
         public async Task<BaseResponse> ValidarAsync(UsuarioUnidadOrganicaRequestDto request)
         {
             var response = new BaseResponse();

@@ -153,11 +153,14 @@
         [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
         public async Task<IActionResult> GetUsuariosPaginadas(
             [FromRoute] int idUnidadorganica,
+            [FromQuery] int idEntidad,
+            [FromQuery] int idAplicacion,
             [FromQuery] string? search,
             [FromQuery] PaginationDto pagination)
         {
-            var result = await service.GetUsuariosConEstadoPorUnidadorganicaAsync(idUnidadorganica, search ?? string.Empty, pagination);
-
+            //var result = await service.GetUsuariosConEstadoPorUnidadorganicaAsync(idUnidadorganica, search ?? string.Empty, pagination);
+            var result = await service.GetUsuariosAsignadosAsync(idEntidad, idAplicacion, idUnidadorganica);
+            
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
 
