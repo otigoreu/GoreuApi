@@ -19,5 +19,7 @@ namespace Goreu.Dto.Response
 
         public int idEntidad { get; set; }
         public int? idDependencia { get; set; }
+
+        public List<UnidadOrganicaResponseDto> Hijos { get; set; } = new(); // 👈 importante
     }
 }

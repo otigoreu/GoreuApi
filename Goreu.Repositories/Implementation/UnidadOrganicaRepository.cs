@@ -1,12 +1,4 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Entities;
-using Goreu.Entities.Info;
-using Goreu.Persistence;
-using Goreu.Repositories.Interface;
-using Goreu.Repositories.Utils;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Goreu.Repositories.Implementation
 {
@@ -48,6 +40,33 @@ namespace Goreu.Repositories.Implementation
 
 
             return await query.ToListAsync();
+        }
+
+        /// <summary>
+        /// Obtiene todos los descendientes (hijos, nietos, etc.) de una unidad orgánica dada.
+        /// </summary>
+        public async Task<ICollection<UnidadOrganica>> ObtenerDescendientesAsync(int idUnidadOrganica)
+        {
+            // 🔹 Traemos todas las unidades (más eficiente que incluir recursivamente)
+            var todas = await context.Set<UnidadOrganica>().AsNoTracking().ToListAsync();
+
+            return ObtenerHijosRecursivo(idUnidadOrganica, todas);
+        }
+
+        /// <summary>
+        /// Función auxiliar recursiva para obtener los hijos.
+        /// </summary>
+        private List<UnidadOrganica> ObtenerHijosRecursivo(int idPadre, List<UnidadOrganica> todas)
+        {
+            var hijos = todas.Where(u => u.IdDependencia == idPadre).ToList();
+            var resultado = new List<UnidadOrganica>(hijos);
+
+            foreach (var hijo in hijos)
+            {
+                resultado.AddRange(ObtenerHijosRecursivo(hijo.Id, todas));
+            }
+
+            return resultado;
         }
     }
 }

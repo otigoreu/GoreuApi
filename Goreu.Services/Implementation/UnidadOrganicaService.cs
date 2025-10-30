@@ -1,12 +1,4 @@
-﻿using AutoMapper;
-using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities;
-using Goreu.Repositories.Interface;
-using Goreu.Services.Interface;
-using Microsoft.Extensions.Logging;
-
-namespace Goreu.Services.Implementation
+﻿namespace Goreu.Services.Implementation
 {
     public class UnidadOrganicaService : ServiceBase<UnidadOrganica, UnidadOrganicaRequestDto, UnidadOrganicaResponseDto>, IUnidadOrganicaService
     {
@@ -89,6 +81,57 @@ namespace Goreu.Services.Implementation
             }
 
             return response;
+        }
+
+
+        /// <summary>
+        /// Obtiene las unidades orgánicas descendientes en formato jerárquico.
+        /// </summary>
+        /// <param name="idUnidad">Identificador de la unidad padre.</param>
+        /// <returns>Retorna las unidades hijas con estructura jerárquica.</returns>
+        public async Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetDescendientesJerarquicoAsync(int idUnidadOrganica)
+        {
+            var response = new BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>();
+
+            try
+            {
+                var descendientes = await repository.ObtenerDescendientesAsync(idUnidadOrganica);
+
+                // Mapeamos a DTOs planos
+                var descendientesDto = mapper.Map<List<UnidadOrganicaResponseDto>>(descendientes);
+
+                // Construimos la jerarquía
+                var jerarquico = ConstruirJerarquia(descendientesDto, idUnidadOrganica);
+
+                response.Data = jerarquico;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al construir la jerarquía de unidades orgánicas.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Construye una estructura jerárquica a partir de una lista plana.
+        /// </summary>
+        private List<UnidadOrganicaResponseDto> ConstruirJerarquia(List<UnidadOrganicaResponseDto> lista, int? idPadre)
+        {
+            return lista
+                .Where(x => x.idDependencia == idPadre)
+                .Select(x => new UnidadOrganicaResponseDto
+                {
+                    Id = x.Id,
+                    Descripcion = x.Descripcion,
+                    Abrev = x.Abrev,
+                    idEntidad = x.idEntidad,
+                    idDependencia = x.idDependencia,
+                    Hijos = ConstruirJerarquia(lista, x.Id) // 👈 Recursión para los hijos
+                })
+                .ToList();
         }
     }
 
