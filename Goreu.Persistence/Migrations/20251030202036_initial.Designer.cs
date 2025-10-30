@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Goreu.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251027164927_initial")]
+    [Migration("20251030202036_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -66,6 +66,11 @@ namespace Goreu.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
+
+                    b.Property<string>("Sigla")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
 
                     b.HasKey("Id");
 
@@ -184,6 +189,10 @@ namespace Goreu.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Ruc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sigla")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -385,6 +394,10 @@ namespace Goreu.Persistence.Migrations
 
                     b.Property<int>("IdPersona")
                         .HasColumnType("int");
+
+                    b.Property<string>("Iniciales")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("MustChangePassword")
                         .HasColumnType("bit");
@@ -939,7 +952,7 @@ namespace Goreu.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Goreu.Entities.Usuario", "Usuario")
-                        .WithMany("Historials")
+                        .WithMany("Historiales")
                         .HasForeignKey("idUsuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1057,7 +1070,7 @@ namespace Goreu.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Goreu.Entities.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("UsuarioRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1180,7 +1193,9 @@ namespace Goreu.Persistence.Migrations
 
             modelBuilder.Entity("Goreu.Entities.Usuario", b =>
                 {
-                    b.Navigation("Historials");
+                    b.Navigation("Historiales");
+
+                    b.Navigation("UsuarioRoles");
 
                     b.Navigation("UsuarioUnidadOrganicas");
                 });

@@ -53,6 +53,7 @@ namespace Goreu.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Ruc = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    Sigla = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -67,6 +68,7 @@ namespace Goreu.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ruc = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Sigla = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

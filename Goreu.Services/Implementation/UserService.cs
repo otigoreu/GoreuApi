@@ -801,6 +801,7 @@
                     listResponse.Add(new UsuarioResponseDto
                     {
                         Id = user.Id,
+                        IdPersona=user.IdPersona,
                         Iniciales=user.Iniciales,
                         UserName = user.UserName,
                         Email = user.Email ?? string.Empty,

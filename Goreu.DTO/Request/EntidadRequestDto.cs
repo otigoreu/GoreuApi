@@ -10,5 +10,6 @@ namespace Goreu.Dto.Request
     {
         public string Descripcion { get; set; } = default!;
         public string Ruc { get; set; } = default!;
+        public string Sigla { get; set; } = default!;
     }
 }

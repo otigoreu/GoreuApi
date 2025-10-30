@@ -32,13 +32,15 @@ namespace Goreu.Persistence
             var entidad1 = new Entidad
             {
                 Descripcion = "Sistema",
+                Sigla="TI",
                 Ruc = "10101010101"
             };
 
             var entidad2 = new Entidad
             {
                 Descripcion="Goreu",
-                Ruc="12345678901"
+                Sigla = "GRU",
+                Ruc ="12345678901"
             };
 
 

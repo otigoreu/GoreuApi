@@ -10,6 +10,7 @@ namespace Goreu.Entities
     {
         public string Descripcion { get; set; } = default!;
         public string Ruc { get; set; } = default!;
+        public string Sigla { get; set; } = default!;
         public ICollection<UnidadOrganica> UnidadOrganicas { get; set; } = default!;
         public ICollection<EntidadAplicacion> EntidadAplicaciones { get; set; }
     }
