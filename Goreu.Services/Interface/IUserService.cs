@@ -1,14 +1,10 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.DtoResponse;
-using Goreu.Entities.Info;
-
-namespace Goreu.Services.Interface
+﻿namespace Goreu.Services.Interface
 {
     public interface IUserService
     {
         //Task<BaseResponseGeneric<RegisterResponseDto>> RegisterAsync(RegisterRequestDto request);
         Task<BaseResponseGeneric<string>> RegisterAsync(RegisterRequestDto request);
+        Task<BaseResponse> updateAsync(string idUsuario, UsuarioRequestDto request);
         Task<BaseResponseGeneric<LoginResponseDto>> LoginAsync(LoginRequestDto request);
         //-----------------------------------------------------------------------------------------
         Task<BaseResponseGeneric<string>> RequestTokenToResetPasswordAsync(string frontResetPassword, ResetPasswordRequestDto request);

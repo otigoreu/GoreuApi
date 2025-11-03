@@ -23,6 +23,13 @@ namespace Goreu.API.Controllers
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(string id, UsuarioRequestDto request)
+        {
+            var response = await usuarioService.updateAsync(id, request);
+            return response.Success ? Ok(response) : BadRequest(response);
+        }
+
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)

@@ -7,6 +7,7 @@
         private readonly IConfiguration configuration;
         private readonly IOptions<AppSettings> options;
         private readonly IPersonaRepository personaRepository;
+        private readonly IPersonaService personaService;
         private readonly IEntidadRepository entidadRepository;
         private readonly IUnidadOrganicaRepository unidadOrganicaRepository;
         private readonly SignInManager<Usuario> signInManager;
@@ -32,6 +33,7 @@
             RoleManager<Rol> roleManager,
             IRolRepository rolRepository,
             IPersonaRepository personaRepository,
+            IPersonaService personaService,
             IEntidadRepository entidadRepository,
             IUnidadOrganicaRepository unidadOrganicaRepository,
             IUserRepository userRepository,
@@ -47,6 +49,7 @@
             this.configuration = configuration;
             this.options = options;
             this.personaRepository = personaRepository;
+            this.personaService = personaService;
             this.entidadRepository = entidadRepository;
             this.unidadOrganicaRepository = unidadOrganicaRepository;
             this.signInManager = signInManager;
@@ -150,6 +153,69 @@
                 response.ErrorMessage = ex.Message;
 
                 logger.LogError(ex, "❌ Error al registrar usuario: {Message}", ex.Message);
+            }
+
+            return response;
+        }
+
+        public async Task<BaseResponse> updateAsync(string idUsuario, UsuarioRequestDto request)
+        {
+            Console.WriteLine("IDUSUARIO: "+idUsuario);
+            var response =new BaseResponse();
+
+            try
+            {
+                var usuario = await userManager.FindByIdAsync(idUsuario);
+                
+                if (usuario != null)
+                {
+                    Console.WriteLine("USUARIO :" + usuario);
+                    var person = await personaService.GetAsync(usuario.IdPersona);
+                    Console.WriteLine("PERSONA :" + person.Data.Id);
+                    if (person is not null )
+                    {
+
+                        var newPerson = new PersonaRequestDto
+                        {
+
+                            nombres = request.nombres,
+                            apellidoPat = request.apellidoPat,
+                            apellidoMat = request.apellidoMat,
+                            nroDoc = request.nroDoc,
+                            fechaNac=person.Data.FechaNac,
+                            idTipoDoc=person.Data.IdTipoDoc,
+                            email = request.Email
+
+                        };
+                        var persoupdate = await personaService.UpdateAsync(usuario.IdPersona, newPerson);
+
+                    }
+                    else
+                    {
+                        response.Success = false;
+                        response.ErrorMessage = "no se pudo crear a la persona.";
+
+                    }
+                    usuario.Email = request.Email;
+                    usuario.UserName = request.nroDoc;
+                    usuario.Iniciales = request.Iniciales;
+                    var userupdate = await userManager.UpdateAsync(usuario);
+                    response.Success = true;
+                    response.ErrorMessage = "Actualizado Correctamente";
+
+                }
+                else {
+                   
+                    response.Success = false;
+                    response.ErrorMessage = "no se pudo crear al usuario.";
+                }
+
+            }
+            catch (Exception ex )
+            {
+
+                response.ErrorMessage = "Ocurrio un error al actualizar  los datos";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
 
             return response;
@@ -428,20 +494,31 @@
             var response = new BaseResponseGeneric<LoginResponseDto>();
             try
             {
-                var resultado = await signInManager.PasswordSignInAsync(request.UserName, request.Password, isPersistent: false, lockoutOnFailure: false);
+                var usuario = await userManager.FindByNameAsync(request.UserName);
+                if (usuario.Estado)
+                {
+                    var resultado = await signInManager.PasswordSignInAsync(request.UserName, request.Password, isPersistent: false, lockoutOnFailure: false);
 
-                if (resultado.Succeeded)
-                {
-                    //var user = await userManager.FindByEmailAsync(request.UserName);
-                    var user = await userManager.FindByNameAsync(request.UserName);
-                    response.Success = true;
-                    response.Data = await ConstruirToken(user);
+                    if (resultado.Succeeded)
+                    {
+                        //var user = await userManager.FindByEmailAsync(request.UserName);
+                        var user = await userManager.FindByNameAsync(request.UserName);
+                        response.Success = true;
+                        response.Data = await ConstruirToken(user);
+                    }
+                    else
+                    {
+                        response.Success = false;
+                        response.ErrorMessage = "Credenciales incorrectas.";
+                    }
+
                 }
-                else
-                {
+                else {
                     response.Success = false;
-                    response.ErrorMessage = "Credenciales incorrectas.";
-                }
+                    response.ErrorMessage = "Usuario no Activo";
+
+                }    
+
             }
             catch (Exception ex)
             {
@@ -1216,6 +1293,10 @@
             return response;
         }
 
+        public Task<BaseResponse> updateAsync(Usuario user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 
