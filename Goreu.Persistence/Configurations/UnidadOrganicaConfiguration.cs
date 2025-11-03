@@ -14,7 +14,6 @@ namespace Goreu.Persistence.Configurations
         public void Configure(EntityTypeBuilder<UnidadOrganica> builder)
         {
             builder.HasKey(x => x.Id);
-
             builder.Property(x => x.Descripcion).HasMaxLength(50);
             builder.Property(x => x.Abrev).HasMaxLength(5);
             builder.ToTable(nameof(UnidadOrganica), "Administrador");

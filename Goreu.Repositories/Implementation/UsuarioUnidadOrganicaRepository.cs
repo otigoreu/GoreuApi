@@ -72,6 +72,7 @@ namespace Goreu.Repositories.Implementation
         {
             var usuarios = await context.Set<Usuario>()
                 .Include(u => u.Persona) // ✅ EF entiende esta navegación
+                .Include(uuo => uuo.UsuarioUnidadOrganicas)
                 .AsNoTracking()
                 .Where(u =>
                     u.UsuarioRoles.Any(ur =>

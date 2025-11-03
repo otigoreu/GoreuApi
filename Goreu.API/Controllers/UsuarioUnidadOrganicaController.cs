@@ -1,4 +1,6 @@
-﻿namespace Goreu.API.Controllers
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Goreu.API.Controllers
 {
     [Route("api/usuarioUnidadOrganicas")]
     [ApiController]
@@ -148,17 +150,30 @@
             return Ok(response);
         }
 
-
+        /// <summary>
+        /// Obtiene la lista paginada de usuarios asignados a una Unidad Orgánica específica.
+        /// </summary>
+        /// <param name="idEntidad">Identificador único de la entidad.</param>
+        /// <param name="idAplicacion">Identificador de la aplicación asociada.</param>
+        /// <param name="idUnidadorganica">Identificador único de la Unidad Orgánica.</param>
+        /// <param name="search">Texto opcional para filtrar los usuarios por nombre o criterio similar.</param>
+        /// <param name="pagination">Parámetros de paginación (número de página, tamaño de página, etc.).</param>
+        /// <returns>
+        /// - <c>200 OK</c> si la consulta se realizó correctamente.
+        /// - <c>500 Internal Server Error</c> si ocurrió un error inesperado.
+        /// </returns>
         [HttpGet("unidadorganica/{idUnidadorganica}/usuarios")]
         [AllowAnonymous] // -----------------------------------------------------------------------------------------------------------> BORRAR
         public async Task<IActionResult> GetUsuariosPaginadas(
+            [FromQuery, Required] int idEntidad,
+            [FromQuery, Required] int idAplicacion,
             [FromRoute] int idUnidadorganica,
-            [FromQuery] int idEntidad,
-            [FromQuery] int idAplicacion,
             [FromQuery] string? search,
             [FromQuery] PaginationDto pagination)
         {
-            //var result = await service.GetUsuariosConEstadoPorUnidadorganicaAsync(idUnidadorganica, search ?? string.Empty, pagination);
+            if (idEntidad <= 0 || idAplicacion <= 0)
+                return BadRequest("Los parámetros 'idEntidad' y 'idAplicacion' son obligatorios y deben ser mayores que cero.");
+
             var result = await service.GetUsuariosAsignadosAsync(idEntidad, idAplicacion, idUnidadorganica);
             
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
