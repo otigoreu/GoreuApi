@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Goreu.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251105215235_initial")]
+    [Migration("20251105230234_initial")]
     partial class initial
     {
         /// <inheritdoc />
