@@ -30,9 +30,9 @@
         public async Task<EntidadInfo> GetAsyncPerRol(string idRol)
         {
             var query = context.Set<EntidadInfo>().FromSqlRaw(
-               @"select e.id, e.Descripcion,e.Ruc, e.Sigla ,e.Estado from Administrador.Entidad e 
-                join Administrador.EntidadAplicacion ea on e.Id=ea.IdEntidad 
-                join Administrador.Rol r on r.IdEntidadAplicacion=ea.Id where r.id={0}", idRol);
+               @"select e.id, e.Descripcion,e.Ruc, e.Sigla ,e.Estado from adm.Entidad e 
+                join adm.EntidadAplicacion ea on e.Id=ea.IdEntidad 
+                join adm.Rol r on r.IdEntidadAplicacion=ea.Id where r.id={0}", idRol);
 
             return await query.SingleOrDefaultAsync();
         }
@@ -40,9 +40,9 @@
         public async Task <EntidadInfo> GetAsyncPerUser(string idUser)
         {
             var query = context.Set<EntidadInfo>().FromSqlRaw(
-                @"select DISTINCT e.Id, e.Descripcion,e.Ruc, e.Sigla,e.Estado from Administrador.UnidadOrganica uo 
-                join Administrador.UsuarioUnidadOrganica uuo on uuo.IdUnidadOrganica= uo.Id join Administrador.Entidad e on e.Id=uo.IdEntidad
-                join Administrador.Usuario u on u.Id=uuo.IdUsuario where u.Id={0}", idUser);
+                @"select DISTINCT e.Id, e.Descripcion,e.Ruc, e.Sigla,e.Estado from adm.UnidadOrganica uo 
+                join adm.UsuarioUnidadOrganica uuo on uuo.IdUnidadOrganica= uo.Id join adm.Entidad e on e.Id=uo.IdEntidad
+                join adm.Usuario u on u.Id=uuo.IdUsuario where u.Id={0}", idUser);
 
             //return await query.ElementAtAsync(0);
             return await query.SingleOrDefaultAsync();

@@ -4,7 +4,7 @@
     {
         public void Configure(EntityTypeBuilder<UsuarioRol> builder)
         {
-            builder.ToTable(nameof(UsuarioRol), "Administrador");
+            builder.ToTable(nameof(UsuarioRol), "adm");
 
             // 🔹 Nueva clave primaria
             builder.HasKey(ur => ur.Id);

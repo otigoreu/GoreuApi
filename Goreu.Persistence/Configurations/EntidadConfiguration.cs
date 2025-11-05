@@ -13,7 +13,7 @@ namespace Goreu.Persistence.Configurations
             builder.Property(x => x.Descripcion).HasMaxLength(50);
             builder.Property(x => x.Ruc).HasMaxLength(11);
             builder.Property(x => x.Sigla).HasMaxLength(6);
-            builder.ToTable(nameof(Entidad), "Administrador");
+            builder.ToTable(nameof(Entidad), "adm");
             //builder.HasQueryFilter(x => x.Estado);
         }
     }

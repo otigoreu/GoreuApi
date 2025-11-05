@@ -14,7 +14,7 @@ namespace Goreu.Persistence.Configurations
         public void Configure(EntityTypeBuilder<MenuRol> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.ToTable(nameof(MenuRol), "Administrador");
+            builder.ToTable(nameof(MenuRol), "adm");
             // Configurar la relación con menu
             builder
                 .HasOne(ua => ua.Menu)

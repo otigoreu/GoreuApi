@@ -10,7 +10,7 @@ namespace Goreu.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Persona> builder)
         {
             //nombre de la tabla
-            builder.ToTable(nameof(Persona), "Administrador");
+            builder.ToTable(nameof(Persona), "adm");
 
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Nombres).HasMaxLength(50);

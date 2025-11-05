@@ -11,7 +11,7 @@ namespace Goreu.Persistence.Configurations.Pide
         {
             builder.HasKey(x => x.Id);
 
-            builder.ToTable(nameof(CredencialReniec), "Administrador");
+            builder.ToTable(nameof(CredencialReniec), "adm");
             builder.HasQueryFilter(x => x.Estado);
 
            

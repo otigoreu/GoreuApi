@@ -16,7 +16,7 @@ namespace Goreu.Persistence.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Descripcion).HasMaxLength(200);
             builder.Property(x => x.Abrev).HasMaxLength(50);
-            builder.ToTable(nameof(TipoDocumento), "Administrador");
+            builder.ToTable(nameof(TipoDocumento), "adm");
             //builder.HasQueryFilter(x => x.Estado);
         }
     }

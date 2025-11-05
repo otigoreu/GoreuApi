@@ -10,7 +10,7 @@ namespace Goreu.Persistence.Configurations
         {
 
             builder.HasKey(x => x.Id);
-            builder.ToTable(nameof(EntidadAplicacion), "Administrador");
+            builder.ToTable(nameof(EntidadAplicacion), "adm");
             //configuracion de relacion con entidad
             builder.HasOne(ua => ua.Entidad)
                 .WithMany(u => u.EntidadAplicaciones)

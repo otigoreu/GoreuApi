@@ -18,7 +18,7 @@ namespace Goreu.Persistence.Configurations
             builder.Property(x => x.Descripcion).HasMaxLength(50);
             builder.Property(x => x.Icono).HasMaxLength(50);
             builder.Property(x => x.Ruta).HasMaxLength(200);
-            builder.ToTable(nameof(Menu), "Administrador");
+            builder.ToTable(nameof(Menu), "adm");
             //builder.HasQueryFilter(x => x.Estado);
 
             //// Configurar la relación autorreferente

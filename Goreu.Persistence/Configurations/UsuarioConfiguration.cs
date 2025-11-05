@@ -8,7 +8,7 @@ namespace Goreu.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
-            builder.ToTable(nameof(Usuario), "Administrador");
+            builder.ToTable(nameof(Usuario), "adm");
             builder.Property(x => x.Iniciales).HasMaxLength(7);
 
             builder.Property(x => x.UserName).IsUnicode(false);

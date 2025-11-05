@@ -14,7 +14,7 @@ namespace Goreu.Persistence.Configurations
         public void Configure(EntityTypeBuilder<UsuarioUnidadOrganica> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.ToTable(nameof(UsuarioUnidadOrganica), "Administrador");
+            builder.ToTable(nameof(UsuarioUnidadOrganica), "adm");
 
             //configurar la relacion con usuario
             builder.HasOne(ua => ua.Usuario)

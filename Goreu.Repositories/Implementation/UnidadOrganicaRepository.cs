@@ -35,8 +35,8 @@ namespace Goreu.Repositories.Implementation
             //var query = context.Set<UnidadOrganicaInfo>().FromSqlRaw("UnidadOrganicaPerIdUser {0}", idUser);
             var query = context.Set<UnidadOrganicaInfo>().FromSqlRaw(
                 @"select uo.Id, uo.Abrev, uo.Descripcion,uo.IdEntidad,uo.IdDependencia,uo.Estado
-                from Administrador.UnidadOrganica uo join Administrador.UsuarioUnidadOrganica uuo 
-                on uuo.IdUnidadOrganica= uo.Id join Administrador.Usuario u on u.Id=uuo.IdUsuario where u.Id={0}",idUser);
+                from adm.UnidadOrganica uo join adm.UsuarioUnidadOrganica uuo 
+                on uuo.IdUnidadOrganica= uo.Id join adm.Usuario u on u.Id=uuo.IdUsuario where u.Id={0}",idUser);
 
 
             return await query.ToListAsync();

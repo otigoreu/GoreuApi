@@ -12,14 +12,14 @@ namespace Goreu.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "Administrador");
+                name: "adm");
 
             migrationBuilder.EnsureSchema(
                 name: "Seguridad");
 
             migrationBuilder.CreateTable(
                 name: "Aplicacion",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -46,7 +46,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Entidad",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -171,7 +171,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "TipoDocumento",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -201,7 +201,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Menu",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -219,14 +219,14 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Menu_Aplicacion_IdAplicacion",
                         column: x => x.IdAplicacion,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Aplicacion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Menu_Menu_IdMenuPadre",
                         column: x => x.IdMenuPadre,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Menu",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -234,7 +234,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "EntidadAplicacion",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -249,14 +249,14 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_EntidadAplicacion_Aplicacion_IdAplicacion",
                         column: x => x.IdAplicacion,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Aplicacion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EntidadAplicacion_Entidad_IdEntidad",
                         column: x => x.IdEntidad,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Entidad",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -264,7 +264,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "UnidadOrganica",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -281,14 +281,14 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_UnidadOrganica_Entidad_IdEntidad",
                         column: x => x.IdEntidad,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Entidad",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UnidadOrganica_UnidadOrganica_IdDependencia",
                         column: x => x.IdDependencia,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "UnidadOrganica",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -296,7 +296,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Persona",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -316,7 +316,7 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Persona_TipoDocumento_IdTipoDoc",
                         column: x => x.IdTipoDoc,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "TipoDocumento",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -324,7 +324,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Rol",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -340,7 +340,7 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Rol_EntidadAplicacion_IdEntidadAplicacion",
                         column: x => x.IdEntidadAplicacion,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "EntidadAplicacion",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -348,7 +348,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "CredencialReniec",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -367,7 +367,7 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_CredencialReniec_Persona_PersonaID",
                         column: x => x.PersonaID,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Persona",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -375,7 +375,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Usuario",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -404,7 +404,7 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Usuario_Persona_IdPersona",
                         column: x => x.IdPersona,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Persona",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -426,7 +426,7 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetRoleClaims_Rol_RoleId",
                         column: x => x.RoleId,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Rol",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -434,7 +434,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "MenuRol",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -451,14 +451,14 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_MenuRol_Menu_IdMenu",
                         column: x => x.IdMenu,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Menu",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MenuRol_Rol_IdRol",
                         column: x => x.IdRol,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Rol",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -480,7 +480,7 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserClaims_Usuario_UserId",
                         column: x => x.UserId,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -501,7 +501,7 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_Usuario_UserId",
                         column: x => x.UserId,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -522,7 +522,7 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_Usuario_UserId",
                         column: x => x.UserId,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -555,7 +555,7 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_Historial_Usuario_idUsuario",
                         column: x => x.idUsuario,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -563,7 +563,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "UsuarioRol",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -577,14 +577,14 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_UsuarioRol_Rol_RoleId",
                         column: x => x.RoleId,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Rol",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UsuarioRol_Usuario_UserId",
                         column: x => x.UserId,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -592,7 +592,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "UsuarioUnidadOrganica",
-                schema: "Administrador",
+                schema: "adm",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -611,14 +611,14 @@ namespace Goreu.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_UsuarioUnidadOrganica_UnidadOrganica_IdUnidadOrganica",
                         column: x => x.IdUnidadOrganica,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "UnidadOrganica",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UsuarioUnidadOrganica_Usuario_IdUsuario",
                         column: x => x.IdUsuario,
-                        principalSchema: "Administrador",
+                        principalSchema: "adm",
                         principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -641,20 +641,20 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_CredencialReniec_PersonaID",
-                schema: "Administrador",
+                schema: "adm",
                 table: "CredencialReniec",
                 column: "PersonaID",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_EntidadAplicacion_IdAplicacion",
-                schema: "Administrador",
+                schema: "adm",
                 table: "EntidadAplicacion",
                 column: "IdAplicacion");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EntidadAplicacion_IdEntidad",
-                schema: "Administrador",
+                schema: "adm",
                 table: "EntidadAplicacion",
                 column: "IdEntidad");
 
@@ -672,43 +672,43 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Menu_IdAplicacion",
-                schema: "Administrador",
+                schema: "adm",
                 table: "Menu",
                 column: "IdAplicacion");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Menu_IdMenuPadre",
-                schema: "Administrador",
+                schema: "adm",
                 table: "Menu",
                 column: "IdMenuPadre");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MenuRol_IdMenu",
-                schema: "Administrador",
+                schema: "adm",
                 table: "MenuRol",
                 column: "IdMenu");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MenuRol_IdRol",
-                schema: "Administrador",
+                schema: "adm",
                 table: "MenuRol",
                 column: "IdRol");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Persona_IdTipoDoc",
-                schema: "Administrador",
+                schema: "adm",
                 table: "Persona",
                 column: "IdTipoDoc");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rol_IdEntidadAplicacion",
-                schema: "Administrador",
+                schema: "adm",
                 table: "Rol",
                 column: "IdEntidadAplicacion");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
-                schema: "Administrador",
+                schema: "adm",
                 table: "Rol",
                 column: "NormalizedName",
                 unique: true,
@@ -716,31 +716,31 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_UnidadOrganica_IdDependencia",
-                schema: "Administrador",
+                schema: "adm",
                 table: "UnidadOrganica",
                 column: "IdDependencia");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UnidadOrganica_IdEntidad",
-                schema: "Administrador",
+                schema: "adm",
                 table: "UnidadOrganica",
                 column: "IdEntidad");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                schema: "Administrador",
+                schema: "adm",
                 table: "Usuario",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Usuario_IdPersona",
-                schema: "Administrador",
+                schema: "adm",
                 table: "Usuario",
                 column: "IdPersona");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                schema: "Administrador",
+                schema: "adm",
                 table: "Usuario",
                 column: "NormalizedUserName",
                 unique: true,
@@ -748,19 +748,19 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsuarioRol_RoleId",
-                schema: "Administrador",
+                schema: "adm",
                 table: "UsuarioRol",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsuarioUnidadOrganica_IdUnidadOrganica",
-                schema: "Administrador",
+                schema: "adm",
                 table: "UsuarioUnidadOrganica",
                 column: "IdUnidadOrganica");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsuarioUnidadOrganica_IdUsuario",
-                schema: "Administrador",
+                schema: "adm",
                 table: "UsuarioUnidadOrganica",
                 column: "IdUsuario");
         }
@@ -785,7 +785,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "CredencialReniec",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "EntidadInfo");
@@ -802,7 +802,7 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "MenuRol",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "RolEntidadAplicacionCounterInfo");
@@ -818,11 +818,11 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "UsuarioRol",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "UsuarioUnidadOrganica",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "IndiceTabla",
@@ -830,39 +830,39 @@ namespace Goreu.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Menu",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "Rol",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "UnidadOrganica",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "Usuario",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "EntidadAplicacion",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "Persona",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "Aplicacion",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "Entidad",
-                schema: "Administrador");
+                schema: "adm");
 
             migrationBuilder.DropTable(
                 name: "TipoDocumento",
-                schema: "Administrador");
+                schema: "adm");
         }
     }
 }

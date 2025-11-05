@@ -9,7 +9,7 @@ namespace Goreu.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Rol> builder)
         {
-            builder.ToTable(nameof(Rol), "Administrador");
+            builder.ToTable(nameof(Rol), "adm");
             builder.Property(x => x.Name).IsUnicode(false);
             builder.Property(x => x.NormalizedName).IsUnicode(false);
 

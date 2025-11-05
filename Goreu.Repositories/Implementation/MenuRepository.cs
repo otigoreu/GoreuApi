@@ -122,10 +122,10 @@ namespace Goreu.Repositories.Implementation
 	                r.Name as Rol, 
 	                m.IdMenuPadre,
 	                m.Estado 
-	                from Administrador.Menu m 
-			                join Administrador.MenuRol mr on m.Id=mr.IdMenu 
-			                join Administrador.Rol r on r.Id=mr.IdRol 
-			                join Administrador.Aplicacion a on m.IdAplicacion=a.Id
+	                from adm.Menu m 
+			                join adm.MenuRol mr on m.Id=mr.IdMenu 
+			                join adm.Rol r on r.Id=mr.IdRol 
+			                join adm.Aplicacion a on m.IdAplicacion=a.Id
 		                where (m.Descripcion like '%'+{0}+'%')", Descripcion ?? string.Empty );
 
             return await query.ToListAsync();
@@ -136,10 +136,10 @@ namespace Goreu.Repositories.Implementation
         {
             var quey = context.Set<Menu>().FromSqlRaw(
                 @"select distinct m.Id,m.Descripcion, m.Icono, m.Ruta,m.IdAplicacion ,m.IdMenuPadre, m.Estado
-		            from Administrador.Menu m 
-					join Administrador.Aplicacion a on m.IdAplicacion=a.Id
-					join Administrador.EntidadAplicacion ea on ea.IdAplicacion=a.Id		            
-		            join Administrador.Entidad e on e.Id=ea.IdEntidad
+		            from adm.Menu m 
+					join adm.Aplicacion a on m.IdAplicacion=a.Id
+					join adm.EntidadAplicacion ea on ea.IdAplicacion=a.Id		            
+		            join adm.Entidad e on e.Id=ea.IdEntidad
 		            where e.Id={0} and a.Id={1}", idEntidad,idAplicacion);
             return await quey.ToListAsync();
 
@@ -149,9 +149,9 @@ namespace Goreu.Repositories.Implementation
         {
             var quey = context.Set<Menu>().FromSqlRaw(
                 @"select m.Id,m.Descripcion, m.Icono, m.Ruta,m.IdAplicacion ,m.IdMenuPadre, m.Estado
-		            from Administrador.Menu m 
-		            join Administrador.MenuRol mr on mr.IdMenu=m.Id 
-		            join Administrador.Rol r on r.Id=mr.IdRol
+		            from adm.Menu m 
+		            join adm.MenuRol mr on mr.IdMenu=m.Id 
+		            join adm.Rol r on r.Id=mr.IdRol
 		            where r.Id={0}", idRol);
             return await quey.ToListAsync();
         }

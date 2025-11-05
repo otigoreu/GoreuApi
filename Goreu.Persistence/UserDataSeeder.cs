@@ -785,7 +785,17 @@ namespace Goreu.Persistence
                             Estado = true
 
                         };
+                        var usuariorol11 = new UsuarioRol
+                        {
+                            UserId = adminSistema.Id,
+                            RoleId = role2.Id,
+                            Estado = true
+
+                        };
+
                         context.Set<UsuarioRol>().Add(usuariorol1);
+                        context.Set<UsuarioRol>().Add(usuariorol11);
+
                         await context.SaveChangesAsync();
 
 

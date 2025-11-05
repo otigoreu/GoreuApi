@@ -40,7 +40,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Aplicacion", "Administrador");
+                    b.ToTable("Aplicacion", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.Entidad", b =>
@@ -71,7 +71,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Entidad", "Administrador");
+                    b.ToTable("Entidad", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.EntidadAplicacion", b =>
@@ -97,7 +97,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasIndex("IdEntidad");
 
-                    b.ToTable("EntidadAplicacion", "Administrador");
+                    b.ToTable("EntidadAplicacion", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.Historial", b =>
@@ -454,7 +454,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasIndex("IdMenuPadre");
 
-                    b.ToTable("Menu", "Administrador");
+                    b.ToTable("Menu", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.MenuRol", b =>
@@ -487,7 +487,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasIndex("IdRol");
 
-                    b.ToTable("MenuRol", "Administrador");
+                    b.ToTable("MenuRol", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.Persona", b =>
@@ -540,7 +540,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasIndex("IdTipoDoc");
 
-                    b.ToTable("Persona", "Administrador");
+                    b.ToTable("Persona", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.Pide.CredencialReniec", b =>
@@ -580,7 +580,7 @@ namespace Goreu.Persistence.Migrations
                     b.HasIndex("PersonaID")
                         .IsUnique();
 
-                    b.ToTable("CredencialReniec", "Administrador");
+                    b.ToTable("CredencialReniec", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.Rol", b =>
@@ -617,7 +617,7 @@ namespace Goreu.Persistence.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Rol", "Administrador");
+                    b.ToTable("Rol", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.TipoDocumento", b =>
@@ -643,7 +643,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TipoDocumento", "Administrador");
+                    b.ToTable("TipoDocumento", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.UnidadOrganica", b =>
@@ -678,7 +678,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasIndex("IdEntidad");
 
-                    b.ToTable("UnidadOrganica", "Administrador");
+                    b.ToTable("UnidadOrganica", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.Usuario", b =>
@@ -763,7 +763,7 @@ namespace Goreu.Persistence.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("Usuario", "Administrador");
+                    b.ToTable("Usuario", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.UsuarioRol", b =>
@@ -788,7 +788,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UsuarioRol", "Administrador");
+                    b.ToTable("UsuarioRol", "adm");
                 });
 
             modelBuilder.Entity("Goreu.Entities.UsuarioUnidadOrganica", b =>
@@ -827,7 +827,7 @@ namespace Goreu.Persistence.Migrations
 
                     b.HasIndex("IdUsuario");
 
-                    b.ToTable("UsuarioUnidadOrganica", "Administrador");
+                    b.ToTable("UsuarioUnidadOrganica", "adm");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

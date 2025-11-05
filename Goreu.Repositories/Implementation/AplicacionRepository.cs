@@ -52,9 +52,9 @@ namespace Goreu.Repositories.Implementation
         public async Task<AplicacionInfo> GetAsyncPerRol(string idRol)
         {
             var query = context.Set<AplicacionInfo>().FromSqlRaw(
-                @"select a.id, a.Descripcion, a.Estado from Administrador.Aplicacion a 
-                join Administrador.EntidadAplicacion ea on a.Id=ea.IdAplicacion 
-                join Administrador.Rol r on r.IdEntidadAplicacion=ea.Id where r.id={0}", idRol);
+                @"select a.id, a.Descripcion, a.Estado from adm.Aplicacion a 
+                join adm.EntidadAplicacion ea on a.Id=ea.IdAplicacion 
+                join adm.Rol r on r.IdEntidadAplicacion=ea.Id where r.id={0}", idRol);
 
             return await query.SingleOrDefaultAsync();
         }
@@ -63,9 +63,9 @@ namespace Goreu.Repositories.Implementation
         {
             
             var query = context.Set<AplicacionInfo>().FromSqlRaw(
-                @"select distinct  a.Id, a.Descripcion, a.Estado from Administrador.Usuario u 
-                join Administrador.UsuarioRol ur on u.Id=ur.UserId join Administrador.Rol r on r.Id=ur.RoleId
-                join Administrador.EntidadAplicacion ea on r.IdEntidadAplicacion=ea.Id join Administrador.Aplicacion a on a.Id=ea.IdAplicacion 
+                @"select distinct  a.Id, a.Descripcion, a.Estado from adm.Usuario u 
+                join adm.UsuarioRol ur on u.Id=ur.UserId join adm.Rol r on r.Id=ur.RoleId
+                join adm.EntidadAplicacion ea on r.IdEntidadAplicacion=ea.Id join adm.Aplicacion a on a.Id=ea.IdAplicacion 
                 where u.Id={0}", idUser);
 
             return await query.ToListAsync();

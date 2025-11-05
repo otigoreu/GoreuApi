@@ -138,19 +138,19 @@ namespace Goreu.Repositories.Implementation
                     COUNT(h.IdUnidadOrganica) AS CantidadUnidadOrganica,
                     b.MustChangePassword,
                     a.Estado
-                FROM [Administrador].[UsuarioRol] a
-                INNER JOIN [Administrador].[Usuario] b ON a.UserId = b.Id
-                INNER JOIN [Administrador].[Persona] c ON b.IdPersona = c.Id
+                FROM [adm].[UsuarioRol] a
+                INNER JOIN [adm].[Usuario] b ON a.UserId = b.Id
+                INNER JOIN [adm].[Persona] c ON b.IdPersona = c.Id
                     AND (
                         c.Nombres LIKE '%' + {{0}} + '%' 
                         OR c.ApellidoPat LIKE '%' + {{0}} + '%' 
                         OR c.ApellidoMat LIKE '%' + {{0}} + '%'
                     )
-                INNER JOIN [Administrador].[Rol] d ON a.RoleId = d.Id
-                INNER JOIN [Administrador].[EntidadAplicacion] e ON d.IdEntidadAplicacion = e.Id
-                INNER JOIN [Administrador].[Entidad] f ON e.IdEntidad = f.Id
-                INNER JOIN [Administrador].[Aplicacion] g ON e.IdAplicacion = g.Id
-                LEFT JOIN [Administrador].[UsuarioUnidadOrganica] h ON a.UserId = h.IdUsuario
+                INNER JOIN [adm].[Rol] d ON a.RoleId = d.Id
+                INNER JOIN [adm].[EntidadAplicacion] e ON d.IdEntidadAplicacion = e.Id
+                INNER JOIN [adm].[Entidad] f ON e.IdEntidad = f.Id
+                INNER JOIN [adm].[Aplicacion] g ON e.IdAplicacion = g.Id
+                LEFT JOIN [adm].[UsuarioUnidadOrganica] h ON a.UserId = h.IdUsuario
                 {extraWhere}
                 GROUP BY 
                     b.Id, d.Name, b.IdPersona, b.Email, b.UserName, 

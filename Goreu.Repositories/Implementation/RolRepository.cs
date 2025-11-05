@@ -67,9 +67,9 @@
         public async Task<ICollection<RolInfo>> GetAsyncPerUser(string idUser)
         {
             var query = context.Set<RolInfo>().FromSqlRaw(
-                @"select r.Id, r.Name from Administrador.Rol r 
-                join Administrador.UsuarioRol ur on r.Id=ur.RoleId 
-                join Administrador.Usuario u on u.Id=ur.UserId where u.Id={0}", idUser);
+                @"select r.Id, r.Name from adm.Rol r 
+                join adm.UsuarioRol ur on r.Id=ur.RoleId 
+                join adm.Usuario u on u.Id=ur.UserId where u.Id={0}", idUser);
 
             return await query.ToListAsync();
         }
@@ -115,10 +115,10 @@
         {
             var query = context.Set<RolEntidadAplicacionInfo>().FromSqlRaw(
                  @"select r.Id, r.Name, r.NormalizedName, r.Estado, r.IdEntidadAplicacion 
-                    from Administrador.Rol r 
-	                    join Administrador.EntidadAplicacion ea on ea.Id=r.IdEntidadAplicacion
-	                    join Administrador.Aplicacion a on a.Id=ea.IdAplicacion
-	                    join Administrador.Entidad e on e.Id=ea.IdEntidad where e.Id={0} and a.Id={1}",idEntidad,idAplicacion);
+                    from adm.Rol r 
+	                    join adm.EntidadAplicacion ea on ea.Id=r.IdEntidadAplicacion
+	                    join adm.Aplicacion a on a.Id=ea.IdAplicacion
+	                    join adm.Entidad e on e.Id=ea.IdEntidad where e.Id={0} and a.Id={1}",idEntidad,idAplicacion);
 
             return await query.ToListAsync();
         }
@@ -127,9 +127,9 @@
         {
             var query = context.Set<RolEntidadAplicacionCounterInfo>().FromSqlRaw(
                 @"select r.Id, r.Name, r.NormalizedName, r.Estado, r.IdEntidadAplicacion, COUNT(case when mr.Estado=1 then 1 end) as CantidadMenus 
-                        from Administrador.Rol r 
-                        left join Administrador.MenuRol mr on r.Id=mr.IdRol
-						join Administrador.EntidadAplicacion ea on ea.Id=r.IdEntidadAplicacion 
+                        from adm.Rol r 
+                        left join adm.MenuRol mr on r.Id=mr.IdRol
+						join adm.EntidadAplicacion ea on ea.Id=r.IdEntidadAplicacion 
 						where ea.IdEntidad={0} and ea.IdAplicacion={1} 
                         group by r.Id, r.Name, r.NormalizedName, r.Estado, r.IdEntidadAplicacion", idEntidad, idAplicacion);
 
