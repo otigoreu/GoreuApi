@@ -54,7 +54,7 @@ namespace Goreu.Repositories.Implementation
             var query = context.Set<AplicacionInfo>().FromSqlRaw(
                 @"select a.id, a.Descripcion, a.Estado from Administrador.Aplicacion a 
                 join Administrador.EntidadAplicacion ea on a.Id=ea.IdAplicacion 
-                join Administrador.Rol r on r.IdEntidadAplicacion=ea.IdAplicacion where r.id={0}", idRol);
+                join Administrador.Rol r on r.IdEntidadAplicacion=ea.Id where r.id={0}", idRol);
 
             return await query.SingleOrDefaultAsync();
         }

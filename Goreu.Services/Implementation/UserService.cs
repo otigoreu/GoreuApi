@@ -561,12 +561,12 @@
                 NroDoc = persona.NroDoc
             };
 
-            Console.WriteLine("USER: "+user.Id);
+            //Console.WriteLine("USER: "+user.Id);
             ////UnidadOrganica
             var dataUnidad = await unidadOrganicaRepository.GetAsyncPerUser(user.Id);
             var unidadOrganicaDto = new List<UnidadOrganicaResponseSingleDto>();
 
-            Console.WriteLine("unidad"+dataUnidad);
+           // Console.WriteLine("unidad"+dataUnidad);
 
             unidadOrganicaDto = mapper.Map<List<UnidadOrganicaResponseSingleDto>>(dataUnidad);
 
@@ -577,7 +577,7 @@
 
             var dataApp = await aplicacionRepository.GetAsyncPerUser(user.Id);
             aplicacionesDto = mapper.Map<List<AplicacionResponseDto>>(dataApp);
-            Console.WriteLine("APLIACACIONES: " + user.Id);
+            //Console.WriteLine("APLIACACIONES: " + user.Id);
 
             ////Roles
             var dataroles=await rolRepository.GetAsyncPerUser(user.Id);
@@ -586,15 +586,15 @@
             var rolesResponseDto= new List<RolResponseSingleDto>();
 
             rolesResponseDto = mapper.Map<List<RolResponseSingleDto>>(dataroles);
-            Console.WriteLine("ROLES: " + rolesResponseDto[0].Id);
-            Console.WriteLine("ROLES: " + dataroles.First().Id);
+            //Console.WriteLine("ROLES: " + rolesResponseDto[0].Id);
+            //Console.WriteLine("ROLES: " + dataroles.First().Id);
 
             ////Entidad
             var dataEntidad = await entidadRepository.GetAsyncPerRol(dataroles.First().Id);
             var entidadDto = new EntidadResponseDto();
 
             entidadDto = mapper.Map<EntidadResponseDto>(dataEntidad);
-            Console.WriteLine("ENTIDADES: " + user.Id);
+            //Console.WriteLine("ENTIDADES: " + user.Id);
 
             ////Agregar múltiples audiencias como claims dinámicamente
             var audiences = options.Value.Jwt.Audiences;
