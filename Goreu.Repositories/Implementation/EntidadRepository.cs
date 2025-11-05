@@ -32,7 +32,7 @@
             var query = context.Set<EntidadInfo>().FromSqlRaw(
                @"select e.id, e.Descripcion,e.Ruc, e.Sigla ,e.Estado from Administrador.Entidad e 
                 join Administrador.EntidadAplicacion ea on e.Id=ea.IdEntidad 
-                join Administrador.Rol r on r.IdEntidadAplicacion=ea.IdAplicacion where r.id={0}", idRol);
+                join Administrador.Rol r on r.IdEntidadAplicacion=ea.Id where r.id={0}", idRol);
 
             return await query.SingleOrDefaultAsync();
         }
