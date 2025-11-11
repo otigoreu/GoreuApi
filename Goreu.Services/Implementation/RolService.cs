@@ -42,7 +42,16 @@
                     response.ErrorMessage = "Rol ya existe";
                     return response;
                 }
-                response.Data = await repository.AddAsync(mapper.Map<Rol>(request));
+
+                var rolnew = new Rol
+                {
+                    Name = request.Name,
+                    NormalizedName = request.Name,
+                    IdEntidadAplicacion=request.IdEntidadAplicacion,
+
+                };
+
+                response.Data = await repository.AddAsync(rolnew);
                 response.Success = true;
 
                 return response;
@@ -173,7 +182,13 @@
                 {
                     response.ErrorMessage = $"El Rol con id {id} no fue encontrado";
                 }
-                await rolManager.UpdateAsync(mapper.Map(request, data));
+
+
+                data.Name = request.Name;
+                data.NormalizedName = request.Name;
+                data.IdEntidadAplicacion = request.IdEntidadAplicacion;
+         
+                await repository.UpdateAsync();
                 response.Success = true;
 
             }

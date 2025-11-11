@@ -7,6 +7,7 @@
         Task<ICollection<RolEntidadAplicacionCounterInfo>> GetWithAllEntidadAplicacionCounterAsync(int idEntidad, int idAplicacion);
         Task<ICollection<RolInfo>> GetAsyncPerUser(string idUser);
         Task<Rol?> GetAsync(string id);
+        Task UpdateAsync();
         Task<string> AddAsync(Rol rol);
         Task DeleteAsync(string id);
         Task FinalizedAsync(string id);

@@ -140,6 +140,9 @@
 
         }
 
-       
+        public async Task UpdateAsync()
+        {
+            await context.SaveChangesAsync();
+        }
     }
 }
