@@ -17,13 +17,20 @@
             return await context.Set<Rol>().FindAsync(id);
         }
 
+        public async Task<Rol?> GetAsync(int IdEntidadAplicacion, string Name)
+        {
+            return await context.Set<Rol>()
+                .FirstOrDefaultAsync(z =>
+                z.IdEntidadAplicacion == IdEntidadAplicacion &&
+                z.Name.ToLower() == Name.ToLower());
+        }
+
         public async Task<string> AddAsync(Rol rol)
         {
             await context.Set<Rol>().AddAsync(rol);
             await context.SaveChangesAsync();
             return rol.Id;
         }
-
         public async Task<ICollection<Rol>> GetAllAsync()
         {
             return await context.Set<Rol>().AsNoTracking().ToListAsync();

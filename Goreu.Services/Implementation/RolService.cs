@@ -35,36 +35,39 @@
         public async Task<BaseResponseGeneric<string>> AddSync(RolRequestDto request)
         {
             var response = new BaseResponseGeneric<string>();
+
             try
             {
-                if (await rolManager.RoleExistsAsync(request.Name))
+                // Verificar si ya existe un rol con el mismo nombre en la misma aplicación
+                var existingRol = await repository.GetAsync(request.IdEntidadAplicacion, request.Name);
+                if (existingRol != null)
                 {
-                    response.ErrorMessage = "Rol ya existe";
+                    response.ErrorMessage = $"Ya existe un rol con el nombre '{request.Name}' en esta aplicación.";
                     return response;
                 }
 
+                // Crear nuevo rol
                 var rolnew = new Rol
                 {
                     Name = request.Name,
-                    NormalizedName = request.Name,
-                    IdEntidadAplicacion=request.IdEntidadAplicacion,
-
+                    NormalizedName = request.Name.ToUpperInvariant(),
+                    IdEntidadAplicacion = request.IdEntidadAplicacion
                 };
 
                 response.Data = await repository.AddAsync(rolnew);
                 response.Success = true;
 
                 return response;
-
             }
             catch (Exception ex)
             {
-
-                response.ErrorMessage = "Ocurrio un error al registrar el rol";
-                logger.LogError(ex, "{ErrorMessage}{Message}", response.ErrorMessage, ex.Message);
+                response.ErrorMessage = "Ocurrió un error al intentar registrar el rol. Por favor, inténtalo nuevamente.";
+                logger.LogError(ex, "Error al registrar el rol: {Message}", ex.Message);
             }
+
             return response;
         }
+
         //FUNCIONA
         public async Task<BaseResponse> DeleteAsync(string id)
         {

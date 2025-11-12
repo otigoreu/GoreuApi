@@ -34,7 +34,6 @@ namespace Goreu.API.Controllers
             return response.Success ? Ok(response) : BadRequest(response);
         }
 
-
         [HttpGet("id")]
         public async Task<IActionResult> Get(string id)
         {
