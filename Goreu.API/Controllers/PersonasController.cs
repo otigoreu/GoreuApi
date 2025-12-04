@@ -1,4 +1,5 @@
-﻿using Goreu.Dto.Response;
+﻿using Goreu.API.Filters;
+using Goreu.Dto.Response;
 using Goreu.Entities.Info;
 
 namespace Goreu.API.Controllers
@@ -81,6 +82,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost]
+        [PersonaExists]
         public async Task<IActionResult> Post(PersonaRequestDto personRequestDto)
         {
             var response = await service.AddAsync(personRequestDto);

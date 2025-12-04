@@ -1,5 +1,6 @@
 ﻿global using Goreu.Dto.Request;
 global using Goreu.Dto.Request.Pide.Credenciales;
+global using Goreu.Dto.Response;
 global using Goreu.Entities;
 global using Goreu.Persistence;
 global using Goreu.Repositories.Implementation;
@@ -16,10 +17,10 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Mvc.Filters;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.IdentityModel.Tokens;
 global using Newtonsoft.Json;
 global using System.Reflection;
 global using System.Security.Claims;
 global using System.Text;
-global using System.Xml.Linq;
