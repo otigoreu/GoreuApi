@@ -1022,8 +1022,6 @@
                     response.ErrorMessage = "usuario no enocntrado";
                     return response;
                 }
-
-                ////verifica si existe el rol
                 var roleExistis = await roleManager.RoleExistsAsync(roleName);
                 if (!roleExistis)
                 {
@@ -1039,7 +1037,12 @@
                 }
 
                 ////agregar el rol
+                Console.WriteLine("Start<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+                Console.WriteLine("USUARIO : "+user.Id);
+                Console.WriteLine("ROL  : "+roleName);
                 var resultado = await userManager.AddToRoleAsync(user, roleName);
+
+                Console.WriteLine("End>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                 if (resultado.Succeeded)
                 {
                     response.Success = true;

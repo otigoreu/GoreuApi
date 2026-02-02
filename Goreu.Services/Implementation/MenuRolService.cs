@@ -170,7 +170,8 @@ namespace Goreu.Services.Implementation
                         IconoMenu=mero?.Icono??"",
                         DescripcionMenu=mero?.Descripcion??"",
                         IdMenu=mero.Id,
-                        Estado=asociada?.Estado??false,
+                        IdMenuPadre = mero?.IdMenuPadre ?? -1,
+                        Estado =asociada?.Estado??false,
 
                     };
                 
