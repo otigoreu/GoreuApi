@@ -161,18 +161,17 @@ namespace Goreu.Services.Implementation
 
                     var asociada = menuRol.FirstOrDefault(mr => mr.IdMenu==mero.Id);
 
-                    return new MenuRolInfo
-                    {
+                    return new MenuRolInfo { 
+                    
+                        Id=asociada?.Id??0,
+                        Operacion=asociada?.Operacion??false,
+                        Consulta=asociada?.Consulta??false,
+                        IdRol=asociada?.IdRol??"",
+                        IconoMenu=mero?.Icono??"",
+                        DescripcionMenu=mero?.Descripcion??"",
+                        IdMenu=mero.Id,
+                        Estado=asociada?.Estado??false,
 
-                        Id = asociada?.Id ?? 0,
-                        Operacion = asociada?.Operacion ?? false,
-                        Consulta = asociada?.Consulta ?? false,
-                        IdRol = asociada?.IdRol ?? "",
-                        IconoMenu = mero?.Icono ?? "",
-                        DescripcionMenu = mero?.Descripcion ?? "",
-                        IdMenu = mero.Id,
-                        IdMenuPadre = mero?.IdMenuPadre ?? -1,
-                        Estado = asociada?.Estado ?? false,
                     };
                 
                 
