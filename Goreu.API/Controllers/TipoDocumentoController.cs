@@ -1,4 +1,6 @@
-﻿namespace Goreu.API.Controllers
+﻿using Goreu.API.Filters;
+
+namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/tipodocumentos")]
@@ -38,6 +40,7 @@
         }
 
         [HttpPost]
+        [TipoDocumentoExists]
         public async Task<IActionResult> Post([FromBody] TipoDocumentoRequestDto expedienteRequestDto)
         {
 

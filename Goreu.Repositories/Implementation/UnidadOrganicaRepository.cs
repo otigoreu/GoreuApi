@@ -68,5 +68,13 @@ namespace Goreu.Repositories.Implementation
 
             return resultado;
         }
+
+        public async Task<bool> ExisteDescripcionAsync(string descripcion, int idEntidad)
+        {
+            return await context.Set<UnidadOrganica>()
+                .AsNoTracking()
+                .AnyAsync(x => x.Descripcion == descripcion
+                               && x.IdEntidad == idEntidad);
+        }
     }
 }

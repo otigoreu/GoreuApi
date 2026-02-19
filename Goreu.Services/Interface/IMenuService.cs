@@ -15,5 +15,6 @@
         Task<BaseResponse> UpdateAsyncSingle(int id, MenuRequestDtoSingle request);
         Task<BaseResponse> FinalizedAsync(int id);
         Task<BaseResponse> InitializedAsync(int id);
+        Task<BaseResponseGeneric<bool>> ValidarDescripcionAsync(string descripcion, int idAplicacion);
     }
 }

@@ -89,5 +89,12 @@
             item.Estado = true;
             await context.SaveChangesAsync();
         }
+
+        public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await context.Set<TEntity>()
+                .AsNoTracking()
+                .AnyAsync(predicate);
+        }
     }
 }

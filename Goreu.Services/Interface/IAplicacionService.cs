@@ -8,6 +8,6 @@
 
         Task<BaseResponseGeneric<ICollection<AplicacionResponseDto>>> GetAsyncPerUser(string idUser);
         Task<BaseResponseGeneric<AplicacionResponseDto>> GetAsyncPerRol(string idRol);
-
+        Task<BaseResponseGeneric<bool>> ValidarDescripcionAsync(string descripcion);
     }
 }

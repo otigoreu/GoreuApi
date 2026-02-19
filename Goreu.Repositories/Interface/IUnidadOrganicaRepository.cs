@@ -5,5 +5,6 @@
         Task<ICollection<UnidadOrganica>> GetAsync<TKey>(Expression<Func<UnidadOrganica, bool>> predicate, Expression<Func<UnidadOrganica, TKey>> orderBy, PaginationDto pagination);
         Task<ICollection<UnidadOrganicaInfo>> GetAsyncPerUser(string idUser);
         Task<ICollection<UnidadOrganica>> ObtenerDescendientesAsync(int idUnidadOrganica);
+        Task<bool> ExisteDescripcionAsync(string descripcion, int idEntidad);
     }
 }

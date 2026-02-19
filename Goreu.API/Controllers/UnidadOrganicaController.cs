@@ -1,4 +1,5 @@
-﻿using Goreu.Dto.Response;
+﻿using Goreu.API.Filters;
+using Goreu.Dto.Response;
 
 namespace Goreu.API.Controllers
 {
@@ -15,6 +16,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost]
+        [UnidadOrganicaExists]
         public async Task<IActionResult> Post([FromBody] UnidadOrganicaRequestDto dto)
         {
             var response = await unidadOrganicaService.AddAsync(dto);

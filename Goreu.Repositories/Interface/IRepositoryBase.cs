@@ -12,5 +12,6 @@
         Task DeleteAsync(int id);
         Task FinalizeAsync(int id);
         Task InitializeAsync(int id);
+        Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate);
     }
 }

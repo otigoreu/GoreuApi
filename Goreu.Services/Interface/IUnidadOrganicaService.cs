@@ -9,6 +9,7 @@ namespace Goreu.Services.Interface
         Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetAsync(int idEntidad, string descripcion, PaginationDto pagination);
         Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseSingleDto>>> GetAsyncPerUser(string idUser);
         Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetDescendientesJerarquicoAsync(int idUnidadOrganica);
+        Task<BaseResponseGeneric<bool>> ValidarDescripcionAsync(string descripcion, int idEntidad);
     }
 }
 

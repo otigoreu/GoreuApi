@@ -1,4 +1,6 @@
-﻿namespace Goreu.API.Controllers
+﻿using Goreu.API.Filters;
+
+namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/menus")]
@@ -61,7 +63,9 @@
             var response = await service.AddAsync(request);
             return response.Success ? Ok(response) : BadRequest(response);
         }
+
         [HttpPost("single")]
+        [MenuExists]
         public async Task<IActionResult> Post(MenuRequestDtoSingle request)
         {
             var response = await service.AddAsyncSingle(request);

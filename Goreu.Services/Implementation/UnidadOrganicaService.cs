@@ -77,7 +77,7 @@
             {
 
                 response.ErrorMessage = "Ocurrio un error al obtener los datos";
-                logger.LogError(ex,"{ErrorMessage} {Message}", response.ErrorMessage,ex.Message);
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
             }
 
             return response;
@@ -133,6 +133,28 @@
                 })
                 .ToList();
         }
-    }
 
+        public async Task<BaseResponseGeneric<bool>> ValidarDescripcionAsync(string descripcion, int idEntidad)
+        {
+            var response = new BaseResponseGeneric<bool>();
+
+            try
+            {
+                var existe = await repository.ExistsAsync(x =>
+                    x.Descripcion.ToLower() == descripcion.ToLower() &&
+                    x.IdEntidad == idEntidad
+                );
+
+                response.Data = existe;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al validar la descripción de la unidad orgánica.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
+    }
 }

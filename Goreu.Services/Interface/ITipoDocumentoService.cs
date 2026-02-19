@@ -1,8 +1,4 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Dto.Response;
-using Goreu.Entities.Info;
-
-namespace Goreu.Services.Interface
+﻿namespace Goreu.Services.Interface
 {
     public interface ITipoDocumentoService
     {
@@ -14,5 +10,6 @@ namespace Goreu.Services.Interface
         Task<BaseResponse> DeleteAsync(int id);
         Task<BaseResponse> FinalizedAsync(int id);
         Task<BaseResponse> InitializedAsync(int id);
+        Task<BaseResponseGeneric<bool>> ValidarDescripcionAsync(string descripcion);
     }
 }

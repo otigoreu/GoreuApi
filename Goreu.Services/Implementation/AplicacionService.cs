@@ -127,5 +127,26 @@
             }
             return response;
         }
+
+        public async Task<BaseResponseGeneric<bool>> ValidarDescripcionAsync(string descripcion)
+        {
+            var response = new BaseResponseGeneric<bool>();
+
+            try
+            {
+                var existe = await repository.ExistsAsync(x =>
+                    x.Descripcion.ToLower() == descripcion.ToLower() );
+
+                response.Data = existe;
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = "Error al validar la descripción de la Aplicación.";
+                logger.LogError(ex, "{ErrorMessage} {Message}", response.ErrorMessage, ex.Message);
+            }
+
+            return response;
+        }
     }
 }

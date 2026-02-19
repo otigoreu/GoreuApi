@@ -1,4 +1,6 @@
-﻿namespace Goreu.API.Controllers
+﻿using Goreu.API.Filters;
+
+namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/aplicaciones")]
@@ -13,6 +15,7 @@
         }
 
         [HttpPost]
+        [AplicacionExists]
         public async Task<IActionResult> Post(int idEntidad,[FromBody] AplicacionRequestDto dto)
         {
             var response = await service.AddAsync(idEntidad, dto);
