@@ -1,5 +1,4 @@
-﻿using Goreu.Dto.Request;
-using Goreu.Dto.Response;
+﻿using Goreu.Services.Common;
 
 namespace Goreu.Services.Interface
 {
@@ -10,6 +9,10 @@ namespace Goreu.Services.Interface
         Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseSingleDto>>> GetAsyncPerUser(string idUser);
         Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetDescendientesJerarquicoAsync(int idUnidadOrganica);
         Task<BaseResponseGeneric<bool>> ValidarDescripcionAsync(string descripcion, int idEntidad);
+        Task<BaseResponseGeneric<List<UnidadOrganicaTreeResponseDto>>> SearchTreeAsync(int idEntidad, string descripcion);
+        Task<UnidadOrganicaDescendantsCountResponseDto> CountDescendantsAsync(int idEntidad, int id);
+
+        Task<BaseResponseGeneric<List<UnidadOrganicaTreeResponseDto>>> GetTreeByUnidadOrganicaAsync(int idEntidad, int idUnidadOrganica, TipoBusquedaArbol tipoBusqueda, string descripcion);
     }
 }
 

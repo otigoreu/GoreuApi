@@ -76,5 +76,23 @@ namespace Goreu.Repositories.Implementation
                 .AnyAsync(x => x.Descripcion == descripcion
                                && x.IdEntidad == idEntidad);
         }
+
+        public async Task<List<UnidadOrganica>> GetByEntidadAsync(int idEntidad)
+        {
+            return await context.Set<UnidadOrganica>()
+                .Where(x => x.IdEntidad == idEntidad && x.Estado)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<bool> EstaRelacionadaAsync(int id)
+        {
+            bool existeEnUsuarios = await context.Set<UsuarioUnidadOrganica>()
+                .AnyAsync(x => x.IdUnidadOrganica == id && x.Estado);
+
+            // Aquí agregas más tablas si existen
+
+            return existeEnUsuarios;
+        }
     }
 }

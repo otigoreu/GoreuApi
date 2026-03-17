@@ -6,5 +6,6 @@
         Task<ICollection<UnidadOrganicaInfo>> GetAsyncPerUser(string idUser);
         Task<ICollection<UnidadOrganica>> ObtenerDescendientesAsync(int idUnidadOrganica);
         Task<bool> ExisteDescripcionAsync(string descripcion, int idEntidad);
+        Task<List<UnidadOrganica>> GetByEntidadAsync(int idEntidad);
     }
 }
