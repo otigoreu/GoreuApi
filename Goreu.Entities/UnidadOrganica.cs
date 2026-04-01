@@ -4,6 +4,7 @@
     {
         public string Descripcion { get; set; } = default!;
         public string? Abrev { get; set; } = default!;
+        public int idTipo { get; set; } = 1;
         public int IdEntidad { get; set; }
         public Entidad Entidad { get; set; }
 
@@ -14,6 +15,5 @@
         public UnidadOrganica? Dependencia { get; set; }  // Referencia a la unidad padre
 
         public ICollection<UnidadOrganica> Hijos { get; set; } = new List<UnidadOrganica>();  // Hijas
-
     }
 }

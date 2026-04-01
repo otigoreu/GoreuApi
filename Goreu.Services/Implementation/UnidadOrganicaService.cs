@@ -44,13 +44,13 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetAsync(int idEntidad, string descripcion, PaginationDto pagination)
+        public async Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetAsync(int idTipo, int idEntidad, string descripcion, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>();
             try
             {
                 var data = await repository.GetAsync(
-                    predicate: s => s.IdEntidad == idEntidad && s.Descripcion.Contains(descripcion ?? string.Empty),
+                    predicate: s => s.idTipo == idTipo && s.IdEntidad == idEntidad && s.Descripcion.Contains(descripcion ?? string.Empty),
                     orderBy: x => x.Descripcion,
                     pagination);
 

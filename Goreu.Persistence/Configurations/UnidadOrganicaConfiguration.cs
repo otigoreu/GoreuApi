@@ -1,13 +1,4 @@
-﻿using Goreu.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Goreu.Persistence.Configurations
+﻿namespace Goreu.Persistence.Configurations
 {
     public class UnidadOrganicaConfiguration : IEntityTypeConfiguration<UnidadOrganica>
     {
@@ -18,6 +9,8 @@ namespace Goreu.Persistence.Configurations
             builder.Property(x => x.Abrev).HasMaxLength(5);
             builder.ToTable(nameof(UnidadOrganica), "adm");
             //builder.HasQueryFilter(x => x.Estado);
+            builder.Property(x => x.idTipo)
+                .HasDefaultValue(1);
 
             builder.HasOne(ua => ua.Entidad)
                 .WithMany(u => u.UnidadOrganicas)

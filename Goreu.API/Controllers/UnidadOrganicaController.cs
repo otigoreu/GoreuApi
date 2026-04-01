@@ -1,5 +1,4 @@
 ﻿using Goreu.API.Filters;
-using Goreu.Dto.Response;
 using Goreu.Services.Common;
 
 namespace Goreu.API.Controllers
@@ -73,12 +72,12 @@ namespace Goreu.API.Controllers
         }
 
         [HttpGet("descripcion")]
-        public async Task<IActionResult> Get([FromQuery] int? idEntidad, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
+        public async Task<IActionResult> Get([FromQuery] int idTipo, [FromQuery] int? idEntidad, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
         {
             var result = idEntidad switch
             {
                 null => await unidadOrganicaService.GetAsync(search ?? string.Empty, pagination),
-                int id => await unidadOrganicaService.GetAsync(id, search ?? string.Empty, pagination)
+                int id => await unidadOrganicaService.GetAsync(idTipo, id, search ?? string.Empty, pagination)
             };
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
