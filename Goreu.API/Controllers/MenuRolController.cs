@@ -2,6 +2,7 @@
 {
     [ApiController]
     [Route("api/menuroles")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MenuRolController :ControllerBase
     {
         private readonly IMenuRolService service;

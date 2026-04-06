@@ -4,7 +4,7 @@ namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/aplicaciones")]
-   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AplicacionController :ControllerBase
     {
         private readonly IAplicacionService service;

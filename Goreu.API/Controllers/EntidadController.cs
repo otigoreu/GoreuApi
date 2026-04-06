@@ -13,6 +13,7 @@
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post([FromBody] EntidadRequestDto dto)
         {
             var response = await service.AddAsync(dto);
@@ -20,6 +21,7 @@
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Put(int id, [FromBody] EntidadRequestDto dto)
         {
             var result = await service.UpdateAsync(id, dto);
@@ -27,6 +29,7 @@
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete(int id)
         {
             var response = await service.DeleteAsync(id);
@@ -34,6 +37,7 @@
         }
 
         [HttpPatch("{id:int}/finalize")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Finalize(int id)
         {
             var response = await service.FinalizeAsync(id);
@@ -45,6 +49,7 @@
         }
 
         [HttpPatch("{id:int}/initialize")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Initialize(int id)
         {
             var response = await service.InitializeAsync(id);
@@ -56,6 +61,7 @@
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get(int id)
         {
             var response = await service.GetAsync(id);
@@ -77,6 +83,7 @@
         }
 
         [HttpGet("peruser")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get(string idUser)
         {
             var result = await service.GetAsyncPerUser(idUser);
@@ -85,6 +92,7 @@
         }
 
         [HttpGet("perrol")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Getrol(string idRol)
         {
             var result = await service.GetAsyncPerRol(idRol);

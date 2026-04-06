@@ -4,7 +4,7 @@ namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/tipodocumentos")]
-   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TipoDocumentoController : ControllerBase
     {
         private readonly ITipoDocumentoService service;
@@ -23,6 +23,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get()
         {
 
@@ -32,6 +33,7 @@ namespace Goreu.API.Controllers
 
 
         [HttpGet("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Get(int id)
         {
             var response = await service.GetAsync(id);
@@ -41,6 +43,7 @@ namespace Goreu.API.Controllers
 
         [HttpPost]
         [TipoDocumentoExists]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post([FromBody] TipoDocumentoRequestDto expedienteRequestDto)
         {
 
@@ -49,6 +52,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Put(int id, TipoDocumentoRequestDto expedienteRequestDto)
         {
             var response = await service.UpdateAsync(id, expedienteRequestDto);
@@ -57,6 +61,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete(int id)
         {
             var response = await service.DeleteAsync(id);
@@ -65,6 +70,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpDelete("finalized/{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PatchFinit(int id)
         {
 
@@ -72,6 +78,7 @@ namespace Goreu.API.Controllers
             return response.Success ? Ok(response) : BadRequest(response);
         }
         [HttpGet("initialized/{id:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PatchInit(int id)
         {
 

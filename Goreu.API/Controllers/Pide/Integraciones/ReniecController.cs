@@ -4,6 +4,7 @@ namespace Goreu.API.Controllers.Pide.Integraciones
 {
     [ApiController]
     [Route("api/reniec")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ReniecController : ControllerBase
     {
 

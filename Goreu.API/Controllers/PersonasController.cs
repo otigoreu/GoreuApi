@@ -6,7 +6,7 @@ namespace Goreu.API.Controllers
 {
     [ApiController]
     [Route("api/personas")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PersonasController : ControllerBase
     {
         private readonly IPersonaService service;

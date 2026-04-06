@@ -2,6 +2,7 @@
 {
     [ApiController]
     [Route("api/credencialesreniec")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CredencialesReniecController : ControllerBase
     {
         private readonly ICredencialReniecService service;

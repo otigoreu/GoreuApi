@@ -4,7 +4,7 @@ namespace Goreu.API.Controllers
 {
     [Route("api/usuarioUnidadOrganicas")]
     [ApiController]
-   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UsuarioUnidadOrganicaController : ControllerBase
     {
         private readonly IUsuarioUnidadOrganicaService service;

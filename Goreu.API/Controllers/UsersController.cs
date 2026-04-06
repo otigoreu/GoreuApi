@@ -24,6 +24,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Put(string id, UsuarioRequestDto request)
         {
             var response = await usuarioService.updateAsync(id, request);
