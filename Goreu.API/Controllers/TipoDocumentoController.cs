@@ -42,7 +42,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost]
-        [TipoDocumentoExists]
+        [TipoDocumentoExists]//
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post([FromBody] TipoDocumentoRequestDto expedienteRequestDto)
         {
