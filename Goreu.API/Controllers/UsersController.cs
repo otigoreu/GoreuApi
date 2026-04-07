@@ -150,6 +150,7 @@ namespace Goreu.API.Controllers
         //-------------------------------------------------------------------------------------------
 
         [HttpPost("roles/grant/{userId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GrantRole(string userId, string RoleName)
         {
             var response = await usuarioService.GrantUserRole(userId, RoleName);
@@ -157,7 +158,8 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost("roles/grantByEmail/{email}")]
-        
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public async Task<IActionResult> GrantRolesByEmail(string email, string roleName)
         {
             var response = await usuarioService.GrantUserRoleByEmail(email, roleName);
@@ -165,6 +167,7 @@ namespace Goreu.API.Controllers
         }
         
         [HttpPost("roles/revoke/{userId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> RevokeRoles(string userId)
         {
             var response = await usuarioService.RevokeUserRoles(userId);
@@ -172,6 +175,7 @@ namespace Goreu.API.Controllers
         }
         
         [HttpPost("role/revoke/{userId}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> RevokeRole(string userId, string roleName)
         {
             var response = await usuarioService.RevokeUserRole(userId, roleName);
@@ -187,6 +191,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPatch("{id}/finalize")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Finalize(string id)
         {
             var response = await usuarioService.FinalizeAsync(id);
@@ -198,6 +203,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPatch("{id}/initialize")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Initialize(string id)
         {
             var response = await usuarioService.InitializeAsync(id);
