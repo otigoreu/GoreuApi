@@ -6,7 +6,7 @@
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Descripcion).HasMaxLength(50);
-            builder.Property(x => x.Abrev).HasMaxLength(5);
+            builder.Property(x => x.Abrev).HasMaxLength(15);
             builder.ToTable(nameof(UnidadOrganica), "adm");
             //builder.HasQueryFilter(x => x.Estado);
             builder.Property(x => x.idTipo)
