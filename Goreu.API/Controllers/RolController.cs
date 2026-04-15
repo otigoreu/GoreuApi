@@ -102,6 +102,7 @@ namespace Goreu.API.Controllers
         /// - <c>500 Internal Server Error</c>: Si ocurrió un error inesperado en el servidor.
         /// </returns>
         [HttpGet("entidad/{idEntidad}/Aplicacion/{idAplicacion}")]
+        [AllowAnonymous]
         //[ProducesResponseType(typeof(BaseResponseGeneric<ICollection<RolPaginationResponseDto>>), StatusCodes.Status200OK)]
         //[ProducesResponseType(typeof(BaseResponseGeneric<ICollection<RolPaginationResponseDto>>), StatusCodes.Status400BadRequest)]
         //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
