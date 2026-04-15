@@ -60,6 +60,7 @@ namespace Goreu.API.Controllers
         /// 3. Si no se encuentra resultado, devuelve un mensaje indicando que no existen registros para el documento proporcionado.
         /// </remarks>
         [HttpGet("numDocumento")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetByNumDocumento([FromQuery] string numDocumento)
         {
             if (string.IsNullOrWhiteSpace(numDocumento))
@@ -82,6 +83,7 @@ namespace Goreu.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [PersonaExists]
         public async Task<IActionResult> Post(PersonaRequestDto personRequestDto)
         {

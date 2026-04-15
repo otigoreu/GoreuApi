@@ -46,6 +46,7 @@ namespace Goreu.API.Controllers.Pide.Integraciones
         /// 3. Devuelve los datos completos del ciudadano si la operación fue exitosa.
         /// </remarks>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get([FromQuery] GetReniecRequest request)
         {
             try
