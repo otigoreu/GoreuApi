@@ -85,6 +85,7 @@ namespace Goreu.API.Controllers
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
         [HttpGet("byEntidad")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAlbyEntidad(int idEntidad, [FromQuery] PaginationDto pagination)
         {
             var result = await service.GetAllbyEntidad(idEntidad,pagination);
