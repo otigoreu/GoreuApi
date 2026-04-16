@@ -34,4 +34,6 @@
     <ProjectReference Include="..\Goreu.Services\Goreu.Services.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>

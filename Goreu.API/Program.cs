@@ -217,7 +217,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-//await ApplyMigrationsAndSeedDataAsync(app);
+await ApplyMigrationsAndSeedDataAsync(app);
 
 app.Run();
 

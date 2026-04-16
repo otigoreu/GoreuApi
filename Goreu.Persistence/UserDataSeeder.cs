@@ -75,21 +75,17 @@ namespace Goreu.Persistence
                 Descripcion = "PLANILLA"
             };
 
-            var app3 = new Aplicacion
-            {
-                Descripcion = "SISMORE"
-            };
+
             var api0 = await context.Set<Aplicacion>().FirstOrDefaultAsync(x => x.Descripcion == app0.Descripcion);
             var api1 = await context.Set<Aplicacion>().FirstOrDefaultAsync(x => x.Descripcion == app1.Descripcion);
             var api2 = await context.Set<Aplicacion>().FirstOrDefaultAsync(x => x.Descripcion == app2.Descripcion);
-            var api3 = await context.Set<Aplicacion>().FirstOrDefaultAsync(x => x.Descripcion == app3.Descripcion);
 
-            if (api0 is null & api1 is null & api2 is null & api3 is null)
+            if (api0 is null & api1 is null & api2 is null )
             {
                 context.Set<Aplicacion>().Add(app0);
                 context.Set<Aplicacion>().Add(app1);
                 context.Set<Aplicacion>().Add(app2);
-                context.Set<Aplicacion>().Add(app3);
+
 
                 await context.SaveChangesAsync();
             }
@@ -226,13 +222,7 @@ namespace Goreu.Persistence
                 IdAplicacion = app2.Id//Planilla
 
             };
-            var entidadApp4 = new EntidadAplicacion
-            {
 
-                IdEntidad = entidad2.Id,//Goreu
-                IdAplicacion = app3.Id//sismore
-
-            };
             var entiApi1 = await context.Set<EntidadAplicacion>().FirstOrDefaultAsync(x => x.Estado == entidadApp1.Estado);
 
             if (entiApi1 is null)
@@ -240,7 +230,7 @@ namespace Goreu.Persistence
                 context.Set<EntidadAplicacion>().Add(entidadApp1);
                 context.Set<EntidadAplicacion>().Add(entidadApp2);
                 context.Set<EntidadAplicacion>().Add(entidadApp3);
-                context.Set<EntidadAplicacion>().Add(entidadApp4);
+ 
 
                 await context.SaveChangesAsync();
             }
@@ -263,16 +253,16 @@ namespace Goreu.Persistence
 
 
             };
-
+            //Dairo
             var persona2 = new Persona
             {
-                Nombres = "Patricia",
-                ApellidoPat = "Lopez",
-                ApellidoMat = "Vasquez",
-                FechaNac = new DateTime(1990, 05, 31),
-                Email = "edercinsoft@gmail.com",
-                IdTipoDoc = tipodoc2.Id,
-                NroDoc = "46519259",
+                Nombres = "Dhayro",
+                ApellidoPat = " Kong",
+                ApellidoMat = "Torres",
+                FechaNac = new DateTime(1991, 10, 27),
+                Email = "dhayro.kong@hotmail.com",
+                IdTipoDoc = tipodoc1.Id,
+                NroDoc = "70006483",
 
             };
             var persona3 = new Persona
@@ -725,9 +715,9 @@ namespace Goreu.Persistence
             //Customer user
             var adminEntidad = new Usuario()
             {
-                UserName = "46519259",
-                Iniciales = "abc",
-                Email = "edercinsoft@gmail.com",
+                UserName = "70006483",
+                Iniciales = "DKT",
+                Email = "dhayro.kong@hotmail.com",
                 EmailConfirmed = true
             };
 
@@ -804,7 +794,7 @@ namespace Goreu.Persistence
 
                             IdUsuario = adminSistema.Id,
                             IdUnidadOrganica = unidadOrganica1.Id,
-                            Desde= new DateTime(2025, 07, 10),
+                            Desde= new DateTime(2026, 04, 10),
                             ObservacionAnulacion="nada"
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica1 );
@@ -816,11 +806,11 @@ namespace Goreu.Persistence
             #endregion
 
             #region UsuarioDos
-            if (await userManager.FindByEmailAsync("edercinsoft@gmail.com") is null)
+            if (await userManager.FindByEmailAsync("dhayro.kong@hotmail.com") is null)
             {     
                 adminEntidad.IdPersona = persona2.Id;
 
-                var result = await userManager.CreateAsync(adminEntidad, "Edeher*2025");
+                var result = await userManager.CreateAsync(adminEntidad, "Dhayro*2026");
                 if (result.Succeeded)
                 {
                     // Obtenemos el registro del usuario
@@ -847,7 +837,7 @@ namespace Goreu.Persistence
 
                             IdUsuario = adminEntidad.Id,
                             IdUnidadOrganica = unidadOrganica2.Id,
-                            Desde = new DateTime(2025, 07, 10),
+                            Desde = new DateTime(2026, 04, 16),
                             ObservacionAnulacion = "nada"
                         };
                         context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica2);
