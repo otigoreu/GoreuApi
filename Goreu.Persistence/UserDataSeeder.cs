@@ -419,9 +419,9 @@ namespace Goreu.Persistence
             };
             var menu7 = new Menu
             {
-                Descripcion = "UnidadOrganica",
+                Descripcion = "unidadOrganica",
                 Icono = "building-factory-2",
-                Ruta = "pages/unidadOrganica",
+                Ruta = "pages/unidadorganica",
                 IdAplicacion = app0.Id,
                 MenuPadre = null,
 
@@ -485,7 +485,7 @@ namespace Goreu.Persistence
             {
                 Descripcion = "UnidadOrganica",
                 Icono = "building-factory-2",
-                Ruta = "pages/unidadOrganica",
+                Ruta = "pages/unidadorganica",
                 IdAplicacion = app1.Id,
                 MenuPadre = null,
 
