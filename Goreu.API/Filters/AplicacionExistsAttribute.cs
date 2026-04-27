@@ -28,16 +28,19 @@
                 }
 
                 // Consulta la existencia
-                var persona = await _aplicacionService.ValidarDescripcionAsync(dto.Descripcion);
+                var result = await _aplicacionService.ValidarDescripcionAsync(dto.Descripcion);
 
-                if (persona.Success)
+                if (result.Success)
                 {
-                    context.Result = new ConflictObjectResult(new BaseResponse
+                    if (result.Data)
                     {
-                        Success = false,
-                        ErrorMessage = $"Ya existe una aplicación registrada con esa descripción: {dto.Descripcion}."
-                    });
-                    return;
+                        context.Result = new ConflictObjectResult(new BaseResponse
+                        {
+                            Success = false,
+                            ErrorMessage = $"Ya existe una aplicación registrada con esa descripción: {dto.Descripcion}."
+                        });
+                        return;
+                    }
                 }
 
                 await next();
