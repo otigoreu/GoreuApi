@@ -1,4 +1,6 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.OpenApi.Models;
+
+var builder = WebApplication.CreateBuilder(args);
 
 #region Configuración de Servicios
 
@@ -178,6 +180,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+var isProduction = builder.Environment.IsProduction();
 
 builder.Services.AddSwaggerGen(config =>
 {
@@ -189,6 +192,36 @@ builder.Services.AddSwaggerGen(config =>
     });
 
     config.IncludeXmlComments(xmlPath);
+
+    // Solo en Producción se agrega el esquema de seguridad JWT en Swagger UI
+    if (isProduction)
+    {
+        config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Ingresa tu token JWT así: Bearer {token}"
+        });
+
+        config.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+    }
+
 });
 
 #endregion
@@ -197,23 +230,128 @@ builder.Services.AddSwaggerGen(config =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(config =>
-    {
-        config.SwaggerEndpoint("/swagger/v1/swagger.json", "Goreu.API Swagger");
-        config.RoutePrefix = "swagger";
-    });
-}
+
+// ============================================================
+// 🔐 SEGURIDAD SWAGGER - PASO 2: Habilitar Swagger en ambos ambientes
+// Development → acceso libre en "/swagger", sin restricciones.
+// Production  → acceso protegido en "/swagger", con login del PASO 4.
+// ============================================================
+
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
-//app.UseCors("AllowConfiguredOrigins"); 
 app.UseCors("AllowAllOrigins");
+
+// ============================================================
+// 🔐 SEGURIDAD SWAGGER - PASO 4: Orden correcto del Middleware
+// UseAuthentication() DEBE ir antes que UseAuthorization().
+// Sin este orden Identity no puede resolver el usuario
+// y el middleware de Basic Auth del PASO 5 fallará.
+// ============================================================
 app.UseAuthentication();
 app.UseAuthorization();
+
+// ============================================================
+// 🔐 SEGURIDAD SWAGGER - PASO 5: Middleware Basic Auth (solo en Producción)
+// En Development este bloque se omite completamente → Swagger libre.
+// En Production intercepta peticiones a "/swagger" y aplica este flujo:
+//   1. El navegador muestra una ventana emergente de usuario/contraseña.
+//   2. Las credenciales viajan en Base64 en el header "Authorization".
+//   3. Se decodifican y validan contra la BD usando ASP.NET Identity.
+//   4. Se verifica que el usuario tenga el rol "Developer".
+//   5. ✅ Válido → accede a Swagger.
+//   6. ❌ Inválido → el navegador vuelve a mostrar la ventana de login.
+// ============================================================
+if (app.Environment.IsProduction())
+{
+    app.Use(async (context, next) =>
+    {
+        if (context.Request.Path.StartsWithSegments("/swagger"))
+        {
+            var authHeader = context.Request.Headers["Authorization"].ToString();
+
+            // Sin header → el navegador muestra la ventana emergente de login
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Basic "))
+            {
+                context.Response.Headers["WWW-Authenticate"] = "Basic realm=\"Swagger - Solo Developers\"";
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return;
+            }
+
+            // Decodificar credenciales Base64 → "usuario:contraseña"
+            var encodedCredentials = authHeader.Substring("Basic ".Length).Trim();
+            var decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
+            var separatorIndex = decodedCredentials.IndexOf(':');
+
+            if (separatorIndex < 0)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return;
+            }
+
+            var username = decodedCredentials.Substring(0, separatorIndex);
+            var password = decodedCredentials.Substring(separatorIndex + 1);
+
+            // Validar usuario y contraseña contra la base de datos con Identity
+            var userManager = context.RequestServices.GetRequiredService<UserManager<Usuario>>();
+            var signInManager = context.RequestServices.GetRequiredService<SignInManager<Usuario>>();
+
+            var user = await userManager.FindByNameAsync(username);
+
+            if (user == null)
+            {
+                // Usuario no existe → volver a mostrar ventana de login
+                context.Response.Headers["WWW-Authenticate"] = "Basic realm=\"Swagger - Solo Developers\"";
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return;
+            }
+
+            var result = await signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: false);
+
+            if (!result.Succeeded)
+            {
+                // Contraseña incorrecta → volver a mostrar ventana de login
+                context.Response.Headers["WWW-Authenticate"] = "Basic realm=\"Swagger - Solo Developers\"";
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return;
+            }
+
+            // ============================================================
+            // 🔐 SEGURIDAD SWAGGER - PASO 6: Verificación del Rol "Developer"
+            // No basta autenticarse, el usuario también debe tener el rol
+            // "Developer" asignado en la base de datos.
+            // Si no tiene el rol → 403 Forbidden (no se vuelve a pedir login).
+            // ============================================================
+            var roles = await userManager.GetRolesAsync(user);
+
+            if (!roles.Contains("Developer"))
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                await context.Response.WriteAsync("Acceso denegado: Se requiere el rol Developer.");
+                return;
+            }
+
+            // ✅ Credenciales válidas + rol Developer → acceso permitido a Swagger
+        }
+
+        await next();
+    });
+}
+
+app.UseSwagger();
+app.UseSwaggerUI(config =>
+{
+    config.SwaggerEndpoint("/swagger/v1/swagger.json", "Goreu.API Swagger");
+
+    // ============================================================
+    // 🔐 SEGURIDAD SWAGGER - PASO 3: Misma ruta "/swagger" en ambos ambientes
+    // La protección NO depende de la ruta sino del middleware del PASO 4.
+    // En Development → entra directo sin login.
+    // En Production  → el middleware intercepta y pide credenciales.
+    // ============================================================
+    config.RoutePrefix = "swagger";
+});
+
 
 app.MapControllers();
 
