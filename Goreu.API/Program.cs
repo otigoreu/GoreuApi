@@ -230,38 +230,32 @@ builder.Services.AddSwaggerGen(config =>
 
 var app = builder.Build();
 
-
-// ============================================================
-// 🔐 SEGURIDAD SWAGGER - PASO 2: Habilitar Swagger en ambos ambientes
-// Development → acceso libre en "/swagger", sin restricciones.
-// Production  → acceso protegido en "/swagger", con login del PASO 4.
-// ============================================================
-
-
 app.UseHttpsRedirection();
 app.UseRouting();
+// ✅ FIX: Permite Private Network Access (PNA)
+// Necesario cuando sitios públicos acceden a una API en red privada/interna.
+// Chrome 94+ bloquea estas peticiones sin este header.
+// ===========================================================
+app.Use(async (context, next) =>
+{
+    if (context.Request.Method == "OPTIONS" &&
+        context.Request.Headers.ContainsKey("Access-Control-Request-Private-Network"))
+    {
+        context.Response.Headers.Append("Access-Control-Allow-Private-Network", "true");
+    }
+    else
+    {
+        context.Response.Headers.Append("Access-Control-Allow-Private-Network", "true");
+    }
+    await next();
+});
+// ===========================================================
 app.UseCors("AllowAllOrigins");
 
-// ============================================================
-// 🔐 SEGURIDAD SWAGGER - PASO 4: Orden correcto del Middleware
-// UseAuthentication() DEBE ir antes que UseAuthorization().
-// Sin este orden Identity no puede resolver el usuario
-// y el middleware de Basic Auth del PASO 5 fallará.
-// ============================================================
 app.UseAuthentication();
 app.UseAuthorization();
 
-// ============================================================
-// 🔐 SEGURIDAD SWAGGER - PASO 5: Middleware Basic Auth (solo en Producción)
-// En Development este bloque se omite completamente → Swagger libre.
-// En Production intercepta peticiones a "/swagger" y aplica este flujo:
-//   1. El navegador muestra una ventana emergente de usuario/contraseña.
-//   2. Las credenciales viajan en Base64 en el header "Authorization".
-//   3. Se decodifican y validan contra la BD usando ASP.NET Identity.
-//   4. Se verifica que el usuario tenga el rol "Developer".
-//   5. ✅ Válido → accede a Swagger.
-//   6. ❌ Inválido → el navegador vuelve a mostrar la ventana de login.
-// ============================================================
+
 if (app.Environment.IsProduction())
 {
     app.Use(async (context, next) =>
@@ -316,12 +310,6 @@ if (app.Environment.IsProduction())
                 return;
             }
 
-            // ============================================================
-            // 🔐 SEGURIDAD SWAGGER - PASO 6: Verificación del Rol "Developer"
-            // No basta autenticarse, el usuario también debe tener el rol
-            // "Developer" asignado en la base de datos.
-            // Si no tiene el rol → 403 Forbidden (no se vuelve a pedir login).
-            // ============================================================
             var roles = await userManager.GetRolesAsync(user);
 
             if (!roles.Contains("Developer"))
@@ -342,13 +330,6 @@ app.UseSwagger();
 app.UseSwaggerUI(config =>
 {
     config.SwaggerEndpoint("/swagger/v1/swagger.json", "Goreu.API Swagger");
-
-    // ============================================================
-    // 🔐 SEGURIDAD SWAGGER - PASO 3: Misma ruta "/swagger" en ambos ambientes
-    // La protección NO depende de la ruta sino del middleware del PASO 4.
-    // En Development → entra directo sin login.
-    // En Production  → el middleware intercepta y pide credenciales.
-    // ============================================================
     config.RoutePrefix = "swagger";
 });
 
