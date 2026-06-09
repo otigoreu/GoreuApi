@@ -277,24 +277,24 @@ namespace Goreu.Persistence
 
             };
 
-            var persona4 = new Persona
-            {
-                Nombres = "Tony",
-                ApellidoPat = "Stark",
-                ApellidoMat = "Taricuarima",
-                FechaNac = new DateTime(1985, 02, 01),
-                Email = "viernes@gmail.com",
-                IdTipoDoc = tipodoc1.Id,
-                NroDoc = "11223344",
+            //var persona4 = new Persona
+            //{
+            //    Nombres = "Tony",
+            //    ApellidoPat = "Stark",
+            //    ApellidoMat = "Taricuarima",
+            //    FechaNac = new DateTime(1985, 02, 01),
+            //    Email = "viernes@gmail.com",
+            //    IdTipoDoc = tipodoc1.Id,
+            //    NroDoc = "11223344",
 
-            };
+            //};
 
 
             var per1 = await context.Set<Persona>().FirstOrDefaultAsync(x => x.NroDoc == persona1.NroDoc);
             var per2 = await context.Set<Persona>().FirstOrDefaultAsync(x => x.NroDoc == persona2.NroDoc);
             var per3 = await context.Set<Persona>().FirstOrDefaultAsync(x => x.NroDoc == persona3.NroDoc);
-            var per4 = await context.Set<Persona>().FirstOrDefaultAsync(x => x.NroDoc == persona4.NroDoc);
-            if (per1 is null & per2 is null& per3 is null & per4 is null)
+            //var per4 = await context.Set<Persona>().FirstOrDefaultAsync(x => x.NroDoc == persona4.NroDoc);
+            if (per1 is null & per2 is null& per3 is null)
             {
 
 
@@ -302,7 +302,7 @@ namespace Goreu.Persistence
                 context.Set<Persona>().Add(persona1);
                 context.Set<Persona>().Add(persona2);
                 context.Set<Persona>().Add(persona3);
-                context.Set<Persona>().Add(persona4);
+                //context.Set<Persona>().Add(persona4);
                 await context.SaveChangesAsync();
             }
 
@@ -891,48 +891,48 @@ namespace Goreu.Persistence
             }
 
             #endregion
-            #region UsuarioCuatro
+            //#region UsuarioCuatro
 
-            if (await userManager.FindByEmailAsync("viernes@gmail.com") is null)
-            {
-                adminAplicacionPlanilla.IdPersona = persona4.Id;
+            //if (await userManager.FindByEmailAsync("viernes@gmail.com") is null)
+            //{
+            //    adminAplicacionPlanilla.IdPersona = persona4.Id;
 
-                var result = await userManager.CreateAsync(adminAplicacionPlanilla, "Piero*2025");
-                if (result.Succeeded)
-                {
-                    // Obtenemos el registro del usuario
-                    adminAplicacionPlanilla = await userManager.FindByEmailAsync(adminAplicacionPlanilla.Email);
-                    // Aqui agregamos el Rol de Administrador para el usuario Admin
-                    if (adminAplicacionPlanilla is not null)
-                    {
+            //    var result = await userManager.CreateAsync(adminAplicacionPlanilla, "Piero*2025");
+            //    if (result.Succeeded)
+            //    {
+            //        // Obtenemos el registro del usuario
+            //        adminAplicacionPlanilla = await userManager.FindByEmailAsync(adminAplicacionPlanilla.Email);
+            //        // Aqui agregamos el Rol de Administrador para el usuario Admin
+            //        if (adminAplicacionPlanilla is not null)
+            //        {
 
-                        //await userManager.AddToRoleAsync(adminAplicacionPlanilla, role4.Name);
+            //            //await userManager.AddToRoleAsync(adminAplicacionPlanilla, role4.Name);
 
-                        var usuariorol4 = new UsuarioRol
-                        {
-                            UserId = adminAplicacionPlanilla.Id,
-                            RoleId = role4.Id,
-                            Estado = true
+            //            var usuariorol4 = new UsuarioRol
+            //            {
+            //                UserId = adminAplicacionPlanilla.Id,
+            //                RoleId = role4.Id,
+            //                Estado = true
 
-                        };
-                        context.Set<UsuarioRol>().Add(usuariorol4);
-                        await context.SaveChangesAsync();
-                        var usuarioUnidadOrganica3 = new UsuarioUnidadOrganica
-                        {
+            //            };
+            //            context.Set<UsuarioRol>().Add(usuariorol4);
+            //            await context.SaveChangesAsync();
+            //            var usuarioUnidadOrganica3 = new UsuarioUnidadOrganica
+            //            {
 
-                            IdUsuario = adminAplicacionPlanilla.Id,
-                            IdUnidadOrganica = unidadOrganica6.Id,
-                            Desde = new DateTime(2025, 07, 10),
-                            ObservacionAnulacion = "nada"
-                        };
-                        context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica3);
-                        await context.SaveChangesAsync();
+            //                IdUsuario = adminAplicacionPlanilla.Id,
+            //                IdUnidadOrganica = unidadOrganica6.Id,
+            //                Desde = new DateTime(2025, 07, 10),
+            //                ObservacionAnulacion = "nada"
+            //            };
+            //            context.Set<UsuarioUnidadOrganica>().Add(usuarioUnidadOrganica3);
+            //            await context.SaveChangesAsync();
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
 
-            #endregion
+            //#endregion
 
         }
 
