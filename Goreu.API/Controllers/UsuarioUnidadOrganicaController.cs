@@ -72,6 +72,11 @@ namespace Goreu.API.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromBody] UsuarioUnidadOrganicaRequestDto dto)
         {
+            var validacion = await service.ValidarAsync(dto);
+
+            if (!validacion.Success)
+                return BadRequest(validacion);
+
             var result = await service.UpdateAsync(id, dto);
             return result.Success ? Ok(result) : BadRequest(result);
         }

@@ -153,7 +153,7 @@
                 if (last.Estado)
                 {
                     response.Success = false;
-                    response.ErrorMessage = "El usuario ya tiene un perfil activo en esta aplicación.";
+                    response.ErrorMessage = $"El usuario ya esta asignado a la Unidad Organica.";
                     return response;
                 }
 
