@@ -89,7 +89,7 @@ namespace Goreu.Persistence
 
                 await context.SaveChangesAsync();
             }
-
+            
             #endregion
 
             #region tipoDocu
@@ -124,7 +124,7 @@ namespace Goreu.Persistence
             {
                 Descripcion = "SISTEMA",
                 Abrev="sis",
-                IdEntidad = entidad1.Id,
+                IdEntidad = enti1.Id,
                 Dependencia = null
 
 
@@ -135,7 +135,7 @@ namespace Goreu.Persistence
             {
                 Descripcion = "OTI",
                 Abrev = "oti",
-                IdEntidad = entidad2.Id,
+                IdEntidad = enti2.Id,
                 Dependencia = null
 
 
@@ -145,7 +145,7 @@ namespace Goreu.Persistence
             {
                 Descripcion = "Contabilidad",
                 Abrev = "cont",
-                IdEntidad = entidad2.Id,
+                IdEntidad = enti2.Id,
                 Dependencia = null
 
 
@@ -154,7 +154,7 @@ namespace Goreu.Persistence
             {
                 Descripcion = "Tesoreria",
                 Abrev = "teso",
-                IdEntidad = entidad2.Id,
+                IdEntidad = enti2.Id,
                 Dependencia = null
 
 
@@ -163,7 +163,7 @@ namespace Goreu.Persistence
             {
                 Descripcion = "Logistica",
                 Abrev = "log",
-                IdEntidad = entidad2.Id,
+                IdEntidad = enti2.Id,
                 Dependencia = null
 
 
@@ -172,7 +172,7 @@ namespace Goreu.Persistence
             {
                 Descripcion = "RRHH",
                 Abrev = "rrhh",
-                IdEntidad = entidad2.Id,
+                IdEntidad = enti2.Id,
                 Dependencia = null
 
 
@@ -204,22 +204,22 @@ namespace Goreu.Persistence
             var entidadApp1 = new EntidadAplicacion
             {
 
-                IdEntidad = entidad1.Id,//Sistema
-                IdAplicacion = app0.Id//Sistema
+                IdEntidad = enti1.Id,//Sistema
+                IdAplicacion = api0!.Id//Sistema
 
             };
             var entidadApp2 = new EntidadAplicacion
             {
 
-                IdEntidad = entidad2.Id,//Goreu
-                IdAplicacion = app1.Id//Tramite
+                IdEntidad = enti2.Id,//Goreu
+                IdAplicacion = api1!.Id//Tramite
 
             };
             var entidadApp3 = new EntidadAplicacion
             {
 
-                IdEntidad = entidad2.Id,//Goreu
-                IdAplicacion = app2.Id//Planilla
+                IdEntidad = enti2.Id,//Goreu
+                IdAplicacion = api2!.Id//Planilla
 
             };
 
@@ -367,7 +367,7 @@ namespace Goreu.Persistence
                 Descripcion = "Persona",
                 Icono = "users",
                 Ruta = "pages/persona",
-                IdAplicacion = app0.Id,
+                IdAplicacion = api0!.Id,
                 MenuPadre = null,
 
             };
@@ -377,7 +377,7 @@ namespace Goreu.Persistence
                 Descripcion = "Rol",
                 Icono = "user-exclamation",
                 Ruta = "pages/rol",
-                IdAplicacion = app0.Id,
+                IdAplicacion = api0!.Id,
                 MenuPadre = null,
 
             };
@@ -386,7 +386,7 @@ namespace Goreu.Persistence
                 Descripcion = "Usurios",
                 Icono = "user-cog",
                 Ruta = "pages/user",
-                IdAplicacion = app0.Id,
+                IdAplicacion = api0!.Id,
                 MenuPadre = null,
 
             };
@@ -395,7 +395,7 @@ namespace Goreu.Persistence
                 Descripcion = "TipoDocumento",
                 Icono = "file-barcode",
                 Ruta = "pages/tipo-documento",
-                IdAplicacion = app0.Id,
+                IdAplicacion = api0!.Id,
                 MenuPadre = null,
 
             };
@@ -404,7 +404,7 @@ namespace Goreu.Persistence
                 Descripcion = "Menu",
                 Icono = "menu-deep",
                 Ruta = "pages/menu",
-                IdAplicacion = app0.Id,
+                IdAplicacion = api0!.Id,
                 MenuPadre = null,
 
             };
@@ -413,7 +413,7 @@ namespace Goreu.Persistence
                 Descripcion = "Aplicacion",
                 Icono = "brand-google-play",
                 Ruta = "pages/aplicacion",
-                IdAplicacion = app0.Id,
+                IdAplicacion = api0!.Id,
                 MenuPadre = null,
 
             };
@@ -422,7 +422,7 @@ namespace Goreu.Persistence
                 Descripcion = "unidadOrganica",
                 Icono = "building-factory-2",
                 Ruta = "pages/unidadorganica",
-                IdAplicacion = app0.Id,
+                IdAplicacion = api0!.Id,
                 MenuPadre = null,
 
             };
@@ -431,7 +431,7 @@ namespace Goreu.Persistence
                 Descripcion = "Entidad",
                 Icono = "building-factory",
                 Ruta = "pages/entidad",
-                IdAplicacion = app0.Id,
+                IdAplicacion = api0!.Id,
                 MenuPadre = null,
 
             };
@@ -440,7 +440,7 @@ namespace Goreu.Persistence
                 Descripcion = "Persona",
                 Icono = "users",
                 Ruta = "pages/persona",
-                IdAplicacion = app1.Id,
+                IdAplicacion = api1!.Id,
                 MenuPadre = null,
 
             };
@@ -450,7 +450,7 @@ namespace Goreu.Persistence
                 Descripcion = "Rol",
                 Icono = "user-exclamation",
                 Ruta = "pages/rol",
-                IdAplicacion = app1.Id,
+                IdAplicacion = api1!.Id,
                 MenuPadre = null,
 
             };
@@ -459,7 +459,7 @@ namespace Goreu.Persistence
                 Descripcion = "Usurios",
                 Icono = "user-cog",
                 Ruta = "pages/user",
-                IdAplicacion = app1.Id,
+                IdAplicacion = api1!.Id,
                 MenuPadre = null,
 
             };
@@ -468,7 +468,7 @@ namespace Goreu.Persistence
                 Descripcion = "Menu",
                 Icono = "menu-deep",
                 Ruta = "pages/menu",
-                IdAplicacion = app1.Id,
+                IdAplicacion = api1!.Id,
                 MenuPadre = null,
 
             };
@@ -477,7 +477,7 @@ namespace Goreu.Persistence
                 Descripcion = "Aplicacion",
                 Icono = "brand-google-play",
                 Ruta = "pages/aplicacion",
-                IdAplicacion = app1.Id,
+                IdAplicacion = api1!.Id,
                 MenuPadre = null,
 
             };
@@ -486,7 +486,7 @@ namespace Goreu.Persistence
                 Descripcion = "UnidadOrganica",
                 Icono = "building-factory-2",
                 Ruta = "pages/unidadorganica",
-                IdAplicacion = app1.Id,
+                IdAplicacion = api1!.Id,
                 MenuPadre = null,
 
             };
@@ -495,7 +495,7 @@ namespace Goreu.Persistence
                 Descripcion = "Usurios",
                 Icono = "user-cog",
                 Ruta = "pages/user",
-                IdAplicacion = app2.Id,
+                IdAplicacion = api2!.Id,
                 MenuPadre = null,
 
             };
