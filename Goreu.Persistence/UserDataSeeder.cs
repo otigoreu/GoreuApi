@@ -44,8 +44,8 @@ namespace Goreu.Persistence
             };
 
 
-            var enti1= await context.Set<Entidad>().FirstOrDefaultAsync(x => x.Descripcion== entidad1.Descripcion);
-            var enti2 = await context.Set<Entidad>().FirstOrDefaultAsync(x => x.Descripcion == entidad2.Descripcion);
+            var enti1 = await context.Set<Entidad>().FirstOrDefaultAsync(x => x.Id == 1);
+            var enti2 = await context.Set<Entidad>().FirstOrDefaultAsync(x => x.Id == 2);
 
             if (enti1 is null & enti2 is null)
             {
