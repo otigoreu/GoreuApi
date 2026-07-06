@@ -35,6 +35,13 @@ namespace Goreu.Services.Implementation
 
             try
             {
+                var existe = await repository.GetAsync(request.IdRol, request.IdMenu);
+                if (existe is not null)
+                {
+                    response.ErrorMessage = $"Ya existe una relación entre el Rol {request.IdRol} y el Menú {request.IdMenu}.";
+                    return response;
+                }
+
                 response.Data = await repository.AddAsync(mapper.Map<MenuRol>(request));
                 response.Success = true;
 
@@ -151,9 +158,20 @@ namespace Goreu.Services.Implementation
             {
                 //PAso 1.- Obtener todos los Menus
                 var todosLosMenus = await menuService.GetAllByEntidadAndAplicacion(idEntidad,idAplicacion);
-
+                Console.WriteLine("#######Todos los menus#########"+ todosLosMenus.Data.Count());
                 //Paso 2.- todos las relaciones de MenuRol por el id
                 var menuRol = await repository.GetAsync(mr => mr.IdRol.Equals(IdRol));
+                Console.WriteLine("#######MenuRol#########"+ menuRol.Count());
+
+                //Diagnostico temporal
+                var menuIds = todosLosMenus.Data.Select(m => m.Id).ToHashSet();
+                var noEncontrados = menuRol.Where(mr => !menuIds.Contains(mr.IdMenu)).ToList();
+                Console.WriteLine($"MenuRol sin match: {noEncontrados.Count}");
+                foreach (var x in noEncontrados)
+                    Console.WriteLine($"  IdMenu={x.IdMenu} IdRol={x.IdRol}");
+
+                Console.WriteLine("IDs menus DTO: " + string.Join(", ", todosLosMenus.Data.Select(m => m.Id).OrderBy(x => x)));
+                Console.WriteLine("IdMenus menuRol: " + string.Join(", ", menuRol.Select(mr => mr.IdMenu).OrderBy(x => x)));
 
                 //Paso 3.- hacer join entre todos los MenuRol y los menus
 

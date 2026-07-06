@@ -132,7 +132,7 @@ namespace Goreu.Repositories.Implementation
 
         }
 
-        public async Task<ICollection<Menu>> GetAllByEntidadAndAplicacion(int idEntidad, int idAplicacion)
+        public async Task<ICollection<Menu>> GetAllByEntidadAndAplicacion(int idEntidad, int idAplicacion)//encontrado 1
         {
             var quey = context.Set<Menu>().FromSqlRaw(
                 @"select distinct m.Id,m.Descripcion, m.Icono, m.Ruta,m.IdAplicacion ,m.IdMenuPadre, m.Estado
@@ -152,7 +152,7 @@ namespace Goreu.Repositories.Implementation
 		            from adm.Menu m 
 		            join adm.MenuRol mr on mr.IdMenu=m.Id 
 		            join adm.Rol r on r.Id=mr.IdRol
-		            where r.Id={0}", idRol);
+		            where r.Id={0} and mr.Estado=1", idRol);
             return await quey.ToListAsync();
         }
     }
