@@ -134,6 +134,7 @@ namespace Goreu.Services.Implementation
                 .Select(x => new UnidadOrganicaResponseDto
                 {
                     Id = x.Id,
+                    idTipo = x.idTipo,
                     Descripcion = x.Descripcion,
                     Abrev = x.Abrev,
                     idEntidad = x.idEntidad,
