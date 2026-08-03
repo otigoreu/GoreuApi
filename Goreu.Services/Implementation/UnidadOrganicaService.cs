@@ -44,15 +44,21 @@ namespace Goreu.Services.Implementation
             return response;
         }
 
-        public async Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetAsync(int idTipo, int idEntidad, string descripcion, PaginationDto pagination)
+        public async Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetAsync(int? idTipo, int idEntidad, string descripcion, PaginationDto pagination)
         {
             var response = new BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>();
             try
             {
+                bool buscarAmbosTipos = !idTipo.HasValue || idTipo.Value == -1;
+
                 var data = await repository.GetAsync(
-                    predicate: s => s.idTipo == idTipo && s.IdEntidad == idEntidad && s.Descripcion.Contains(descripcion ?? string.Empty),
+                    predicate: s => s.IdEntidad == idEntidad &&
+                                    s.Descripcion.Contains(descripcion ?? string.Empty) &&
+                                    (buscarAmbosTipos ? (s.idTipo == 1 || s.idTipo == 2) : s.idTipo == idTipo),
                     orderBy: x => x.Descripcion,
-                    pagination);
+                    pagination: pagination,
+                    idTipo: idTipo // <- Pasamos el parámetro aquí para que afecte a los hijos
+                );
 
                 response.Data = mapper.Map<ICollection<UnidadOrganicaResponseDto>>(data);
                 response.Success = true;

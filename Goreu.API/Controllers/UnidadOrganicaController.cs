@@ -72,7 +72,11 @@ namespace Goreu.API.Controllers
         }
 
         [HttpGet("descripcion")]
-        public async Task<IActionResult> Get([FromQuery] int idTipo, [FromQuery] int? idEntidad, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
+        public async Task<IActionResult> Get(
+            [FromQuery] int? idTipo,
+            [FromQuery] int? idEntidad,
+            [FromQuery] string? search,
+            [FromQuery] PaginationDto pagination)
         {
             var result = idEntidad switch
             {
@@ -82,6 +86,19 @@ namespace Goreu.API.Controllers
 
             return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
         }
+
+
+        //[HttpGet("descripcion")]
+        //public async Task<IActionResult> Get([FromQuery] int idTipo, [FromQuery] int? idEntidad, [FromQuery] string? search, [FromQuery] PaginationDto pagination)
+        //{
+        //    var result = idEntidad switch
+        //    {
+        //        null => await unidadOrganicaService.GetAsync(search ?? string.Empty, pagination),
+        //        int id => await unidadOrganicaService.GetAsync(idTipo, id, search ?? string.Empty, pagination)
+        //    };
+
+        //    return result.Success ? Ok(result) : StatusCode(500, result.ErrorMessage);
+        //}
 
         [HttpGet("peruser")]
         public async Task<IActionResult> Get(string idUser)

@@ -11,14 +11,21 @@ namespace Goreu.Repositories.Implementation
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ICollection<UnidadOrganica>> GetAsync<TKey>(Expression<Func<UnidadOrganica, bool>> predicate, Expression<Func<UnidadOrganica, TKey>> orderBy, PaginationDto pagination)
+        public async Task<ICollection<UnidadOrganica>> GetAsync<TKey>(
+            Expression<Func<UnidadOrganica, bool>> predicate,
+            Expression<Func<UnidadOrganica, TKey>> orderBy,
+            PaginationDto pagination,
+            int? idTipo = null) // 1. Agregamos el parámetro opcional
         {
+            // 2. Evaluamos la misma regla de negocio para los hijos
+            bool buscarAmbosTipos = !idTipo.HasValue || idTipo.Value == -1;
+
             var queryable = context.Set<UnidadOrganica>()
                 .Include(x => x.Entidad)
                 .Include(x => x.Dependencia)
-                .Include(x => x.Hijos)
+                // 3. Filtramos la colección de hijos en base a la regla
+                .Include(x => x.Hijos.Where(h => buscarAmbosTipos ? (h.idTipo == 1 || h.idTipo == 2) : h.idTipo == idTipo))
                 .Include(z => z.UsuarioUnidadOrganicas.Where(ea => ea.Estado))
-
                 .Where(predicate)
                 .OrderBy(orderBy)
                 .AsNoTracking()
@@ -26,7 +33,6 @@ namespace Goreu.Repositories.Implementation
 
             await httpContextAccessor.HttpContext.InsertarPaginacionHeader(queryable);
             var response = await queryable.Paginate(pagination).ToListAsync();
-
             return response;
         }
 
