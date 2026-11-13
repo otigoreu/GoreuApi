@@ -129,15 +129,16 @@
             return response;
         }
 
-        public async Task<BaseResponse> ValidarAsync(UsuarioUnidadOrganicaRequestDto request)
+        public async Task<BaseResponse> ValidarAsync(UsuarioUnidadOrganicaRequestDto request, int? idExcluir = null)
         {
             var response = new BaseResponse();
             try
             {
-                // Obtener directamente el último registro por Id
+                // Obtener el último registro excluyendo el actual si es edición
                 var data = await repository.GetAsync(
                     predicate: z => z.IdUnidadOrganica == request.IdUnidadOrganica
-                                 && z.IdUsuario == request.IdUsuario,
+                                 && z.IdUsuario == request.IdUsuario
+                                 && (!idExcluir.HasValue || z.Id != idExcluir.Value), // 👈 Ignora el registro actual
                     orderBy: z => z.Id,
                     true
                 );
@@ -153,7 +154,7 @@
                 if (last.Estado)
                 {
                     response.Success = false;
-                    response.ErrorMessage = $"El usuario ya esta asignado a la Unidad Organica.";
+                    response.ErrorMessage = "El usuario ya esta asignado a la Unidad Organica.";
                     return response;
                 }
 
@@ -166,7 +167,6 @@
                     return response;
                 }
 
-                // Si pasa todas las validaciones
                 response.Success = true;
             }
             catch (Exception ex)
@@ -178,6 +178,7 @@
 
             return response;
         }
+
 
         public async Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetUnidadOrganicasAsync(string userId)
         {

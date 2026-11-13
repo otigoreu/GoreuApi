@@ -72,7 +72,7 @@ namespace Goreu.API.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromBody] UsuarioUnidadOrganicaRequestDto dto)
         {
-            var validacion = await service.ValidarAsync(dto);
+            var validacion = await service.ValidarAsync(dto, id); // 👈 Pasamos el id a excluir
 
             if (!validacion.Success)
                 return BadRequest(validacion);

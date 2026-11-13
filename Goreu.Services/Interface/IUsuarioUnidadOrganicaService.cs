@@ -8,7 +8,8 @@
         Task<BaseResponseGeneric<ICollection<UnidadOrganicaResponseDto>>> GetUnidadOrganicasAsync(string idUsuario);
         Task<BaseResponseGeneric<ICollection<UsuarioResponseDto>>> GetUsuariosAsignadosAsync(int idEntidad, int idAplicacion, int idUnidadOrganica);
         Task<BaseResponse> FinalizeAsync(int id, string observacionAnulacion);
-        Task<BaseResponse> ValidarAsync(UsuarioUnidadOrganicaRequestDto request);
+        Task<BaseResponse> ValidarAsync(UsuarioUnidadOrganicaRequestDto request, int? idExcluir = null);
+
     }
 }
 
